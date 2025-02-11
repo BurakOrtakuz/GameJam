@@ -4,7 +4,7 @@
 /*   GameLevel.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*   Organizer: enver yılmaz                      +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:22:51 by bortakuz          #+#    #+#             */
 /*   Updated: 2025/02/11 17:59:03 by bortakuz         ###   ########.fr       */
 /*                                                                            */
@@ -15,57 +15,20 @@
 #include <fstream>
 #include <sstream>
 
-GameLevel::GameLevel()
-{
-}
-
-void GameLevel::load(const char *file, unsigned int levelWidth, unsigned int levelHeight)
-{
-    // clear old data
-    _levelObjects.clear();
-    // load from file
-    unsigned int tileCode;
-    GameLevel level;
-    std::string line;
-    std::ifstream fstream(file);
-    std::vector<std::vector<unsigned int>> tileData;
-    if (fstream)
-    {
-        while (std::getline(fstream, line)) // read each line from level file
-        {
-            std::istringstream sstream(line);
-            std::vector<unsigned int> row;
-            while (sstream >> tileCode) // read each word separated by spaces
-                row.push_back(tileCode);
-            tileData.push_back(row);
-        }
-        if (tileData.size() > 0)
-            this->init(tileData, levelWidth, levelHeight);
-    }
-}
-
-void GameLevel::draw(SpriteRenderer &renderer)
-{
-    for (GameObject &tile : _levelObjects)
-        if (!tile.isDestroyed())
-            tile.draw(renderer);
-}
-
-bool GameLevel::isCompleted()
-{
-    for (GameObject &tile : _levelObjects)
-        if (!tile.isSolid() && !tile.isDestroyed())
-            return false;
-    return true;
-}
-
-void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned int levelWidth, unsigned int levelHeight)
+/* ************************ [v] PRIVATE FUNCTIONS [v] *********************** */
+void
+	GameLevel::init(
+		std::vector<std::vector<unsigned int>>	tileData,
+		unsigned int							levelWidth,
+		unsigned int							levelHeight
+	)
 {
     // calculate dimensions
-    unsigned int height = tileData.size();
-    unsigned int width = tileData[0].size(); // note we can index vector at [0] since this function is only called if height > 0
-    float unit_width = levelWidth / static_cast<float>(width), unit_height = levelHeight / height; 
-    // initialize level tiles based on tileData		
+    unsigned int	height		= tileData.size();
+    unsigned int	width		= tileData[0].size(); // note we can index vector at [0] since this function is only called if height > 0
+    float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height; 
+    
+	// initialize level tiles based on tileData		
     for (unsigned int y = 0; y < height; ++y)
     {
         for (unsigned int x = 0; x < width; ++x)
@@ -98,13 +61,71 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
         }
     }
 }
+/* ************************ [^] PRIVATE FUNCTIONS [^] *********************** */
 
+/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
+GameLevel::GameLevel()
+{
+}
+/* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
+
+/* **************************** [v] GETTERS [v] ***************************** */
 GameObject GameLevel::getGameObject(int index)
 {
 	return _levelObjects[index];
 }
 
+bool GameLevel::isCompleted()
+{
+    for (GameObject &tile : _levelObjects)
+        if (!tile.isSolid() && !tile.isDestroyed())
+            return false;
+    return true;
+}
+/* **************************** [^] GETTERS [^] ***************************** */
+
+/* **************************** [v] SETTERS [v] ***************************** */
 void GameLevel::addGameObject(GameObject obj)
 {
 	_levelObjects.push_back(obj);
 }
+/* **************************** [^] SETTERS [^] ***************************** */
+
+/* **************************** [v] FUNCTIONS [v] *************************** */
+void
+	GameLevel::load(
+		const char *file,
+		unsigned int levelWidth,
+		unsigned int levelHeight
+	)
+{
+    // clear old data
+    _levelObjects.clear();
+    // load from file
+    unsigned int tileCode;
+    GameLevel level;
+    std::string line;
+    std::ifstream fstream(file);
+    std::vector<std::vector<unsigned int>> tileData;
+    if (fstream)
+    {
+        while (std::getline(fstream, line)) // read each line from level file
+        {
+            std::istringstream sstream(line);
+            std::vector<unsigned int> row;
+            while (sstream >> tileCode) // read each word separated by spaces
+                row.push_back(tileCode);
+            tileData.push_back(row);
+        }
+        if (tileData.size() > 0)
+            this->init(tileData, levelWidth, levelHeight);
+    }
+}
+
+void GameLevel::draw(SpriteRenderer &renderer)
+{
+    for (GameObject &tile : _levelObjects)
+        if (!tile.isDestroyed())
+            tile.draw(renderer);
+}
+/* **************************** [^] FUNCTIONS [^] *************************** */

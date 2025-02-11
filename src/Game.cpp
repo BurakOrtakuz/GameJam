@@ -27,11 +27,12 @@ void Game::init()
 	_renderer = new SpriteRenderer(ResourceManager::getShader("sprite"));
 	// load textures
 	std::cout<<"Loading textures"<<std::endl;
-	ResourceManager::loadTexture("assets/background.jpg", false, "background");
-	ResourceManager::loadTexture("assets/awesomeface.png", true, "face");
-	ResourceManager::loadTexture("assets/block.png", false, "block");
-	ResourceManager::loadTexture("assets/block_solid.png", false, "block_solid");
-	ResourceManager::loadTexture("assets/paddle.png", true, "paddle");
+	ResourceManager::loadTexture("assets/background/back.png", true, "background");
+	// ResourceManager::loadTexture("assets/awesomeface.png", true, "face");
+	// ResourceManager::loadTexture("assets/block.png", false, "block");
+	// ResourceManager::loadTexture("assets/block_solid.png", false, "block_solid");
+	// ResourceManager::loadTexture("assets/paddle.png", true, "paddle");
+    ResourceManager::loadTexture("assets/player/sabit.PNG", true, "player");
 	// load levels
 	GameLevel one; one.load("levels/one.lvl", _width, _height / 2);
 	GameLevel two; two.load("levels/two.lvl", _width, _height / 2);
@@ -44,7 +45,7 @@ void Game::init()
 	_currentLevel = 0;
 	// configure game objects
 	glm::vec2 playerPos = glm::vec2(_width / 2.0f - _playerSize.x / 2.0f, _height - _playerSize.y);
-	Player = new GameObject(playerPos, _playerSize, ResourceManager::getTexture("paddle"));
+	Player = new GameObject(playerPos, _playerSize, ResourceManager::getTexture("player"));
 }
 
 void Game::update(float dt)

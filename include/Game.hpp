@@ -15,7 +15,7 @@ public:
 		GAME_WIN
 	};
 private:
-	const glm::vec2 _playerSize = glm::vec2(100.0f, 20.0f);
+	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
 	constexpr static float _playerVelocity = 500.0f;
 	std::vector<GameLevel>	_levels;
 	GameObject				*Player;
