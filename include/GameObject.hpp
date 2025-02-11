@@ -13,11 +13,13 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP 250211L
 
+/* **************************** [v] INCLUDES [v] **************************** */
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include <Texture2D.hpp>
 #include <SpriteRenderer.hpp>
+/* **************************** [^] INCLUDES [^] **************************** */
 
 // Container object for holding all state relevant for a single
 // game object entity. Each object in the game likely needs the
@@ -26,6 +28,7 @@
 class GameObject
 {
 protected:
+/* **************************** [v] VARIABLES [v] *************************** */
 // MODERN DEFINES :)
 	constexpr static glm::vec2	defaultPosition = glm::vec2(0.0f, 0.0f);
 	constexpr static glm::vec2	defaultSize 	= glm::vec2(1.0f, 1.0f);
@@ -39,8 +42,9 @@ protected:
 	bool        _destroyed; //__??__ TO-DO WTF
 // RENDER STATE
 	Texture2D   _sprite;
+/* **************************** [^] VARIABLES [^] *************************** */
 public:
-// CONSTRUCTOR
+/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	GameObject(
 		glm::vec2 pos		= defaultPosition,
 		glm::vec2 size		= defaultSize,
@@ -49,16 +53,20 @@ public:
 		glm::vec2 velocity	= defaultVelocity
 	);
 	~GameObject();
-// GETTERS
+/* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
+/* **************************** [v] GETTERS [v] ***************************** */
 	glm::vec2	getPosition()	const;
 	glm::vec2	getSize()		const;
 	bool		isSolid()		const;
 	bool		isDestroyed()	const;
-// SETTERS
+/* **************************** [^] GETTERS [^] ***************************** */
+/* **************************** [v] SETTERS [v] ***************************** */
 	void		setSolid(bool solid);
 	void		setPosition(glm::vec2 pos);
-// FUNCTIONS
+/* **************************** [^] SETTERS [^] ***************************** */
+/* **************************** [v] FUNCTIONS [v] *************************** */
 	virtual void draw(SpriteRenderer &renderer);
+/* **************************** [^] FUNCTIONS [^] *************************** */
 };
 
 #endif
