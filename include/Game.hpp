@@ -56,7 +56,7 @@ private:
 	const glm::vec2			_playerSize = glm::vec2(200.0f, 200.0f);
 	constexpr static float	_playerVelocity = 500.0f;
 	std::vector<GameLevel>	_levels;
-	GameObject				*Player;
+	GameObject				*_player;
 	unsigned int			_currentLevel;
 	Game::GameState			_state;
 	SpriteRenderer			*_renderer;

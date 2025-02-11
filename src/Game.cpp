@@ -10,10 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/* **************************** [v] INCLUDES [v] **************************** */
 #include <Game.hpp>
 #include <glm/glm.hpp>
 #include <ResourceManager.hpp>
 #include <iostream>
+/* **************************** [^] INCLUDES [^] **************************** */
+
+/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 Game::Game(unsigned int width, unsigned int height) : _keys()
 {
 	_width = width;
@@ -25,7 +29,34 @@ Game::~Game()
 {
 	
 }
+/* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
 
+/* **************************** [v] GETTERS [v] ***************************** */
+unsigned int Game::getLevel() const
+{
+	return _currentLevel;
+}
+
+bool Game::getKeys(int key) const
+{
+	return _keys[key];
+}
+/* **************************** [^] GETTERS [^] ***************************** */
+
+/* **************************** [v] SETTERS [v] ***************************** */
+void Game::setKeys(int key, bool value)
+{
+	_keys[key] = value;
+}
+
+void Game::setLevel(unsigned int level)
+{
+	if(level < _levels.size())
+		_currentLevel = level;
+}
+/* **************************** [^] SETTERS [^] ***************************** */
+
+/* **************************** [v] FUNCTIONS [v] *************************** */
 void Game::init()
 {
 	// load shaders
@@ -67,7 +98,7 @@ void Game::update(float dt)
 
 void Game::processInput(float dt)
 {
-	if (_state == GAME_ACTIVE)
+	if (_state == GameState::GAME_ACTIVE)
 	{
 		float velocity = _playerVelocity * dt;
 		glm::vec2 playerPos = _player->getPosition();
@@ -88,7 +119,7 @@ void Game::processInput(float dt)
 
 void Game::render()
 {
-	if(_state == GAME_ACTIVE)
+	if(_state == GameState::GAME_ACTIVE)
 	{
 		// draw background
 		_renderer->drawSprite(ResourceManager::getTexture("background"), 
@@ -98,25 +129,5 @@ void Game::render()
 		_levels[_currentLevel].draw(*_renderer);
 		_player->draw(*_renderer);
 	}
-}  
-
-unsigned int Game::getLevel() const
-{
-	return _currentLevel;
 }
-
-bool Game::getKeys(int key) const
-{
-	return _keys[key];
-}
-
-void Game::setKeys(int key, bool value)
-{
-	_keys[key] = value;
-}
-
-void Game::setLevel(unsigned int level)
-{
-	if(level < _levels.size())
-		_currentLevel = level;
-}
+/* **************************** [^] FUNCTIONS [^] *************************** */
