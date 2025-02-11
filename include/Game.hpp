@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Game.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/11 20:38:06 by bortakuz          #+#    #+#             */
+/*   Updated: 2025/02/11 20:38:07 by bortakuz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GAME_H
 #define GAME_H
 
@@ -18,7 +30,7 @@ private:
 	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
 	constexpr static float _playerVelocity = 500.0f;
 	std::vector<GameLevel>	_levels;
-	GameObject				*Player;
+	GameObject				*_player;
 	unsigned int			_currentLevel;
 	Game::GameState				_state;
 	SpriteRenderer			*_renderer;
