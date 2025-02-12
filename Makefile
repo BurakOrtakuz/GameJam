@@ -1,12 +1,15 @@
 NAME			=	scop
 
-INCLUDEFLAGS	=	-Ilib -Iinclude
+INCLUDEFLAGS	=	-Ilib -Iinclude -Iinclude/Animation
 LDFLAGS			=	-lglfw -ldl -lGL -lz
 
 SRC				=	lib/glad/glad.c \
 					lib/stb_images/stb_image.c \
 
-SRC 			+=	src/Utils.cpp \
+SRC 			+=	src/Animation/Animation.cpp \
+					src/Animation/frame.cpp \
+					src/Animation/FrameManager.cpp \
+					src/Utils.cpp \
 					src/Window.cpp \
 					src/Shader.cpp \
 					src/Camera.cpp \
