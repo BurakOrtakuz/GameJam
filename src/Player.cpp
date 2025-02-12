@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:09:46 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:16:02 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 14:35:15 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,3 +43,13 @@ Player::~Player()
 {
 }
 
+
+glm::vec2 Player::getVelocity() const
+{
+	return _velocity;
+}
+
+void Player::setVelocity(glm::vec2 velocity)
+{
+	_velocity = velocity;
+}

@@ -11,9 +11,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 // The Width of the screen
-const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_WIDTH = 1920;
 // The height of the screen
-const unsigned int SCREEN_HEIGHT = 600;
+const unsigned int SCREEN_HEIGHT = 1080;
 
 Game Breakout(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
-
+	glfwSwapInterval(0); // disable vsync
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -56,7 +56,8 @@ int main(int argc, char *argv[])
 	// -------------------
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
-
+	float fpsTimer = 0.0f;
+	int frameCount = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		// calculate delta time
@@ -64,6 +65,14 @@ int main(int argc, char *argv[])
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		fpsTimer += deltaTime;
+        frameCount++;
+		if (fpsTimer >= 1.0f)
+        {
+            std::cout << "FPS: " << frameCount << std::endl;
+            fpsTimer = 0.0f;
+            frameCount = 0;
+        }
 		glfwPollEvents();
 
 		// manage user input

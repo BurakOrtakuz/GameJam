@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:18:50 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:34:16 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 17:02:53 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@
 /* **************************** [v] INCLUDES [v] **************************** */
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <SpriteRenderer.hpp>
+#include <Camera.hpp>
 #include <GameLevel.hpp>
-/* **************************** [^] INCLUDES [^] **************************** */
 #include <Player.hpp>
+/* **************************** [^] INCLUDES [^] **************************** */
 
 class Game
 {
@@ -34,8 +36,8 @@ public:
 /* *************************** [^] ENUM CLASS [^] *************************** */
 private:
 	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
-	constexpr static float _playerVelocity = 500.0f;
 	std::vector<GameLevel>	_levels;
+	Camera					*_camera;
 	Player					*_player;
 	unsigned int			_currentLevel;
 	Game::GameState				_state;

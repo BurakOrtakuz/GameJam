@@ -51,6 +51,11 @@ fclean: clean
 
 re: fclean all
 
+rr: rerun
+
+rerun: re
+	./$(NAME)
+
 run : all
 	./$(NAME)
 .PHONY: all c clean fc fclean re run

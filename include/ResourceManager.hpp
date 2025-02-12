@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:40:19 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 16:04:06 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 14:38:32 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ private:
 	ResourceManager() = delete;
 	ResourceManager(ResourceManager const &) = delete;
 	ResourceManager &operator=(ResourceManager const &) = delete;
+
 	static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
 	// loads a single texture from file
 	static Texture2D loadTextureFromFile(const char *file, bool alpha);
