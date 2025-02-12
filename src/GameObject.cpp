@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:41:31 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 20:41:31 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:14:59 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ GameObject::GameObject(
 	glm::vec2 pos,
 	glm::vec2 size,
 	Texture2D sprite,
-	glm::vec3 color,
-	glm::vec2 velocity
+	glm::vec3 color
 ): 
 	_position(pos),
 	_size(size),
-	_velocity(velocity),
 	_color(color),
 	_rotation(0.0f),
 	_sprite(sprite),

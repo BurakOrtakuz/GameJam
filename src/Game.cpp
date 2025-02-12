@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:36:12 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 20:36:13 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:11:06 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void Game::init()
 	_currentLevel = 0;
 	// configure game objects
 	glm::vec2 playerPos = glm::vec2(_width / 2.0f - _playerSize.x / 2.0f, _height - _playerSize.y);
-	_player = new GameObject(playerPos, _playerSize, ResourceManager::getTexture("player"));
+	_player = new Player(playerPos, _playerSize, ResourceManager::getTexture("player"));
 }
 
 void Game::update(float dt)
