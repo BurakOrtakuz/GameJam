@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:36:12 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:11:06 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:35:37 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void Game::update(float dt)
 
 void Game::processInput(float dt)
 {
-	if (_state == GAME_ACTIVE)
+	if (_state == Game::GameState::GAME_ACTIVE)
 	{
 		float velocity = _playerVelocity * dt;
 		glm::vec2 playerPos = _player->getPosition();
@@ -88,7 +88,7 @@ void Game::processInput(float dt)
 
 void Game::render()
 {
-	if(_state == GAME_ACTIVE)
+	if(_state == Game::GameState::GAME_ACTIVE)
 	{
 		// draw background
 		_renderer->drawSprite(ResourceManager::getTexture("background"), 

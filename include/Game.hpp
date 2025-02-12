@@ -6,7 +6,7 @@
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:18:50 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:32:16 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:34:16 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ public:
 		GAME_MENU,
 		GAME_WIN
 	};
+/* *************************** [^] ENUM CLASS [^] *************************** */
 private:
 	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
 	constexpr static float _playerVelocity = 500.0f;
@@ -43,7 +44,7 @@ private:
 	unsigned int			_width, _height;
 
 public:
-
+/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	Game(unsigned int width, unsigned int height);
 	~Game();
 /* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
@@ -62,19 +63,6 @@ public:
 	void update(float dt);
 	void render();
 /* **************************** [^] FUNCTIONS [^] *************************** */
-
-private:
-/* **************************** [v] VARIABLES [v] *************************** */
-	const glm::vec2			_playerSize = glm::vec2(200.0f, 200.0f);
-	constexpr static float	_playerVelocity = 500.0f;
-	std::vector<GameLevel>	_levels;
-	GameObject				*Player;
-	unsigned int			_currentLevel;
-	Game::GameState			_state;
-	SpriteRenderer			*_renderer;
-	bool					_keys[1024];
-	unsigned int			_width, _height;
-/* **************************** [^] VARIABLES [^] *************************** */
 };
 
 #endif
