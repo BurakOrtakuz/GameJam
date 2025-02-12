@@ -4,9 +4,9 @@
 /*   GameObject.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*   Organizer: enver yılmaz                      +#+#+#+#+#+   +#+           */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:03:21 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 18:21:14 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:14:55 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,9 @@ protected:
 // MODERN DEFINES :)
 	constexpr static glm::vec2	defaultPosition = glm::vec2(0.0f, 0.0f);
 	constexpr static glm::vec2	defaultSize 	= glm::vec2(1.0f, 1.0f);
-	constexpr static glm::vec2	defaultVelocity = glm::vec2(0.0f, 0.0f);
 	constexpr static float		defaultRotation = 0.0f;	
 // VARIABLES
-	glm::vec2   _position, _size, _velocity;
+	glm::vec2   _position, _size;
 	glm::vec3   _color;
 	float       _rotation;
 	bool        _isSolid;   //__??__ TO-DO WTF
@@ -49,8 +48,7 @@ public:
 		glm::vec2 pos		= defaultPosition,
 		glm::vec2 size		= defaultSize,
 		Texture2D sprite	= Texture2D(),
-		glm::vec3 color		= glm::vec3(1.0f),
-		glm::vec2 velocity	= defaultVelocity
+		glm::vec3 color		= glm::vec3(1.0f)
 	);
 	~GameObject();
 /* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */

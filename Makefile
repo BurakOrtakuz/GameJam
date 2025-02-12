@@ -14,6 +14,7 @@ SRC 			+=	src/Utils.cpp \
 					src/ResourceManager.cpp \
 					src/SpriteRenderer.cpp \
 					src/GameObject.cpp \
+					src/Player.cpp \
 					src/GameLevel.cpp \
 					src/Game.cpp \
 					src/main.cpp

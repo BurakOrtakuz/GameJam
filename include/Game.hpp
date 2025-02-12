@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   GameLevel.hpp                                      :+:      :+:    :+:   */
+/*   Game.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*   Organizer: enver yılmaz                      +#+#+#+#+#+   +#+           */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 17:18:50 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 17:27:58 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/12 13:34:16 by bortakuz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <SpriteRenderer.hpp>
 #include <GameLevel.hpp>
 /* **************************** [^] INCLUDES [^] **************************** */
+#include <Player.hpp>
 
 class Game
 {
@@ -31,6 +32,18 @@ public:
 		GAME_WIN
 	};
 /* *************************** [^] ENUM CLASS [^] *************************** */
+private:
+	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
+	constexpr static float _playerVelocity = 500.0f;
+	std::vector<GameLevel>	_levels;
+	Player					*_player;
+	unsigned int			_currentLevel;
+	Game::GameState				_state;
+	SpriteRenderer			*_renderer;
+	bool					_keys[1024];
+	unsigned int			_width, _height;
+
+public:
 /* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	Game(unsigned int width, unsigned int height);
 	~Game();
@@ -50,19 +63,6 @@ public:
 	void update(float dt);
 	void render();
 /* **************************** [^] FUNCTIONS [^] *************************** */
-
-private:
-/* **************************** [v] VARIABLES [v] *************************** */
-	const glm::vec2			_playerSize = glm::vec2(200.0f, 200.0f);
-	constexpr static float	_playerVelocity = 500.0f;
-	std::vector<GameLevel>	_levels;
-	GameObject				*_player;
-	unsigned int			_currentLevel;
-	Game::GameState			_state;
-	SpriteRenderer			*_renderer;
-	bool					_keys[1024];
-	unsigned int			_width, _height;
-/* **************************** [^] VARIABLES [^] *************************** */
 };
 
 #endif
