@@ -13,6 +13,7 @@
 #ifndef GAMELEVEL_HPP
 #define GAMELEVEL_HPP 250211L
 
+/* **************************** [v] INCLUDES [v] **************************** */
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
@@ -21,6 +22,7 @@
 #include <GameObject.hpp>
 #include <SpriteRenderer.hpp>
 #include <ResourceManager.hpp>
+/* **************************** [^] INCLUDES [^] **************************** */
 
 /// GameLevel holds all Tiles as part of a Breakout level and 
 /// hosts functionality to Load/render levels from the harddisk.
@@ -28,25 +30,30 @@
 class GameLevel
 {
 private:
-// VARIABLES
+/* **************************** [v] VARIABLES [v] *************************** */
 	std::vector<GameObject> _levelObjects;
-
-// PRIVATE FUNCTIONS
+/* **************************** [^] VARIABLES [^] *************************** */
+/* *********************** [v] PRIVATE FUNCTIONS [v] ************************ */
 	// Initialize level from tile data
 	void init(
 		std::vector<std::vector<unsigned int>>	tileData,
 		unsigned int							levelWidth,
 		unsigned int							levelHeight
 	);
+/* *********************** [^] PRIVATE FUNCTIONS [^] ************************ */
+
 public:
-// CONSTRUCTOR
+/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	GameLevel();
-// GETTERS
+/* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
+/* **************************** [v] GETTERS [v] ***************************** */
 	GameObject getGameObject(int index);
 	bool isCompleted();
-// SETTERS
+/* **************************** [^] GETTERS [^] ***************************** */
+/* **************************** [v] SETTERS [v] ***************************** */
 	void addGameObject(GameObject obj);
-// FUNCTIONS
+/* **************************** [^] SETTERS [^] ***************************** */
+/* **************************** [v] FUNCTIONS [v] *************************** */
 	// Loads level from file
 	void load(
 		const char *file,
@@ -55,6 +62,8 @@ public:
 	);
 	// Render level
 	void draw(SpriteRenderer &renderer);
+/* **************************** [^] FUNCTIONS [^] *************************** */
+
 };
 
 #endif // GAMELEVEL_HPP
