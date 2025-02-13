@@ -1,19 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Texture2D.hpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 20:38:25 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 20:38:25 by bortakuz         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef TEXTURE2D_HPP
 #define TEXTURE2D_HPP
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 class Texture2D
 {
@@ -38,6 +27,7 @@ public:
 	unsigned int *getIDPointer();
 	unsigned int getWidth() const;
 	unsigned int getHeight() const;
+	glm::vec2	 getSize() const;
 	unsigned int getInternalFormat() const;
 	unsigned int getImageFormat() const;
 	void setInternalFormat(unsigned int internalFormat);
