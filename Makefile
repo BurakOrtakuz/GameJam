@@ -3,7 +3,7 @@ NAME		=	jam.exe
 INC_FLAGS	=	-Ilib -Iinclude
 
 CXX			=	clang++
-CXXFLAGS	=	
+CXXFLAGS	=
 #-Wall -Wextra -Werror
 LDFLAGS		=	-lglfw -ldl -lGL -lz
 GRAPHIC		=	lib/graphic.a
@@ -36,10 +36,12 @@ run: all
 
 c: clean
 clean:
+	@make -C lib clean
 	$(RM) $(OBJ)
 
 f: fclean
 fclean: clean
+	@make -C lib fclean
 	$(RM) $(NAME)
 
 re: fclean all
