@@ -29,6 +29,7 @@ public:
 	);
 	void draw(SpriteRenderer &renderer);
 	Player	*_player;
+	Player	*_enemy;
 private:
 	std::vector<GameObject>		objects;
 	map<string, Texture2D>		*textures;

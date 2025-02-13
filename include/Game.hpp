@@ -45,6 +45,7 @@ private:
 	GLFWwindow  			*_window;
 	Shader					_shader;
 	Player					*_player;
+	Player					*_enemy;
     map<string, Texture2D>	textures;
 	map<string, GameMap>	maps;
 

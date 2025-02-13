@@ -10,8 +10,10 @@ Texture2D::Texture2D()
 
 void Texture2D::generate(unsigned int width, unsigned int height, unsigned char* data)
 {
-    _width = width/3;
-    _height = height/3;
+    _width = width / 5;
+    _height = height / 5;
+	std::cout << "_width: " << _width << std::endl;
+	std::cout << "_height: " << _height << std::endl;
 	struct s_texture text;
 	
 	text.data = data;

@@ -14,7 +14,9 @@ void
 
     unsigned int	height		= tileData.size();
     unsigned int	width		= tileData[0].size();
-    float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
+    //float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
+	float			unit_width  = 100.0f;
+	float			unit_height = 100.0f;
 
     for (unsigned int y = 0; y < height; ++y)
     {
@@ -30,7 +32,6 @@ void
             //}
 			if (tileData[y][x] == 1)
             {
-				
                 glm::vec2 pos(unit_width * x, unit_height * y);
                 glm::vec2 size = (*textures)["leftUPCorner"].getSize();
                 std::cout << "size.x: " << size.x << " size.y: " << size.y << std::endl;
@@ -40,10 +41,16 @@ void
             }
             else if (tileData[y][x] == 9)
             {
-				const glm::vec2 _playerSize(unit_width * x, unit_height * y);
-				glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				_player = new Player(playerPos, _playerSize, (*textures)["player"]);
+				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
+				glm::vec2 playerPos = glm::vec2(200.0f, 1000.0f);
+				_player = new Player(playerPos, (*textures)["player"].getSize(), (*textures)["player"]);
 				_player->setSolid(true);
+            }
+			else if (tileData[y][x] == 8)
+            {
+				glm::vec2 enemyPos = glm::vec2(100.0f, 100.0f);
+				_enemy = new Player(enemyPos, (*textures)["player"].getSize(), (*textures)["player"]);
+				_enemy->setSolid(true);
             }
         }
     }

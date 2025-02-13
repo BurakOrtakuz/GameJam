@@ -60,8 +60,8 @@ void Game::init(void)
 	init_window();
 
 	const GLFWvidmode* mode = get_primary_monitor();
-	this->SCREEN_WIDTH = mode->width / 2;
-	this->SCREEN_HEIGHT = mode->height / 2;
+	this->SCREEN_WIDTH = 1500; // mode->width / 2;
+	this->SCREEN_HEIGHT = 1000; // mode->height / 2;
 	
 	this->_window = errCheck(
 		(GLFWwindow *)NULL,
@@ -93,8 +93,11 @@ void Game::initRender()
 	newTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	newTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	newTexture("assets/Player.png", true, "player");
+
 	newMap("levels/one.lvl", "level1");
+	
 	_player = maps["level1"]._player;
+	//_enemy = maps["level1"]._enemy;
 }
 
 void
@@ -151,8 +154,13 @@ void
 	{
 		_renderer->drawSprite(textures["background"],
 			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT), 0.0f);
-		maps["level1"].draw(*_renderer);
-		_player->draw(*_renderer);
+		
+		//maps["level1"].draw(*_renderer);
+		
+		//_player->draw(*_renderer);
+		//_enemy->draw(*_renderer);
+
+
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
 		//Texture2D text = textures["rightUPCorner"];
