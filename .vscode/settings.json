@@ -57,6 +57,9 @@
 		"variant": "cpp",
 		"semaphore": "cpp",
 		"format": "cpp",
-		"text_encoding": "cpp"
+		"text_encoding": "cpp",
+		"list": "cpp",
+		"deque": "cpp",
+		"fstream": "cpp"
 	}
 }
