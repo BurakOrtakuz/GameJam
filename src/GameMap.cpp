@@ -41,8 +41,9 @@ void
             }
             else if (tileData[y][x] == 9)
             {
+				std::cout << "GIRDILÇ," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(200.0f, 1000.0f);
+				glm::vec2 playerPos = glm::vec2(200.0f, 800.0f);
 				_player = new Player(playerPos, (*textures)["player"].getSize(), (*textures)["player"]);
 				_player->setSolid(true);
             }

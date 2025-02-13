@@ -10,7 +10,8 @@ GRAPHIC		=	lib/graphic.a
 
 SRCDIR		=	./src
 
-SRC			=	$(SRCDIR)/Game.cpp \
+SRC			=	$(SRCDIR)/Camera.cpp \
+				$(SRCDIR)/Game.cpp \
 				$(SRCDIR)/GameMap.cpp \
 				$(SRCDIR)/GameObject.cpp \
 				$(SRCDIR)/InputCallbacks.cpp \

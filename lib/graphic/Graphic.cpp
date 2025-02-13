@@ -35,6 +35,8 @@ GLFWwindow *gl_create_window(int width, int height, const char *title)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glfwSwapInterval(0); // VSync off
+
 	return (window);
 }
 

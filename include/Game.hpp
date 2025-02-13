@@ -8,6 +8,7 @@
 #include <SpriteRenderer.hpp>
 #include <map>
 #include <Player.hpp>
+#include <Camera.hpp>
 
 using std::map;
 using std::string;
@@ -29,10 +30,11 @@ public:
 	void		initRender(void);
 	void		start(void);
 	void		loop(void);
-    void		newTexture(const char *, bool, const char *);
+	void		newTexture(const char *, bool, const char *);
 	void		newMap(const char *, const char *);
 	void		processInput(float dt);
 	void		render(void);
+	void		update(float);
 	static void	updateKeyStatus(int key, bool status);
 private:
 	constexpr static float _playerVelocity = 500.0f;
@@ -46,7 +48,8 @@ private:
 	Shader					_shader;
 	Player					*_player;
 	Player					*_enemy;
-    map<string, Texture2D>	textures;
+	Camera  				*_camera;
+	map<string, Texture2D>	textures;
 	map<string, GameMap>	maps;
 
 };

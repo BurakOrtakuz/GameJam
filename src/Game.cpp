@@ -27,6 +27,7 @@ void Game::start(void)
 	this->_shader.SetMatrix4("projection", projection);
 	_renderer = new SpriteRenderer(this->_shader);
 	initRender();
+	this->_camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT, _player->getPosition(), 1.0f);
 	this->loop();
 }
 
@@ -34,6 +35,8 @@ void Game::loop(void)
 {
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	float fpsTimer = 0.0f;
+	int frameCount = 0;
 	while (!glfwWindowShouldClose(_window))
 	{
 		// calculate delta time
@@ -41,14 +44,21 @@ void Game::loop(void)
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		
+
+		fpsTimer += deltaTime;
+        frameCount++;
+		if (fpsTimer >= 1.0f)
+        {
+            std::cout << "FPS: " << frameCount << std::endl; //__??__
+            fpsTimer = 0.0f;
+            frameCount = 0;
+        }
+
 		glfwPollEvents();
 
 		processInput(deltaTime);
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
+		
+		update(deltaTime);
 		render();
 
 		glfwSwapBuffers(_window);
@@ -135,15 +145,19 @@ void
 		(void)_keys;
 		if (_keys[GLFW_KEY_A])
 		{
-			if (playerPos.x >= 0.0f)
+			//if (playerPos.x >= 0.0f)
 				playerPos.x -= velocity;
 		}
 		if (_keys[GLFW_KEY_D])
 		{
-			if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
+			//if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
 				playerPos.x += velocity;
 		}
+		glm::vec2 position = playerPos;
+		position.y -= 300;
 		_player->setPosition(playerPos);
+		_camera->setPosition(position);
+		_shader.SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
 }
 
@@ -153,11 +167,11 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite(textures["background"],
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT), 0.0f);
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH*2, SCREEN_HEIGHT), 0.0f);
 		
-		//maps["level1"].draw(*_renderer);
+		maps["level1"].draw(*_renderer);
 		
-		//_player->draw(*_renderer);
+		_player->draw(*_renderer);
 		//_enemy->draw(*_renderer);
 
 
@@ -173,4 +187,13 @@ void
 	Game::updateKeyStatus(int key, bool status)
 {
 	_keys[key] = status;
+}
+
+void
+	Game::update(float dt)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	this->_camera->updateCamera(dt);
 }
