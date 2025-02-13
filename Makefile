@@ -1,6 +1,6 @@
 NAME		=	jam.exe
 
-INC_FLAGS	=	-Ilib -Iinclude -Iinclude/Animation -Ilib
+INC_FLAGS	=	-Ilib -Iinclude -Iinclude/Animation -Iinclude/Game -Iinclude/Objects
 
 CXX			=	clang++
 CXXFLAGS	=
@@ -22,7 +22,8 @@ SRC			=	$(SRCDIR)/Animation/Animation.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
 				$(SRCDIR)/Texture2D.cpp \
-				$(SRCDIR)/Player.cpp
+				$(SRCDIR)/Objects/Player.cpp \
+				$(SRCDIR)/Objects/Wall.cpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
@@ -42,8 +43,9 @@ clean:
 	@make -C lib clean
 	$(RM) $(OBJ)
 
-f: fclean
-fclean: clean
+f: fc
+fclean: fc
+fc: clean
 	@make -C lib fclean
 	$(RM) $(NAME)
 

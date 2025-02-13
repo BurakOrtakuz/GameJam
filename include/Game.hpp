@@ -47,6 +47,7 @@ private:
 	GLFWwindow  			*_window;
 	Shader					_shader;
 	Player					*_player;
+	std::vector<Wall>		*_walls;
 	Player					*_enemy;
 	Camera  				*_camera;
 	map<string, Texture2D>	textures;

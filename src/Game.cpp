@@ -106,7 +106,11 @@ void Game::initRender()
 
 	newMap("levels/one.lvl", "level1");
 
+	// O_o Beg your pardon but the fuck?
+	// Most manuel shit I've ever seen
+	// - Teo
 	_player = maps["level1"]._player;
+	_walls = &(maps["level1"].walls);
 	//_enemy = maps["level1"]._enemy;
 }
 
@@ -142,17 +146,40 @@ void
 		float velocity = _playerVelocity * dt;
 		glm::vec2 playerPos = _player->getPosition();
 
+		glm::vec2 playerSize = _player->getSize();
+
+		glm::vec2 player_ru = {playerPos.x, playerPos.y};
+		glm::vec2 player_lu = {playerPos.x + playerSize.x, playerPos.y};
+		glm::vec2 player_rd = {playerPos.x, playerPos.y + playerSize.y};
+		glm::vec2 player_ld = {playerPos.x + playerSize.x, playerPos.y + playerSize.y};
+
 		(void)_keys;
+
+		/*
+		for (Wall wall : _walls)
+		{
+			glm::vec2 wallPos = wall->getPosition();
+			glm::vec2 wallSize = wall->getSize();
+
+			glm::vec2 wall_lu = {wallPos.x, wallPos.y};
+			glm::vec2 wall_ru = {wallPos.x + wallSize.x, wallPos.y};
+			glm::vec2 wall_ld = {wallPos.x, wallPos.y + wallSize.y};
+			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
+		}
+		*/
+
 		if (_keys[GLFW_KEY_A])
 		{
 			//if (playerPos.x >= 0.0f)
 				playerPos.x -= velocity;
 		}
+
 		if (_keys[GLFW_KEY_D])
 		{
 			//if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
 				playerPos.x += velocity;
 		}
+
 		glm::vec2 position = playerPos;
 		position.y -= 300;
 		_player->setPosition(playerPos);
@@ -167,8 +194,7 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite(textures["background"],
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH*2, SCREEN_HEIGHT), 0.0f);
-
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
 		maps["level1"].draw(*_renderer);
 
 		_player->draw(*_renderer);
