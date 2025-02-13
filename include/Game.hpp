@@ -1,68 +1,53 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Game.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 17:18:50 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:34:16 by bortakuz         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#ifndef GAME_HPP
+# define GAME_HPP 202502
 
-#ifndef GAME_H
-#define GAME_H 250211L
-
-/* **************************** [v] INCLUDES [v] **************************** */
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <Utils.hpp>
+#include <Shader.hpp>
+#include <GameMap.hpp>
+#include <Texture2D.hpp>
 #include <SpriteRenderer.hpp>
-#include <GameLevel.hpp>
-/* **************************** [^] INCLUDES [^] **************************** */
+#include <map>
 #include <Player.hpp>
+
+using std::map;
+using std::string;
 
 class Game
 {
 public:
-/* *************************** [v] ENUM CLASS [v] *************************** */
 	enum class GameState
 	{
 		GAME_ACTIVE,
 		GAME_MENU,
 		GAME_WIN
 	};
-/* *************************** [^] ENUM CLASS [^] *************************** */
-private:
-	const glm::vec2 _playerSize = glm::vec2(200.0f, 200.0f);
-	constexpr static float _playerVelocity = 500.0f;
-	std::vector<GameLevel>	_levels;
-	Player					*_player;
-	unsigned int			_currentLevel;
-	Game::GameState				_state;
-	SpriteRenderer			*_renderer;
-	bool					_keys[1024];
-	unsigned int			_width, _height;
-
 public:
-/* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
-	Game(unsigned int width, unsigned int height);
-	~Game();
-/* ******************* [^] CONSTRUCTOR AND DESTRUCTOR [^] ******************* */
-/* **************************** [v] GETTERS [v] ***************************** */
-	unsigned int	getLevel()			const;
-	bool			getKeys(int key)	const;
-/* **************************** [^] GETTERS [^] ***************************** */
-/* **************************** [v] SETTERS [v] ***************************** */
-	void	setKeys(int key, bool value);
-	void	setLevel(unsigned int level);
-/* **************************** [^] SETTERS [^] ***************************** */
-/* **************************** [v] FUNCTIONS [v] *************************** */
-	void init();
-	// game loop
-	void processInput(float dt);
-	void update(float dt);
-	void render();
-/* **************************** [^] FUNCTIONS [^] *************************** */
+	Game(void);
+	~Game(void);
+
+	void		init(void);
+	void		initRender(void);
+	void		start(void);
+	void		loop(void);
+    void		newTexture(const char *, bool, const char *);
+	void		newMap(const char *, const char *);
+	void		processInput(float dt);
+	void		render(void);
+	static void	updateKeyStatus(int key, bool status);
+private:
+	constexpr static float _playerVelocity = 500.0f;
+	static bool				_keys[1024];
+	unsigned int			SCREEN_WIDTH;
+	unsigned int			SCREEN_HEIGHT;
+	unsigned int 			_quadVAO;
+	Game::GameState			_state;
+	SpriteRenderer			*_renderer;
+	GLFWwindow  			*_window;
+	Shader					_shader;
+	Player					*_player;
+    map<string, Texture2D>	textures;
+	map<string, GameMap>	maps;
+
 };
 
-#endif
+#endif /* GAME_HPP */
