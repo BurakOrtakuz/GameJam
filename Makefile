@@ -1,9 +1,9 @@
 NAME		=	jam.exe
 
-INC_FLAGS	=	-Ilib -Iinclude
+INC_FLAGS	=	-Ilib -Iinclude -Iinclude/Game -Iinclude/Objects
 
 CXX			=	clang++
-CXXFLAGS	=
+CXXFLAGS	=	
 #-Wall -Wextra -Werror
 LDFLAGS		=	-lglfw -ldl -lGL -lz
 GRAPHIC		=	lib/graphic.a
@@ -19,7 +19,8 @@ SRC			=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
 				$(SRCDIR)/Texture2D.cpp \
-				$(SRCDIR)/Player.cpp
+				$(SRCDIR)/Objects/Player.cpp \
+				$(SRCDIR)/Objects/Wall.cpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
@@ -39,8 +40,9 @@ clean:
 	@make -C lib clean
 	$(RM) $(OBJ)
 
-f: fclean
-fclean: clean
+f: fc
+fclean: fc
+fc: clean
 	@make -C lib fclean
 	$(RM) $(NAME)
 
