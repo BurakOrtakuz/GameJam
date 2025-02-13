@@ -17,6 +17,7 @@ SRC 			+=	src/Animation/Animation.cpp \
 					src/ResourceManager.cpp \
 					src/SpriteRenderer.cpp \
 					src/GameObject.cpp \
+					src/Player.cpp \
 					src/GameLevel.cpp \
 					src/Game.cpp \
 					src/main.cpp
@@ -52,6 +53,11 @@ fclean: clean
 	@$(RM) $(NAME)
 
 re: fclean all
+
+rr: rerun
+
+rerun: re
+	./$(NAME)
 
 run : all
 	./$(NAME)

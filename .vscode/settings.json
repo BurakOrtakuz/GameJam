@@ -1,5 +1,4 @@
 {
-	"cmake.ignoreCMakeListsMissing": true,
 	"files.associations": {
 		"vector": "cpp",
 		"cctype": "cpp",
@@ -61,6 +60,11 @@
 		"format": "cpp",
 		"system_error": "cpp",
 		"text_encoding": "cpp",
-		"*.ipp": "cpp"
+		"*.ipp": "cpp",
+		"chrono": "cpp",
+		"ratio": "cpp",
+		"stop_token": "cpp",
+		"thread": "cpp",
+		"semaphore": "cpp"
 	}
 }

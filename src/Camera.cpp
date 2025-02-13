@@ -1,140 +1,88 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Camera.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/11 20:41:23 by bortakuz          #+#    #+#             */
+/*   Updated: 2025/02/12 20:46:06 by bortakuz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <Camera.hpp>
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-    : cameraPosition(position),
-      cameraFront(glm::vec3(0.0f, 0.0f, -1.0f)),
-      worldUp(up),
-      yaw(yaw),
-      pitch(pitch),
-      movementSpeed(defaultSpeed),
-      mouseSensitivity(defaultSensitivity),
-      zoom(defaultZoom)
-{
-    updateCameraVectors();
-}
-
-Camera::Camera( float posX, float posY, float posZ,
-                float upX, float upY, float upZ, 
-                float yaw, float pitch)
-    : cameraPosition(glm::vec3(posX, posY, posZ)),
-      cameraFront(glm::vec3(0.0f, 0.0f, -1.0f)),
-      worldUp(glm::vec3(upX, upY, upZ)),
-      yaw(yaw),
-      pitch(pitch),
-      movementSpeed(defaultSpeed),
-      mouseSensitivity(defaultSensitivity),
-      zoom(defaultZoom)
-{
-    updateCameraVectors();
-}
-
-Camera::~Camera()
+Camera::Camera(
+		float screenWidth,
+		float screenHeight,
+		glm::vec2 position,
+		float lerpSpeed
+	):
+		_position(position),
+		_zoom(1.0f),
+		_rotation(0.0f),
+		_targetPosition(0.0f, 0.0f),
+		_screenWidth(screenWidth),
+		_screenHeight(screenHeight),
+		_lerpSpeed(lerpSpeed)
 {
 }
 
-Camera::Camera(const Camera &camera)
+glm::mat4 Camera::getViewProjectionMatrix() const
 {
-    if (this == &camera)
-        return;
-    cameraPosition = camera.cameraPosition;
-    cameraFront = camera.cameraFront;
-    cameraUp = camera.cameraUp;
-    cameraRight = camera.cameraRight;
-    worldUp = camera.worldUp;
-    yaw = camera.yaw;
-    pitch = camera.pitch;
-    movementSpeed = camera.movementSpeed;
-    mouseSensitivity = camera.mouseSensitivity;
-    zoom = camera.zoom;
-    updateCameraVectors();
+	glm::mat4 projection = glm::ortho(
+		-_screenWidth / 2.0f / _zoom,
+		_screenWidth / 2.0f / _zoom,
+		_screenHeight / 2.0f / _zoom,
+		-_screenHeight / 2.0f / _zoom,
+		-1.0f,
+		1.0f
+	);
+	glm::mat4 view = glm::mat4(1.0f);
+	view =glm::translate(
+				glm::mat4(1.0f),
+				glm::vec3(-_position, 0.0f)
+			);
+	view =	glm::rotate(
+				view,
+				glm::radians(_rotation),
+				glm::vec3(0.0f, 0.0f, 1.0f)
+		);
+	return projection * view;			
 }
 
-Camera &Camera::operator=(const Camera &camera)
+void Camera::updateCamera(float dt)
 {
-    if (this == &camera)
-        return *this;
-    cameraPosition = camera.cameraPosition;
-    cameraFront = camera.cameraFront;
-    cameraUp = camera.cameraUp;
-    cameraRight = camera.cameraRight;
-    worldUp = camera.worldUp;
-    yaw = camera.yaw;
-    pitch = camera.pitch;
-    movementSpeed = camera.movementSpeed;
-    mouseSensitivity = camera.mouseSensitivity;
-    zoom = camera.zoom;
-    updateCameraVectors();
-    return *this;
+	_position = glm::mix(
+					_position,
+					_targetPosition,
+					_lerpSpeed * dt
+				);
+}
+void Camera::move(glm::vec2 &delta)
+{
+	_targetPosition += delta;
 }
 
-void Camera::processKeyboard(Camera_Movement direction, float deltaTime)
+
+void Camera::zoom(const float zoom)
 {
-    float velocity = movementSpeed * deltaTime;
-    if (direction == Camera_Movement::FORWARD)
-        cameraPosition += cameraFront * velocity;
-    if (direction == Camera_Movement::BACKWARD)
-        cameraPosition -= cameraFront * velocity;
-    if (direction == Camera_Movement::LEFT)
-        cameraPosition -= cameraRight * velocity;
-    if (direction == Camera_Movement::RIGHT)
-        cameraPosition += cameraRight * velocity;
-    if (direction == Camera_Movement::UP)
-        cameraPosition += cameraUp * velocity;
-    if (direction == Camera_Movement::DOWN)
-        cameraPosition -= cameraUp * velocity;
+	if(_zoom >= 0.1f && _zoom <= 10.0f)
+		_zoom += zoom;
 }
 
-void Camera::processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch)
+void Camera::setPosition(const glm::vec2 &position)
 {
-    xoffset *= mouseSensitivity;
-    yoffset *= mouseSensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (constrainPitch)
-    {
-        if (pitch > 89.0f)
-            pitch = 89.0f;
-        if (pitch < -89.0f)
-            pitch = -89.0f;
-    }
-
-    updateCameraVectors();
+	_targetPosition = position;
 }
 
-void Camera::processMouseScroll(float yoffset)
+void Camera::setRotation(const float degree)
 {
-    if (zoom >= 1.0f && zoom <= 45.0f)
-        zoom -= yoffset;
-    if (zoom <= 1.0f)
-        zoom = 1.0f;
-    if (zoom >= 45.0f)
-        zoom = 45.0f;
+	_rotation = degree;
 }
 
-void Camera::updateCameraVectors()
+void Camera::setLerpSpeed(const float lerpSpeed)
 {
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
-    cameraRight = glm::normalize(glm::cross(cameraFront, worldUp));
-    cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
+	_lerpSpeed = lerpSpeed;
 }
 
-glm::mat4 Camera::getViewMatrix() const
-{
-    return glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
-}
-
-float Camera::getZoom() const
-{
-    return zoom;
-}
-
-glm::vec3 Camera::getPosition() const
-{
-    return cameraPosition;
-}

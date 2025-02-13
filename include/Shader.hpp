@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   Shader.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
+/*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:02:32 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/11 13:02:41 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:15:07 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
-#include <glad/glad.h> 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <string>
 
 class Shader
 {
 private:
-	unsigned int ID; 
-	void    checkCompileErrors(unsigned int object, std::string type); 
+	unsigned int ID;
+	void    checkCompileErrors(unsigned int object, std::string type);
 public:
 	Shader();
 	Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
 	Shader(const Shader &other);
 	~Shader();
-	
+
 	Shader &operator=(const Shader &other);
-	
+
 	Shader  &Use();
-	void    Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // note: geometry source code is optional 
+	void    Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr); // note: geometry source code is optional
 	void    SetFloat    (const char *name, float value, bool useShader = false);
 	void    SetInteger  (const char *name, int value, bool useShader = false);
 	void    SetVector2f (const char *name, float x, float y, bool useShader = false);

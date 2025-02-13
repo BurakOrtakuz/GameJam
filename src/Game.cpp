@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Game.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/11 20:36:12 by bortakuz          #+#    #+#             */
+/*   Updated: 2025/02/13 14:13:13 by bdemirbu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <Game.hpp>
 #include <glm/glm.hpp>
 #include <ResourceManager.hpp>
@@ -11,22 +23,23 @@ Game::Game(unsigned int width, unsigned int height) : _keys()
 
 Game::~Game()
 {
-	
+
 }
 
 void Game::init()
 {
+	glm::vec2 playerPos = glm::vec2(
+							_width / 2.0f - _playerSize.x / 2.0f,
+							_height - _playerSize.y);
 	// load shaders
 	ResourceManager::loadShader("lib/Shaders/shader.vs", "lib/Shaders/shader.fs", nullptr, "sprite");
 	// configure shaders
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(_width), 
-		static_cast<float>(_height), 0.0f, -1.0f, 1.0f);
+	_camera = new Camera(_width, _height,playerPos, 1.0f);
 	ResourceManager::getShader("sprite").Use().SetInteger("image", 0);
-	ResourceManager::getShader("sprite").SetMatrix4("projection", projection);
+	ResourceManager::getShader("sprite").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	// set render-specific controls
 	_renderer = new SpriteRenderer(ResourceManager::getShader("sprite"));
 	// load textures
-	std::cout<<"Loading textures"<<std::endl;
 	ResourceManager::loadTexture("assets/background/back.png", true, "background");
 	// ResourceManager::loadTexture("assets/awesomeface.png", true, "face");
 	// ResourceManager::loadTexture("assets/block.png", false, "block");
@@ -44,49 +57,68 @@ void Game::init()
 	_levels.push_back(four);
 	_currentLevel = 0;
 	// configure game objects
-	glm::vec2 playerPos = glm::vec2(_width / 2.0f - _playerSize.x / 2.0f, _height - _playerSize.y);
-	Player = new GameObject(playerPos, _playerSize, ResourceManager::getTexture("player"));
+	_player = new Player(
+					playerPos,
+					_playerSize,
+					ResourceManager::getTexture("player"),
+					glm::vec3(1.0f),
+					glm::vec2(400.0f, 0.0f)
+				);
+
 }
 
 void Game::update(float dt)
 {
-	
+	if (_state == Game::GameState::GAME_ACTIVE)
+	{
+		_camera->updateCamera(dt);
+	}
 }
 
 void Game::processInput(float dt)
 {
-	if (_state == GAME_ACTIVE)
+	if (_state == Game::GameState::GAME_ACTIVE)
 	{
-		float velocity = _playerVelocity * dt;
-		glm::vec2 playerPos = Player->getPosition();
+		float velocity = _player->getVelocity().x * dt;
+		glm::vec2 playerPos = _player->getPosition();
 		// move playerboard
 		if (_keys[GLFW_KEY_A])
 		{
-			if (playerPos.x >= 0.0f)
 				playerPos.x -= velocity;
 		}
 		if (_keys[GLFW_KEY_D])
 		{
-			if (playerPos.x <= _width - Player->getSize().x)
 				playerPos.x += velocity;
 		}
-		Player->setPosition(playerPos);
+		glm::mat4 projection = glm::ortho(
+					playerPos.x -(_width/2),
+					playerPos.x + (_width/2),
+					playerPos.y + (_height/2),
+					playerPos.y - (_height/2),
+					-1.0f, 2.0f
+				);
+		_camera->setPosition(playerPos);
+		ResourceManager::getShader("sprite").SetMatrix4("projection", _camera->getViewProjectionMatrix());
+		_player->setPosition(playerPos);
 	}
 }
 
 void Game::render()
 {
-	if(_state == GAME_ACTIVE)
+	if(_state == Game::GameState::GAME_ACTIVE)
 	{
 		// draw background
-		_renderer->drawSprite(ResourceManager::getTexture("background"), 
-			glm::vec2(0.0f, 0.0f), glm::vec2(_width, _height), 0.0f
+		_renderer->drawSprite(
+			ResourceManager::getTexture("background"),
+			glm::vec2(1000.0f, 0.0f),
+			glm::vec2(_width, _height*2),
+			0.0f
 		);
 		// draw level
 		_levels[_currentLevel].draw(*_renderer);
-		Player->draw(*_renderer);
+		_player->draw(*_renderer);
 	}
-}  
+}
 
 unsigned int Game::getLevel() const
 {

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Camera.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/11 20:38:11 by bortakuz          #+#    #+#             */
+/*   Updated: 2025/02/12 20:39:13 by bortakuz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
@@ -8,50 +20,30 @@
 class Camera
 {
 private:
-	constexpr static float defaultYaw = -90.0f;
-	constexpr static float defaultPitch = 0.0f;
-	constexpr static float defaultSpeed = 2.5f;
-	constexpr static float defaultSensitivity = 0.1f;
-	constexpr static float defaultZoom = 45.0f;
-	// Camera Attributes
-	glm::vec3   cameraPosition;
-	glm::vec3   cameraFront;
-	glm::vec3  	cameraUp;
-	glm::vec3   cameraRight;
-	glm::vec3   worldUp;
+	constexpr static float defaultLerpSpeed = 0.1f;
+	constexpr static glm::vec2 defaultPosition = glm::vec2(0.0f, 0.0f);
+	glm::vec2 _position;
+	glm::vec2 _targetPosition;
+	float _zoom;
+	float _rotation;
+	float _lerpSpeed;
+	const float _screenWidth;
+	const float _screenHeight;
 
-	// Euler Angles
-	float yaw;
-	float pitch;
-
-	// Camera options
-	float movementSpeed;
-	float mouseSensitivity;
-	float zoom;
-
-	// Camera Functions
-	void updateCameraVectors();
 public:
-	enum class Camera_Movement {
-		FORWARD,
-		BACKWARD,
-		LEFT,
-		RIGHT,
-		UP,
-		DOWN
-	};
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = defaultYaw, float pitch = defaultPitch);
-	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
-	~Camera();
-	Camera(const Camera &camera);
-	Camera &operator=(const Camera &camera);
-	void processKeyboard(Camera_Movement direction, float deltaTime);
-	void processMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
-	void processMouseScroll(float yoffset);
-	glm::mat4 getViewMatrix() const;
-	float getZoom() const;
-	glm::vec3 getPosition() const;
-
+	Camera(
+		float screenWidth,
+		float screenHeight,
+		glm::vec2 position = defaultPosition,
+		float lerpSpeed = defaultLerpSpeed
+	);
+	glm::mat4 getViewProjectionMatrix() const;
+	void updateCamera(float dt);
+	void move(glm::vec2 &delta);
+	void zoom(const float zoom);
+	void setPosition(const glm::vec2 &position);
+	void setRotation(const float degree);
+	void setLerpSpeed(const float lerpSpeed);
 };
 
 #endif // CAMERA_HPP
