@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   GameObject.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 20:41:31 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 13:14:59 by bortakuz         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <GameObject.hpp>
 
 /* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
@@ -23,9 +11,9 @@ GameObject::GameObject(
 	_size(size),
 	_color(color),
 	_rotation(0.0f),
-	_sprite(sprite),
 	_isSolid(false),
-	_destroyed(false) 
+	_destroyed(false),
+	_sprite(sprite)
 {
 
 }

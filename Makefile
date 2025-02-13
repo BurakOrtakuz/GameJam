@@ -1,61 +1,54 @@
-NAME			=	scop
+NAME		=	jam.exe
 
-INCLUDEFLAGS	=	-Ilib -Iinclude
-LDFLAGS			=	-lglfw -ldl -lGL -lz
+INC_FLAGS	=	-Ilib -Iinclude
 
-SRC				=	lib/glad/glad.c \
-					lib/stb_images/stb_image.c \
+CXX			=	clang++
+CXXFLAGS	=	
+#-Wall -Wextra -Werror
+LDFLAGS		=	-lglfw -ldl -lGL -lz
+GRAPHIC		=	lib/graphic.a
 
-SRC 			+=	src/Utils.cpp \
-					src/Window.cpp \
-					src/Shader.cpp \
-					src/Camera.cpp \
-					src/Texture2D.cpp \
-					src/ResourceManager.cpp \
-					src/SpriteRenderer.cpp \
-					src/GameObject.cpp \
-					src/Player.cpp \
-					src/GameLevel.cpp \
-					src/Game.cpp \
-					src/main.cpp
+SRCDIR		=	./src
 
-OBJDIR			=	obj
-OBJ				=	$(SRC:%.cpp=$(OBJDIR)/%.o)
-OBJ				:=	$(OBJ:%.c=$(OBJDIR)/%.o)
+SRC			=	$(SRCDIR)/Camera.cpp \
+				$(SRCDIR)/Game.cpp \
+				$(SRCDIR)/GameMap.cpp \
+				$(SRCDIR)/GameObject.cpp \
+				$(SRCDIR)/InputCallbacks.cpp \
+				$(SRCDIR)/main.cpp \
+				$(SRCDIR)/Shader.cpp \
+				$(SRCDIR)/SpriteRenderer.cpp \
+				$(SRCDIR)/Texture2D.cpp \
+				$(SRCDIR)/Player.cpp
 
-CXX				=	c++
-CC				=	gcc
+OBJ			=	$(SRC:.cpp=.o)
 
-RM				=	rm -rf
+all: graphall $(NAME)
 
-all:	$(NAME)
+$(NAME): $(OBJ)
+	$(CXX) $(CXXFLAGS)  $(OBJ) $(GRAPHIC) $(INC_FLAGS) $(LDFLAGS) -o $(NAME)
 
-$(NAME):	$(OBJ)
-	$(CXX)	$(OBJ)	$(INCLUDEFLAGS)	$(LDFLAGS)	-o	$(NAME)
+rrun: re
+	@./$(NAME) || true
 
-$(OBJDIR)/%.o: %.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(INCLUDEFLAGS) -c $< -o $@
-
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	$(CC) $(INCLUDEFLAGS) -c $< -o $@
+run: all
+	@./$(NAME) || true
 
 c: clean
 clean:
-	@$(RM) $(OBJDIR)/*
+	$(RM) $(OBJ)
 
-fc: fclean
+f: fclean
 fclean: clean
-	@$(RM) $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
-rr: rerun
 
-rerun: re
-	./$(NAME)
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INC_FLAGS) -c $< -o $@
 
-run : all
-	./$(NAME)
-.PHONY: all c clean fc fclean re run
+graphall:
+	@make -C lib
+
+.PHONY: all clean fclean re c f
