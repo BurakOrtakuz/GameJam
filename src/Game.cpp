@@ -63,6 +63,8 @@ void Game::loop(void)
 
 		glfwPollEvents();
 
+
+		
 		processInput(deltaTime);
 
 		update(deltaTime);
