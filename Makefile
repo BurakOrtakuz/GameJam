@@ -13,7 +13,7 @@ LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32
 INC_FLAGS	=	-Ilib -Iinclude
 
 CXX			=	c++
-CXXFLAGS	=	-static $(RELEASE_FLAGS) $(INCLUDEFLAGS)
+CXXFLAGS	=	 $(RELEASE_FLAGS) $(INCLUDEFLAGS)
 #-Wall -Wextra -Werror
 GRAPHIC		=	lib/graphic.a
 
@@ -23,7 +23,7 @@ ENEMDIR		=	$(SRCDIR)/Enemies
 OBJDIR		=	$(SRCDIR)/Objects
 
 #Animation
-SRC			=	
+SRC			=	$(ANIMDIR)/Animation.cpp \
 
 #Enemies
 SRC			+=	$(ENEMDIR)/Enemy.cpp \

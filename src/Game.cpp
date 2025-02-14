@@ -25,7 +25,7 @@ void Game::start(void)
 {
 	ResourceManager::loadShader("lib/Shaders/shader.vs", "lib/Shaders/shader.fs", nullptr, "shader");
 	ResourceManager::getShader("shader").Use().SetInteger("image", 0);
-	_renderer = new SpriteRenderer(ResourceManager::getShader("shader"));
+	_renderer = new SpriteRenderer("shader");
 	initRender();
 	this->_camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT, maps["level1"]._player->getPosition(), 1.0f);
 	ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
@@ -114,6 +114,29 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Player.png", true, "player");
+
+	std::vector<std::string> textures;
+	textures.push_back("sprint1");
+	textures.push_back("sprint2");
+	textures.push_back("sprint3");
+	textures.push_back("sprint4");
+	textures.push_back("sprint5");
+	textures.push_back("sprint6");
+	textures.push_back("sprint7");
+	textures.push_back("sprint8");
+
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/1_run_loop.png", true, "sprint1");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/2_run_loop.png", true, "sprint2");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/3_run_loop.png", true, "sprint3");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/4_run_loop.png", true, "sprint4");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/5_run_loop.png", true, "sprint5");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/6_run_loop.png", true, "sprint6");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/7_run_loop.png", true, "sprint7");
+	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/8_run_loop.png", true, "sprint8");
+
+	maps["level1"]._player->addAnimation(textures, "sprint");
+	std::cout << "Textures loaded" << std::endl;
+	maps["level1"]._player->setCurAnimation("sprint");
 	newMap("levels/one.lvl", "level1");
 
 	// O_o Beg your pardon but the fuck?
@@ -232,7 +255,7 @@ void
 {
 	if (_state == GameState::GAME_ACTIVE)
 	{
-		_renderer->drawSprite(ResourceManager::getTexture("background"),
+		_renderer->drawSprite("background",
 			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
 		maps["level1"].draw(*_renderer);
 
@@ -263,5 +286,6 @@ void
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	maps["level1"]._player->updateAnimation();
 	this->_camera->updateCamera(dt);
 }

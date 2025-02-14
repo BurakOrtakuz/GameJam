@@ -3,9 +3,9 @@
 Enemy::Enemy(
 	glm::vec2 pos,
 	glm::vec2 size,
-	Texture2D sprite,
+	std::string spriteName,
 	glm::vec3 color
-) :  GameObject(pos, size, sprite, color)
+) :  GameObject(pos, size, spriteName, color)
 {
 	
 }

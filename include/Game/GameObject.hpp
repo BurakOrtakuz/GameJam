@@ -24,14 +24,14 @@ protected:
 	bool        _isSolid;   //__??__ TO-DO WTF
 	bool        _destroyed; //__??__ TO-DO WTF
 // RENDER STATE
-	Texture2D   _sprite;
+	std::string   _sprite;
 /* **************************** [^] VARIABLES [^] *************************** */
 public:
 /* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	GameObject(
 		glm::vec2 pos		= defaultPosition,
 		glm::vec2 size		= defaultSize,
-		Texture2D sprite	= Texture2D(),
+		std::string sprite	= "",
 		glm::vec3 color		= glm::vec3(1.0f)
 	);
 	~GameObject();

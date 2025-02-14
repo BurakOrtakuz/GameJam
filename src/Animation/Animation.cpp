@@ -3,48 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   Animation.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
+/*   By: enveryilmaz <enveryilmaz@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 17:15:16 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/13 14:42:50 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/15 01:04:04 by enveryilmaz      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Animation/Animation.hpp>
-
+#include <iostream>
 // Constructors
-Animation::Animation(std::vector<std::string> textures, bool alpha, unsigned int frameRate, bool isLooping) : _frameManager(textures, alpha)
+
+Animation::Animation()
 {
 
 }
 
-Animation::Animation(std::vector<Texture2D> textures, unsigned int frameRate, bool isLooping) : _frameManager(textures)
+Animation::Animation(
+	std::vector<std::string> textures,
+	bool alpha,
+	unsigned int frameRate,
+	bool isLooping)
 {
-
+	_textures = textures;
+	_isLooping = isLooping;
+	_frameRate = frameRate;
+	_isPlaying = false;
+	_frameCount = 0;
+	_currentFrame = 0;
+	std::cout << "Textures loaded" << std::endl;
+	
 }
 
-Animation::Animation(const std::string &path, bool alpha, unsigned int frameRate, bool isLooping) : _frameManager(path, alpha)
+Animation::Animation(const Animation &animation)
 {
-
+	std::cout << "Copy constructor called" << std::endl;
+	*this = animation;
 }
 
-Animation::Animation(Texture2D texture, unsigned int frameRate, bool isLooping) : _frameManager(texture)
+Animation &Animation::operator=(const Animation &animation)
 {
-
+	std::cout << "Assignment operator called" << std::endl;
+	_textures = animation._textures;
+	_isLooping = animation._isLooping;
+	_frameRate = animation._frameRate;
+	_isPlaying = animation._isPlaying;
+	_frameCount = animation._frameCount;
+	_currentFrame = animation._currentFrame;
+	return (*this);
 }
-
 
 // Destructor
 Animation::~Animation()
 {
-
+	std::cout << "Destructor called" << std::endl;
 }
 
 
 // Setters
 void	Animation::setCurrentFrame(unsigned int index)
 {
-	this->_frameManager.setCurrentFrame(index);
+	this->_currentFrame = index;
 }
 
 void	Animation::setFrameRate(unsigned int frameRate)
@@ -64,58 +83,82 @@ void	Animation::setPlaying(bool isPlaying)
 
 
 // Getters
-Texture2D		Animation::getCurrentFrame()
+
+unsigned int Animation::getCurrentFrameIndex() const
 {
-	return (_frameManager.getCurrentFrame());
+	return (_currentFrame);
 }
 
-Texture2D		Animation::getFrame(unsigned int index)
-{
-	return (_frameManager.getFrame(index));
-}
-
-unsigned int	Animation::getSize()
-{
-	return (_frameManager.getSize());
-}
-
-unsigned int	Animation::getFrameRate()
+unsigned int Animation::getFrameRate() const
 {
 	return (_frameRate);
 }
 
-bool			Animation::isLooping()
+unsigned int Animation::getFrameCount() const
 {
-	return (_isLooping);
+	return (_frameCount);
 }
 
-bool			Animation::isPlaying()
+bool Animation::isPlaying() const
 {
 	return (_isPlaying);
 }
 
+bool Animation::isLooping() const
+{
+	return (_isLooping);
+}
+
+std::string Animation::getCurrentFrame() {
+    return _textures[_currentFrame];
+}
+
+std::string Animation::getFrame(unsigned int index) {
+    // Add bounds checking if needed
+    return _textures[index];
+}
+std::string	Animation::getNextFrame()
+{
+	if(_currentFrame == _textures.size() - 1)
+		_currentFrame = 0;
+	else
+		_currentFrame++;
+	return (_textures[_currentFrame]);
+}
+
+unsigned int	Animation::getSize()
+{
+	return (_textures.size());
+}
 
 // member functions
 void	Animation::addFrame(const std::string &texture, bool alpha)
 {
-	this->_frameManager.addFrame(texture, alpha);
-}
-
-void	Animation::addFrame(Texture2D texture)
-{
-	this->_frameManager.addFrame(texture);
+	_textures.emplace_back(texture.c_str(), alpha);
 }
 
 void	Animation::removeFrame(unsigned int index)
 {
-	this->_frameManager.removeFrame(index);
+	if (index >= _textures.size())
+		return;
+	_textures.erase(_textures.begin() + index);
 }
 
-void	Animation::update()
-{
-
+std::string Animation::update(float deltaTime) {
+	std::cout << "Update called" << std::endl;
+    if (_isPlaying) {
+        _frameCount += deltaTime;
+        float frameDuration = 1.0f / _frameRate; // Use frame rate
+        if (_frameCount >= frameDuration) {
+            _frameCount -= frameDuration; // Subtract to preserve residual time
+            _currentFrame = (_currentFrame + 1) % _textures.size();
+            if (!_isLooping && _currentFrame == _textures.size() - 1) {
+                _isPlaying = false;
+            }
+        }
+    }
+    return _textures[_currentFrame];
 }
-
 void	Animation::play()
 {
 }

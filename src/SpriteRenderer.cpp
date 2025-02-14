@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   SpriteRenderer.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bortakuz <burakortakuz@gmail.com>          +#+  +:+       +#+        */
+/*   By: enveryilmaz <enveryilmaz@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 20:41:43 by bortakuz          #+#    #+#             */
-/*   Updated: 2025/02/12 14:21:53 by bortakuz         ###   ########.fr       */
+/*   Updated: 2025/02/15 00:00:35 by enveryilmaz      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <SpriteRenderer.hpp>
 #include <iostream>
+#include <ResourceManager.hpp>
 
-SpriteRenderer::SpriteRenderer(Shader &shader)
+SpriteRenderer::SpriteRenderer(std::string shaderName)
 {
-	_shader = shader;
+	_shaderName = shaderName;
 	this->initRenderData();
 }
 
@@ -24,9 +25,10 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &_quadVAO);
 }
 
-void SpriteRenderer::drawSprite(Texture2D &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
+void SpriteRenderer::drawSprite(std::string textureName, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
 {
-	_shader.Use();
+	Texture2D texture = ResourceManager::getTexture(textureName);
+	ResourceManager::getShader(_shaderName).Use();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
@@ -36,11 +38,11 @@ void SpriteRenderer::drawSprite(Texture2D &texture, glm::vec2 position, glm::vec
 
 	model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
-	_shader.SetMatrix4("model", model);
+	ResourceManager::getShader(_shaderName).SetMatrix4("model", model);
 
 	// prepare transformations
 	// render textured quad
-	_shader.SetVector3f("spriteColor", color);
+	ResourceManager::getShader(_shaderName).SetVector3f("spriteColor", color);
 
 	glActiveTexture(GL_TEXTURE0);
 	texture.bind();

@@ -64,7 +64,8 @@
 		"numeric": "cpp",
 		"iostream": "cpp",
 		"numbers": "cpp"
-	}
+	},
+	"cmake.ignoreCMakeListsMissing": true
 }
 /*
 
