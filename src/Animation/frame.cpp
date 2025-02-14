@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "frame.hpp"
-#include "Game.hpp"
+#include <Animation/frame.hpp>
+#include <Game.hpp>
 
 frame::frame(Texture2D texture)
 	: texture(texture), next(nullptr), prev(nullptr)

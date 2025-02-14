@@ -3,7 +3,7 @@
 
 #include <Utils.hpp>
 #include <Shader.hpp>
-#include <GameMap.hpp>
+#include <Game/GameMap.hpp>
 #include <Texture2D.hpp>
 #include <SpriteRenderer.hpp>
 #include <map>
