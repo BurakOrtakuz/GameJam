@@ -122,8 +122,7 @@ unsigned int gl_compile_shader(const char *vShaderFile, const char *fShaderFile)
 	std::string vertexCode;
 	std::string fragmentCode;
 	std::string geometryCode;
-	try
-	{
+	
 		// open files
 		std::ifstream vertexShaderFile(vShaderFile);
 		std::ifstream fragmentShaderFile(fShaderFile);
@@ -137,11 +136,7 @@ unsigned int gl_compile_shader(const char *vShaderFile, const char *fShaderFile)
 		// convert stream into string
 		vertexCode = vShaderStream.str();
 		fragmentCode = fShaderStream.str();
-	}
-	catch (std::exception e)
-	{
-		std::cout << "ERReOR::SHADER: Faild to read shader files" << std::endl;
-	}
+
 	const char *vShaderCode = vertexCode.c_str();
 	const char *fShaderCode = fragmentCode.c_str();
 	return (compile(vShaderCode, fShaderCode));
