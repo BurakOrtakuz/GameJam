@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Animation.hpp"
+#include <Animation/Animation.hpp>
 
 // Constructors
 Animation::Animation(std::vector<std::string> textures, bool alpha, unsigned int frameRate, bool isLooping) : _frameManager(textures, alpha)

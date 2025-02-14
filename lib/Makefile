@@ -1,7 +1,7 @@
 NAME		=	graphic.a
 
 INC_FLAGS	=	-I.
-LDFLAGS		=	-lglfw -ldl -lGL -lz
+LDFLAGS		=	-lglfw3 -lgdi32 -lopengl32 -lmingw32 -mwindows
 
 OBJDIR		=	obj
 
@@ -14,8 +14,8 @@ COBJ		=	$(CSRC:%.c=$(OBJDIR)/%.o)
 CXXOBJ		=	$(CXXSRC:%.cpp=$(OBJDIR)/%.o)
 OBJS		=	$(COBJ) $(CXXOBJ)
 
-CC			=	clang
-CXX			=	clang++
+CC			=	gcc
+CXX			=	c++
 
 CFLAGS		=	-Wall -Wextra -Werror
 CXXFLAGS	=	-Wall -Wextra -Werror
