@@ -33,7 +33,6 @@ Shader &Shader::Use()
 void Shader::init(const char *vsPath, const char *fsPath)
 {
 	this->ID = gl_compile_shader(vsPath, fsPath);
-
 }
 
 void Shader::SetFloat(const char *name, float value, bool useShader)

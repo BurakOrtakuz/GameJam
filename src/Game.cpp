@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <CollisionManager.hpp>
 #include <TagManager.hpp>
+#include <ResourceManager.hpp>
 
 bool Game::_keys[1024] = {0};
 
@@ -22,14 +23,12 @@ Game::~Game(void)
 
 void Game::start(void)
 {
-	this->_shader.init("lib/Shaders/shader.vs", "lib/Shaders/shader.fs");
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCREEN_WIDTH),
-		static_cast<float>(SCREEN_HEIGHT), 0.0f, -1.0f, 1.0f);
-	this->_shader.Use().SetInteger("image", 0);
-	this->_shader.SetMatrix4("projection", projection);
-	_renderer = new SpriteRenderer(this->_shader);
+	ResourceManager::loadShader("lib/Shaders/shader.vs", "lib/Shaders/shader.fs", nullptr, "shader");
+	ResourceManager::getShader("shader").Use().SetInteger("image", 0);
+	_renderer = new SpriteRenderer(ResourceManager::getShader("shader"));
 	initRender();
 	this->_camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT, maps["level1"]._player->getPosition(), 1.0f);
+	ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	this->loop();
 }
 
@@ -108,13 +107,15 @@ void Game::initRender()
 
 	this->_quadVAO = gl_init_render(vertices, sizeof(vertices));
 
-	newTexture("assets/back.png", true, "background");
-	newTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
-	newTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
-	newTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
-	newTexture("assets/Player.png", true, "player");
 
+	ResourceManager::loadTexture("assets/background.jpg", false, "background");
+	ResourceManager::loadTexture("assets/back.png", true, "background");
+	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
+	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
+	ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
+	ResourceManager::loadTexture("assets/Player.png", true, "player");
 	newMap("levels/one.lvl", "level1");
+	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
 
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
@@ -123,7 +124,10 @@ void Game::initRender()
 	//_player = maps["level1"]._player;
 
 	// _enemyWowo = maps["level1"]._enemyWowo;
-	maps["level1"]._player->tagAdd(e_tag::PLAYER);
+	Player *player = maps["level1"]._player;
+	player->tagAdd(e_tag::PLAYER);
+	player->setCollision(glm::vec2(player->getPosition().x + 50.0f, player->getPosition().y),
+							glm::vec2 (player->getSize().x - 100.0f, player->getSize().y - 100.0f));
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -131,25 +135,9 @@ void Game::initRender()
 }
 
 void
-	Game::newTexture(const char *filePath, bool alpha, const char *name)
-{
-	Texture2D texture;
-	if (alpha)
-	{
-		texture.setInternalFormat(GL_RGBA);
-		texture.setImageFormat(GL_RGBA);
-	}
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-	texture.generate(width, height, data);
-	stbi_image_free(data);
-	this->textures[name] = texture;
-}
-
-void
 	Game::newMap(const char *filePath, const char *name)
 {
-	GameMap gmap(&this->textures);
+	GameMap gmap;
 	gmap.load(filePath, SCREEN_WIDTH, SCREEN_HEIGHT / 2);
 	this->maps[name] = gmap;
 }
@@ -241,7 +229,7 @@ void
 
 
 		_camera->setPosition(position);
-		_shader.SetMatrix4("projection", _camera->getViewProjectionMatrix());
+		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
 }
 
@@ -250,16 +238,15 @@ void
 {
 	if (_state == GameState::GAME_ACTIVE)
 	{
-		_renderer->drawSprite(textures["background"],
+		_renderer->drawSprite(ResourceManager::getTexture("background"),
 			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
 		maps["level1"]._enemyWowo->draw(*_renderer);
 
-		//_enemy->draw(*_renderer);
-
-
+		_renderer->drawSprite(ResourceManager::getTexture("merhaba"),
+			maps["level1"]._player->getCollision().getPosition(), maps["level1"]._player->getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
 		//Texture2D text = textures["rightUPCorner"];

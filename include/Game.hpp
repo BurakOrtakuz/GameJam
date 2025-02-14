@@ -10,6 +10,7 @@
 #include <Player.hpp>
 #include <Camera.hpp>
 
+
 using std::map;
 using std::string;
 
@@ -30,7 +31,6 @@ public:
 	void		initRender(void);
 	void		start(void);
 	void		loop(void);
-	void		newTexture(const char *, bool, const char *);
 	void		newMap(const char *, const char *);
 	void		process(float dt);
 	void		processInput(float dt);
@@ -46,12 +46,10 @@ private:
 	Game::GameState			_state;
 	SpriteRenderer			*_renderer;
 	GLFWwindow  			*_window;
-	Shader					_shader;
-	Player					*_player;
+	// Player					*_player;
+	// Player					*_enemy;
 	std::vector<Wall>		*_walls;
-	Player					*_enemy;
 	Camera  				*_camera;
-	map<string, Texture2D>	textures;
 	map<string, GameMap>	maps;
 
 };

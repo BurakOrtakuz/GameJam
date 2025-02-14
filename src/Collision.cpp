@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:59:32 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 23:54:38 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 23:59:30 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ square Collision::getCollision() const
 glm::vec2 Collision::getSize() const
 {
 	return this->_size;
+}
+
+glm::vec2 Collision::getPosition() const
+{
+	return this->_position;
 }
 
 // member functions

@@ -47,6 +47,8 @@ public:
 	void	setSolid(bool solid);
 	void	setPosition(glm::vec2 pos);
 	void	setCollisionSize(glm::vec2 size);
+	void	setCollisionPosition(glm::vec2 pos);
+	void	setCollision(glm::vec2 pos, glm::vec2 size);
 /* **************************** [^] SETTERS [^] ***************************** */
 /* **************************** [v] FUNCTIONS [v] *************************** */
 	void draw(SpriteRenderer &renderer);

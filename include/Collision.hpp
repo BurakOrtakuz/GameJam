@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:56:02 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 23:54:41 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 23:59:25 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Collision
 		// getters
 		square		getCollision() const;
 		glm::vec2	getSize() const;
+		glm::vec2	getPosition() const;
 
 		// member functions
 		bool	checkCollision(Collision const &other) const;

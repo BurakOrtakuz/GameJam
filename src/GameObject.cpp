@@ -58,13 +58,23 @@ void GameObject::setSolid(bool solid)
 
 void GameObject::setPosition(glm::vec2 pos)
 {
+	_collision.setPosition(pos + _collision.getPosition() - _position);
 	_position = pos;
-	_collision.setPosition(pos);
 }
 
 void GameObject::setCollisionSize(glm::vec2 size)
 {
 	_collision.setSize(size);
+}
+
+void GameObject::setCollisionPosition(glm::vec2 pos)
+{
+	_collision.setPosition(pos);
+}
+
+void GameObject::setCollision(glm::vec2 pos, glm::vec2 size)
+{
+	_collision.setCollision(pos, size);
 }
 /* **************************** [^] SETTERS [^] ***************************** */
 

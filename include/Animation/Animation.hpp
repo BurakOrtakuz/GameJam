@@ -10,31 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "FrameManager.hpp"
+#ifndef ANIMATION_HPP
+# define ANIMATION_HPP
 
+#include <vector>
+#include <Texture2D.hpp>
+#include <iostream>
+#include <string>
 class Animation
 {
 	private:
-		FrameManager	_frameManager;
+		std::vector<std::string>	_textures;
 		unsigned int	_currentFrame;
 		unsigned int	_frameRate;
-		unsigned int	_frameCount;
+		float			_frameCount;
 		bool			_isPlaying;
 		bool			_isLooping;
 
 		// Private constructor
-		Animation() = delete;
-		Animation(Animation const &) = delete;
-		Animation &operator=(Animation const &) = delete;
-
-
-	public:
-
+		
+		
+		public:
+		
+		Animation();
 		// Constructors
-		Animation(std::vector<std::string> textures, bool alpha = false, unsigned int frameRate = 1, bool isLooping = true);
-		Animation(std::vector<Texture2D> textures, unsigned int frameRate = 1, bool isLooping = true);
-		Animation(const std::string &path, bool alpha = false, unsigned int frameRate = 1, bool isLooping = true);
-		Animation(Texture2D texture, unsigned int frameRate = 1, bool isLooping = true);
+		Animation(std::vector<std::string> textures, unsigned int frameRate = 1, bool isLooping = false);
 
 		// Destructor
 		~Animation();
@@ -46,20 +46,23 @@ class Animation
 		void	setPlaying(bool isPlaying);
 
 		// Getters
-		Texture2D		getCurrentFrame();
-		Texture2D		getFrame(unsigned int index);
+		unsigned int	getCurrentFrameIndex() const;
+		unsigned int	getFrameRate() const;
+		unsigned int	getFrameCount() const;
+		bool			isPlaying() const;
+		bool			isLooping() const;
+		std::string			getCurrentFrame();
+		std::string			getFrame(unsigned int index);
+		std::string		getNextFrame();
 		unsigned int	getSize();
-		unsigned int	getFrameRate();
-		bool			isLooping();
-		bool			isPlaying();
 
 		// member functions
 		void	addFrame(const std::string &texture, bool alpha = false);
-		void	addFrame(Texture2D texture);
 		void	removeFrame(unsigned int index);
-		void	update();
+		Texture2D	&update(float deltaTime);
 		void	play();
 		void	stop();
 		void	pause();
 };
 
+#endif // ANIMATION_HPP
