@@ -17,7 +17,6 @@ void
 	//float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
 	float			unit_width  = 100.0f;
 	float			unit_height = 100.0f;
-
 	for (unsigned int y = 0; y < height; ++y)
 	{
 		for (unsigned int x = 0; x < width; ++x)
@@ -42,7 +41,7 @@ void
 			{
 				std::cout << "GIRDILÇ," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(200.0f, 800.0f);
+				glm::vec2 playerPos = glm::vec2(200.0f, 700.0f);
 				_player = new Player(playerPos, (*textures)["player"].getSize(), (*textures)["player"]);
 				_player->setSolid(true);
 			}

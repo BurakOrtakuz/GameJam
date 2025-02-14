@@ -1,14 +1,11 @@
 NAME		=	jam.exe
 
-RELEASE_FLAGS = -O3 -DNDEBUG -s
-INCLUDEFLAGS = -Ilib -Iinclude -Iinclude/Animation -Iinclude/Game -Iinclude/Objects
-LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32 -mwindows
+INC_FLAGS	=	-Ilib -Iinclude -Iinclude/Animation -Iinclude/Game -Iinclude/Objects
 
-INC_FLAGS	=	-Ilib -Iinclude
-
-CXX			=	c++
-CXXFLAGS	=	$(RELEASE_FLAGS) $(INCLUDEFLAGS) -static
+CXX			=	clang++
+CXXFLAGS	=
 #-Wall -Wextra -Werror
+LDFLAGS		=	-lglfw -ldl -lGL -lz
 GRAPHIC		=	lib/graphic.a
 
 SRCDIR		=	./src
@@ -46,13 +43,25 @@ run: all
 
 c: clean
 clean:
+	@make -C lib clean
 	$(RM) $(OBJ)
 
-f: fclean
-fclean: clean
+f: fc
+fclean: fc
+fc: clean
+	@make -C lib fclean
 	$(RM) $(NAME)
 
 re: fclean all
+
+rr: rerun
+
+rerun: re
+	./$(NAME)
+
+run : all
+	./$(NAME)
+.PHONY: all c clean fc fclean re run
 
 
 %.o: %.cpp

@@ -5,6 +5,8 @@
 #include <Game.hpp>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include <CollisionManager.hpp>
+#include <TagManager.hpp>
 
 bool Game::_keys[1024] = {0};
 
@@ -49,6 +51,11 @@ void Game::loop(void)
         frameCount++;
 		if (fpsTimer >= 1.0f)
         {
+			//std::cout << "playerPos\nx: " <<  _player->getPosition().x << " y: " << _player->getPosition().y << std::endl;
+			//std::cout << "Player Collision\ndown: " << _player->getCollision().getCollision().down << "up: " << _player->getCollision().getCollision().up << "left: " << _player->getCollision().getCollision().left << "right: " << _player->getCollision().getCollision().right << std::endl;
+
+			if (CollisionManager::checkCollision(e_tag::WALL, _player) == true)
+				std::cout << "duvarın içerisinde" << std::endl;
             std::cout << "FPS: " << frameCount << std::endl; //__??__
             fpsTimer = 0.0f;
             frameCount = 0;
@@ -59,6 +66,7 @@ void Game::loop(void)
 		processInput(deltaTime);
 
 		update(deltaTime);
+
 		render();
 
 		glfwSwapBuffers(_window);
@@ -110,7 +118,10 @@ void Game::initRender()
 	// Most manuel shit I've ever seen
 	// - Teo
 	_player = maps["level1"]._player;
+	_player->tagAdd(e_tag::PLAYER);
 	_walls = &(maps["level1"].walls);
+	for (Wall &wall : *_walls)
+		wall.tagAdd(e_tag::WALL);
 	//_enemy = maps["level1"]._enemy;
 }
 
@@ -146,27 +157,7 @@ void
 		float velocity = _playerVelocity * dt;
 		glm::vec2 playerPos = _player->getPosition();
 
-		glm::vec2 playerSize = _player->getSize();
-
-		glm::vec2 player_ru = {playerPos.x, playerPos.y};
-		glm::vec2 player_lu = {playerPos.x + playerSize.x, playerPos.y};
-		glm::vec2 player_rd = {playerPos.x, playerPos.y + playerSize.y};
-		glm::vec2 player_ld = {playerPos.x + playerSize.x, playerPos.y + playerSize.y};
-
 		(void)_keys;
-
-		/*
-		for (Wall wall : _walls)
-		{
-			glm::vec2 wallPos = wall->getPosition();
-			glm::vec2 wallSize = wall->getSize();
-
-			glm::vec2 wall_lu = {wallPos.x, wallPos.y};
-			glm::vec2 wall_ru = {wallPos.x + wallSize.x, wallPos.y};
-			glm::vec2 wall_ld = {wallPos.x, wallPos.y + wallSize.y};
-			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
-		}
-		*/
 
 		if (_keys[GLFW_KEY_A])
 		{
@@ -178,6 +169,7 @@ void
 		{
 			//if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
 				playerPos.x += velocity;
+
 		}
 
 		glm::vec2 position = playerPos;
