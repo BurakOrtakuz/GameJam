@@ -5,6 +5,8 @@
 #include <Texture2D.hpp>
 #include <glm/glm.hpp>
 
+#include "Collision.hpp"
+
 class GameObject
 {
 protected:
@@ -12,10 +14,11 @@ protected:
 // MODERN DEFINES :)
 	constexpr static glm::vec2	defaultPosition = glm::vec2(0.0f, 0.0f);
 	constexpr static glm::vec2	defaultSize 	= glm::vec2(1.0f, 1.0f);
-	constexpr static float		defaultRotation = 0.0f;	
+	constexpr static float		defaultRotation = 0.0f;
 // VARIABLES
 	glm::vec2   _position, _size;
 	glm::vec3   _color;
+	Collision   _collision;
 	float       _rotation;
 	bool        _isSolid;   //__??__ TO-DO WTF
 	bool        _destroyed; //__??__ TO-DO WTF

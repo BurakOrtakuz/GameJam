@@ -1,34 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CollisionManager.hpp                               :+:      :+:    :+:   */
+/*   TagManager.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 20:35:09 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 14:57:32 by bdemirbu         ###   ########.fr       */
+/*   Created: 2025/02/14 14:27:48 by bdemirbu          #+#    #+#             */
+/*   Updated: 2025/02/14 14:44:47 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLLISIONMANAGER_HPP
-# define COLLISIONMANAGER_HPP
+#ifndef TAGMANAGER_HPP
+# define TAGMANAGER_HPP
 
-#include "Collision.hpp"
-#include "GameObject.hpp"
 #include "tag.hpp"
+#include "GameObject.hpp"
 
-class CollisionManager
+# include <map>
+# include <vector>
+# include <string>
+
+class TagManager
 {
 	private:
+		static	std::map<e_tag, std::vector<GameObject *> >	_tags;
+
 		// private constructor
-		CollisionManager() = delete;
-		CollisionManager(CollisionManager const &src) = delete;
-		~CollisionManager();
-		CollisionManager &operator=(CollisionManager const &src) = delete;
+		TagManager() = delete;
+		TagManager(TagManager const &src) = delete;
+		~TagManager();
+		TagManager &operator=(TagManager const &src) = delete;
 	public:
 
 		// member functions
-		static bool			checkCollision(e_tag tag, GameObject *other);
+		static void							addTag(e_tag tag, GameObject *object);
+		static std::vector<GameObject *>	getTags(e_tag tag);
 
 };
-#endif // COLLISIONMANAGER_HPP
+
+#endif // TAGMANAGER_HPP

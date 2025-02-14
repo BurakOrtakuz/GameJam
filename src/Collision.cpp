@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:59:32 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/13 20:43:26 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:14:54 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,12 @@ Collision::Collision(glm::vec2 position, glm::vec2 size) : _square({position, si
 // copy constructor
 Collision::Collision(Collision const &src) : _square(src._square)
 {
-	
+
+}
+
+// destructor
+Collision::~Collision()
+{
 }
 
 // assignment operator
@@ -34,13 +39,8 @@ Collision &Collision::operator=(Collision const &src)
 	return *this;
 }
 
-// member functions
-bool		Collision::checkCollision(Collision const &other)
+// setters
+void Collision::setPosition(glm::vec2 position)
 {
-	if (other._square.position.x + other._square.size.x >= this->_square.position.x &&
-		this->_square.position.x + this->_square.size.x >= other._square.position.x &&
-		other._square.position.y + other._square.size.y >= this->_square.position.y &&
-		this->_square.position.y + this->_square.size.y >= other._square.position.y)
-		return true;
-	return false;
+	_square.position = position;
 }

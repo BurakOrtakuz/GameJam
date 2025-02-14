@@ -14,10 +14,13 @@ SRC			=	$(SRCDIR)/Animation/Animation.cpp \
 				$(SRCDIR)/Animation/frame.cpp \
 				$(SRCDIR)/Animation/FrameManager.cpp \
 				$(SRCDIR)/Camera.cpp \
+				$(SRCDIR)/Collision.cpp \
+				$(SRCDIR)/CollisionManager.cpp \
 				$(SRCDIR)/Game.cpp \
 				$(SRCDIR)/GameMap.cpp \
 				$(SRCDIR)/GameObject.cpp \
 				$(SRCDIR)/InputCallbacks.cpp \
+				$(SRCDIR)/TagManager.cpp \
 				$(SRCDIR)/main.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
