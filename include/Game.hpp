@@ -3,7 +3,7 @@
 
 #include <Utils.hpp>
 #include <Shader.hpp>
-#include <GameMap.hpp>
+#include <Game/GameMap.hpp>
 #include <Texture2D.hpp>
 #include <SpriteRenderer.hpp>
 #include <map>
@@ -32,6 +32,7 @@ public:
 	void		loop(void);
 	void		newTexture(const char *, bool, const char *);
 	void		newMap(const char *, const char *);
+	void		process(float dt);
 	void		processInput(float dt);
 	void		render(void);
 	void		update(float);
@@ -47,6 +48,7 @@ private:
 	GLFWwindow  			*_window;
 	Shader					_shader;
 	Player					*_player;
+	std::vector<Wall>		*_walls;
 	Player					*_enemy;
 	Camera  				*_camera;
 	map<string, Texture2D>	textures;

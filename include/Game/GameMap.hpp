@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 #include <Player.hpp>
+#include <Wowo.hpp>
+#include <Wall.hpp>
 
 using std::map;
 using std::string;
@@ -28,8 +30,9 @@ public:
 		unsigned int levelHeight
 	);
 	void draw(SpriteRenderer &renderer);
-	Player	*_player;
-	Player	*_enemy;
+	Player				*_player;
+	Wowo				*_enemyWowo;
+	std::vector<Wall>	walls;
 private:
 	std::vector<GameObject>		objects;
 	map<string, Texture2D>		*textures;

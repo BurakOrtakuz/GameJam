@@ -2,6 +2,9 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 /* ************************ [v] PRIVATE FUNCTIONS [v] *********************** */
 void
@@ -12,49 +15,49 @@ void
 	)
 {
 
-    unsigned int	height		= tileData.size();
-    unsigned int	width		= tileData[0].size();
-    //float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
+	unsigned int	height		= tileData.size();
+	unsigned int	width		= tileData[0].size();
+	//float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
 	float			unit_width  = 100.0f;
 	float			unit_height = 100.0f;
 
-    for (unsigned int y = 0; y < height; ++y)
-    {
-        for (unsigned int x = 0; x < width; ++x)
-        {
-            //if (tileData[y][x] == 0)
-            //{
-            //    glm::vec2 pos(unit_width * x, unit_height * y);
-            //    //glm::vec2 size(unit_width, unit_height);
-            //    GameObject obj(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
-            //    obj.setSolid(true);
-            //    this->objects.push_back(obj);
-            //}
+	for (unsigned int y = 0; y < height; ++y)
+	{
+		for (unsigned int x = 0; x < width; ++x)
+		{
+			//if (tileData[y][x] == 0)
+			//{
+			//    glm::vec2 pos(unit_width * x, unit_height * y);
+			//    //glm::vec2 size(unit_width, unit_height);
+			//    GameObject obj(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
+			//    obj.setSolid(true);
+			//    this->objects.push_back(obj);
+			//}
 			if (tileData[y][x] == 1)
-            {
-                glm::vec2 pos(unit_width * x, unit_height * y);
-                glm::vec2 size = (*textures)["leftUPCorner"].getSize();
-                std::cout << "size.x: " << size.x << " size.y: " << size.y << std::endl;
-				GameObject obj(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
-                obj.setSolid(true);
-                this->objects.push_back(obj);
-            }
-            else if (tileData[y][x] == 9)
-            {
-				std::cout << "GIRDILÇ," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
+			{
+				glm::vec2 pos(unit_width * x, unit_height * y);
+				glm::vec2 size = (*textures)["leftUPCorner"].getSize();
+				Wall wall(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
+				wall.setSolid(true);
+				this->walls.push_back(wall);
+			}
+			else if (tileData[y][x] == 9)
+			{
+				std::cout << "GIRDILI," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
 				glm::vec2 playerPos = glm::vec2(200.0f, 800.0f);
 				_player = new Player(playerPos, (*textures)["player"].getSize(), (*textures)["player"]);
 				_player->setSolid(true);
-            }
-			else if (tileData[y][x] == 8)
-            {
-				glm::vec2 enemyPos = glm::vec2(100.0f, 100.0f);
-				_enemy = new Player(enemyPos, (*textures)["player"].getSize(), (*textures)["player"]);
-				_enemy->setSolid(true);
-            }
-        }
-    }
+			}
+			else if (tileData[y][x] == 200)
+			{
+				write(1, "AAAA\n", 5);
+				glm::vec2 enemyWowoPos(unit_width * x, unit_height * y);
+				_enemyWowo = new Wowo(enemyWowoPos, (*textures)["wowo"].getSize(), (*textures)["wowo"], glm::vec3(1.0f));
+				_enemyWowo->setSolid(true);
+			}
+		}
+	}
 }
 /* ************************ [^] PRIVATE FUNCTIONS [^] *********************** */
 
@@ -79,10 +82,10 @@ GameObject GameMap::getGameObject(int index)
 
 bool GameMap::isCompleted()
 {
-    for (GameObject &tile : this->objects)
-        if (!tile.isSolid() && !tile.isDestroyed())
-            return false;
-    return true;
+	for (GameObject &tile : this->objects)
+		if (!tile.isSolid() && !tile.isDestroyed())
+			return false;
+	return true;
 }
 /* **************************** [^] GETTERS [^] ***************************** */
 
@@ -101,32 +104,32 @@ void
 		unsigned int levelHeight
 	)
 {
-    // clear old data
-    this->objects.clear();
-    // load from file
-    unsigned int tileCode;
-    std::string line;
-    std::ifstream fstream(file);
-    std::vector<std::vector<unsigned int>> tileData;
-    if (fstream)
-    {
-        while (std::getline(fstream, line)) // read each line from level file
-        {
-            std::istringstream sstream(line);
-            std::vector<unsigned int> row;
-            while (sstream >> tileCode) // read each word separated by spaces
-                row.push_back(tileCode);
-            tileData.push_back(row);
-        }
-        if (tileData.size() > 0)
-            this->init(tileData, levelWidth, levelHeight);
-    }
+	// clear old data
+	this->objects.clear();
+	// load from file
+	unsigned int tileCode;
+	std::string line;
+	std::ifstream fstream(file);
+	std::vector<std::vector<unsigned int>> tileData;
+	if (fstream)
+	{
+		while (std::getline(fstream, line)) // read each line from level file
+		{
+			std::istringstream sstream(line);
+			std::vector<unsigned int> row;
+			while (sstream >> tileCode) // read each word separated by spaces
+				row.push_back(tileCode);
+			tileData.push_back(row);
+		}
+		if (tileData.size() > 0)
+			this->init(tileData, levelWidth, levelHeight);
+	}
 }
 
 void GameMap::draw(SpriteRenderer &renderer)
 {
-    for (GameObject &tile : this->objects)
-        if (!tile.isDestroyed())
-            tile.draw(renderer);
+	for (Wall &tile : this->walls)
+		if (!tile.isDestroyed())
+			tile.draw(renderer);
 }
 /* **************************** [^] FUNCTIONS [^] *************************** */

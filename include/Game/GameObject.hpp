@@ -5,6 +5,9 @@
 #include <Texture2D.hpp>
 #include <glm/glm.hpp>
 
+#include "Collision.hpp"
+#include "tag.hpp"
+
 class GameObject
 {
 protected:
@@ -16,6 +19,7 @@ protected:
 // VARIABLES
 	glm::vec2   _position, _size;
 	glm::vec3   _color;
+	Collision   _collision;
 	float       _rotation;
 	bool        _isSolid;   //__??__ TO-DO WTF
 	bool        _destroyed; //__??__ TO-DO WTF
@@ -37,6 +41,7 @@ public:
 	glm::vec2	getSize()		const;
 	bool		isSolid()		const;
 	bool		isDestroyed()	const;
+	Collision	getCollision()	const;
 /* **************************** [^] GETTERS [^] ***************************** */
 /* **************************** [v] SETTERS [v] ***************************** */
 	void		setSolid(bool solid);
@@ -44,6 +49,7 @@ public:
 /* **************************** [^] SETTERS [^] ***************************** */
 /* **************************** [v] FUNCTIONS [v] *************************** */
 	void draw(SpriteRenderer &renderer);
+	void	tagAdd(e_tag tag);
 /* **************************** [^] FUNCTIONS [^] *************************** */
 };
 

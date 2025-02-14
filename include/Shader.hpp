@@ -13,7 +13,7 @@ public:
 	Shader(const Shader &other);
 	~Shader();
 	Shader &operator=(const Shader &other);
-	
+
 	Shader  &Use();
 	void	init(const char *, const char *);
 	void    SetFloat    (const char *name, float value, bool useShader = false);
