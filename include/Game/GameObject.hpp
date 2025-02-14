@@ -15,7 +15,7 @@ protected:
 // MODERN DEFINES :)
 	constexpr static glm::vec2	defaultPosition = glm::vec2(0.0f, 0.0f);
 	constexpr static glm::vec2	defaultSize 	= glm::vec2(1.0f, 1.0f);
-	constexpr static float		defaultRotation = 0.0f;
+	constexpr static float		defaultRotation = 0.0f;	
 // VARIABLES
 	glm::vec2   _position, _size;
 	glm::vec3   _color;
@@ -26,7 +26,6 @@ protected:
 // RENDER STATE
 	Texture2D   _sprite;
 /* **************************** [^] VARIABLES [^] *************************** */
-	GameObject() = delete;
 public:
 /* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 	GameObject(
@@ -49,7 +48,7 @@ public:
 	void		setPosition(glm::vec2 pos);
 /* **************************** [^] SETTERS [^] ***************************** */
 /* **************************** [v] FUNCTIONS [v] *************************** */
-	void	draw(SpriteRenderer &renderer);
+	void draw(SpriteRenderer &renderer);
 	void	tagAdd(e_tag tag);
 /* **************************** [^] FUNCTIONS [^] *************************** */
 };

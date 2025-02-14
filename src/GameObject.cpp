@@ -7,7 +7,7 @@ GameObject::GameObject(
 	glm::vec2 size,
 	Texture2D sprite,
 	glm::vec3 color
-):
+): 
 	_position(pos),
 	_size(size),
 	_color(color),

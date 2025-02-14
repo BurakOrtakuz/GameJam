@@ -29,7 +29,7 @@ void Game::start(void)
 	this->_shader.SetMatrix4("projection", projection);
 	_renderer = new SpriteRenderer(this->_shader);
 	initRender();
-	this->_camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT, _player->getPosition(), 1.0f);
+	this->_camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT, maps["level1"]._player->getPosition(), 1.0f);
 	this->loop();
 }
 
@@ -51,11 +51,10 @@ void Game::loop(void)
         frameCount++;
 		if (fpsTimer >= 1.0f)
         {
-			//std::cout << "playerPos\nx: " <<  _player->getPosition().x << " y: " << _player->getPosition().y << std::endl;
-			//std::cout << "Player Collision\ndown: " << _player->getCollision().getCollision().down << "up: " << _player->getCollision().getCollision().up << "left: " << _player->getCollision().getCollision().left << "right: " << _player->getCollision().getCollision().right << std::endl;
+			//
+			//
 
-			if (CollisionManager::checkCollision(e_tag::WALL, _player) == true)
-				std::cout << "duvarın içerisinde" << std::endl;
+			
             std::cout << "FPS: " << frameCount << std::endl; //__??__
             fpsTimer = 0.0f;
             frameCount = 0;
@@ -63,12 +62,12 @@ void Game::loop(void)
 
 		glfwPollEvents();
 
+		process(deltaTime);
 
-		
 		processInput(deltaTime);
 
 		update(deltaTime);
-
+	
 		render();
 
 		glfwSwapBuffers(_window);
@@ -112,6 +111,7 @@ void Game::initRender()
 	newTexture("assets/back.png", true, "background");
 	newTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	newTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
+	newTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
 	newTexture("assets/Player.png", true, "player");
 
 	newMap("levels/one.lvl", "level1");
@@ -119,8 +119,11 @@ void Game::initRender()
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
-	_player = maps["level1"]._player;
-	_player->tagAdd(e_tag::PLAYER);
+	
+	//_player = maps["level1"]._player;
+	
+	// _enemyWowo = maps["level1"]._enemyWowo;
+	maps["level1"]._player->tagAdd(e_tag::PLAYER);
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -151,15 +154,67 @@ void
 	this->maps[name] = gmap;
 }
 
+void Game::process(float dt)
+{
+	if (_state == GameState::GAME_ACTIVE)
+	{
+		float velocity = maps["level1"]._enemyWowo->_velocity * dt;
+		glm::vec2 wowoPos = maps["level1"]._enemyWowo->getPosition();
+
+		glm::vec2 playerSize = maps["level1"]._enemyWowo->getSize();
+
+		glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
+		glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
+		glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
+		glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
+
+		glm::vec2 playerPos = maps["level1"]._player->getPosition();
+
+		if (playerPos.x < wowoPos.x)
+		{
+			wowoPos.x -= velocity;
+		}
+		else if (playerPos.x > wowoPos.x)
+		{
+			wowoPos.x += velocity;
+		}
+
+		glm::vec2 position = wowoPos;
+		maps["level1"]._enemyWowo->setPosition(wowoPos);
+	}
+}
+
 void
 	Game::processInput(float dt)
 {
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		float velocity = _playerVelocity * dt;
-		glm::vec2 playerPos = _player->getPosition();
+		glm::vec2 playerPos = maps["level1"]._player->getPosition();
+
+		glm::vec2 playerSize = maps["level1"]._player->getSize();
+
+		glm::vec2 player_ru = {playerPos.x, playerPos.y};
+		glm::vec2 player_lu = {playerPos.x + playerSize.x, playerPos.y};
+		glm::vec2 player_rd = {playerPos.x, playerPos.y + playerSize.y};
+		glm::vec2 player_ld = {playerPos.x + playerSize.x, playerPos.y + playerSize.y};
 
 		(void)_keys;
+
+		/*
+		for (Wall wall : _walls)
+		{
+			glm::vec2 wallPos = wall->getPosition();
+			glm::vec2 wallSize = wall->getSize();
+
+			glm::vec2 wall_lu = {wallPos.x, wallPos.y};
+			glm::vec2 wall_ru = {wallPos.x + wallSize.x, wallPos.y};
+			glm::vec2 wall_ld = {wallPos.x, wallPos.y + wallSize.y};
+			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
+		}
+		*/
+
+		
 
 		if (_keys[GLFW_KEY_A])
 		{
@@ -171,12 +226,20 @@ void
 		{
 			//if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
 				playerPos.x += velocity;
-
 		}
 
 		glm::vec2 position = playerPos;
 		position.y -= 300;
-		_player->setPosition(playerPos);
+		
+		glm::vec2 tempPos = maps["level1"]._player->getPosition();
+		maps["level1"]._player->setPosition(playerPos);
+		if (CollisionManager::checkCollision(e_tag::WALL, position, maps["level1"]._player->getSize()) == true)
+		if (CollisionManager::checkCollision(e_tag::WALL, maps["level1"]._player) == true)
+		{
+			maps["level1"]._player->setPosition(tempPos);
+		}
+		
+		
 		_camera->setPosition(position);
 		_shader.SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
@@ -191,7 +254,10 @@ void
 			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
 		maps["level1"].draw(*_renderer);
 
-		_player->draw(*_renderer);
+		maps["level1"]._player->draw(*_renderer);
+		maps["level1"]._enemyWowo->draw(*_renderer);
+
+		
 		//_enemy->draw(*_renderer);
 
 

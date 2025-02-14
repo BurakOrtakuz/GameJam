@@ -32,6 +32,7 @@ public:
 	void		loop(void);
 	void		newTexture(const char *, bool, const char *);
 	void		newMap(const char *, const char *);
+	void		process(float dt);
 	void		processInput(float dt);
 	void		render(void);
 	void		update(float);

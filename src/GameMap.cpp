@@ -2,6 +2,9 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 /* ************************ [v] PRIVATE FUNCTIONS [v] *********************** */
 void
@@ -17,6 +20,7 @@ void
 	//float			unit_width	= levelWidth / static_cast<float>(width), unit_height = levelHeight / height;
 	float			unit_width  = 100.0f;
 	float			unit_height = 100.0f;
+
 	for (unsigned int y = 0; y < height; ++y)
 	{
 		for (unsigned int x = 0; x < width; ++x)
@@ -39,17 +43,18 @@ void
 			}
 			else if (tileData[y][x] == 9)
 			{
-				std::cout << "GIRDILÇ," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
+				std::cout << "GIRDILI," << "X:"<< (*textures)["player"].getSize().x <<  "Y:" << (*textures)["player"].getSize().y << std::endl;
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(200.0f, 700.0f);
+				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y);
 				_player = new Player(playerPos, (*textures)["player"].getSize(), (*textures)["player"]);
 				_player->setSolid(true);
 			}
-			else if (tileData[y][x] == 8)
+			else if (tileData[y][x] == 200)
 			{
-				glm::vec2 enemyPos = glm::vec2(100.0f, 100.0f);
-				_enemy = new Player(enemyPos, (*textures)["player"].getSize(), (*textures)["player"]);
-				_enemy->setSolid(true);
+				write(1, "AAAA\n", 5);
+				glm::vec2 enemyWowoPos(unit_width * x, unit_height * y);
+				_enemyWowo = new Wowo(enemyWowoPos, (*textures)["wowo"].getSize(), (*textures)["wowo"], glm::vec3(1.0f));
+				_enemyWowo->setSolid(true);
 			}
 		}
 	}

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CollisionManager.hpp"
-#include "TagManager.hpp"
+#include <CollisionManager.hpp>
+#include <TagManager.hpp>
 #include <iostream>
 
 bool	CollisionManager::checkCollision(e_tag tag, const GameObject *other)

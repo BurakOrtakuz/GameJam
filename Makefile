@@ -1,32 +1,52 @@
 NAME		=	jam.exe
 
-INC_FLAGS	=	-Ilib -Iinclude -Iinclude/Animation -Iinclude/Game -Iinclude/Objects
+RELEASE_FLAGS = -O3 -DNDEBUG -s
+INCLUDEFLAGS = -Ilib -Iinclude 
+INCLUDEFLAGS +=	-Iinclude/Animation
+INCLUDEFLAGS += -Iinclude/Enemies
+INCLUDEFLAGS += -Iinclude/Game
+INCLUDEFLAGS += -Iinclude/Objects
 
-CXX			=	clang++
-CXXFLAGS	=
+
+LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32 -mwindows
+
+INC_FLAGS	=	-Ilib -Iinclude
+
+CXX			=	c++
+CXXFLAGS	=	-static $(RELEASE_FLAGS) $(INCLUDEFLAGS)
 #-Wall -Wextra -Werror
-LDFLAGS		=	-lglfw -ldl -lGL -lz
 GRAPHIC		=	lib/graphic.a
 
 SRCDIR		=	./src
+ANIMDIR		=	$(SRCDIR)/Animation
+ENEMDIR		=	$(SRCDIR)/Enemies
+OBJDIR		=	$(SRCDIR)/Objects
 
-SRC			=	$(SRCDIR)/Animation/Animation.cpp \
-				$(SRCDIR)/Animation/frame.cpp \
-				$(SRCDIR)/Animation/FrameManager.cpp \
-				$(SRCDIR)/Camera.cpp \
+#Animation
+SRC			=	$(ANIMDIR)/Animation.cpp \
+				$(ANIMDIR)/frame.cpp \
+				$(ANIMDIR)/FrameManager.cpp \
+
+#Enemies
+SRC			+=	$(ENEMDIR)/Enemy.cpp \
+				$(ENEMDIR)/Wowo.cpp \
+
+#Objects
+SRC			+=	$(OBJDIR)/Player.cpp \
+				$(OBJDIR)/Wall.cpp
+
+SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/Collision.cpp \
 				$(SRCDIR)/CollisionManager.cpp \
 				$(SRCDIR)/Game.cpp \
 				$(SRCDIR)/GameMap.cpp \
 				$(SRCDIR)/GameObject.cpp \
 				$(SRCDIR)/InputCallbacks.cpp \
-				$(SRCDIR)/TagManager.cpp \
 				$(SRCDIR)/main.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
+				$(SRCDIR)/TagManager.cpp \
 				$(SRCDIR)/Texture2D.cpp \
-				$(SRCDIR)/Objects/Player.cpp \
-				$(SRCDIR)/Objects/Wall.cpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
@@ -43,25 +63,13 @@ run: all
 
 c: clean
 clean:
-	@make -C lib clean
 	$(RM) $(OBJ)
 
-f: fc
-fclean: fc
-fc: clean
-	@make -C lib fclean
+f: fclean
+fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
-
-rr: rerun
-
-rerun: re
-	./$(NAME)
-
-run : all
-	./$(NAME)
-.PHONY: all c clean fc fclean re run
 
 
 %.o: %.cpp
@@ -71,3 +79,4 @@ graphall:
 	@make -C lib
 
 .PHONY: all clean fclean re c f
+
