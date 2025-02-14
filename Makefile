@@ -8,7 +8,7 @@ INCLUDEFLAGS += -Iinclude/Game
 INCLUDEFLAGS += -Iinclude/Objects
 
 
-LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32 -mwindows
+LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32
 
 INC_FLAGS	=	-Ilib -Iinclude
 
@@ -23,9 +23,7 @@ ENEMDIR		=	$(SRCDIR)/Enemies
 OBJDIR		=	$(SRCDIR)/Objects
 
 #Animation
-SRC			=	$(ANIMDIR)/Animation.cpp \
-				$(ANIMDIR)/frame.cpp \
-				$(ANIMDIR)/FrameManager.cpp \
+SRC			=	
 
 #Enemies
 SRC			+=	$(ENEMDIR)/Enemy.cpp \
@@ -43,6 +41,7 @@ SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/GameObject.cpp \
 				$(SRCDIR)/InputCallbacks.cpp \
 				$(SRCDIR)/main.cpp \
+				$(SRCDIR)/ResourceManager.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
 				$(SRCDIR)/TagManager.cpp \

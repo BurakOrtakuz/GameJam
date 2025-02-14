@@ -60,7 +60,10 @@
 		"text_encoding": "cpp",
 		"list": "cpp",
 		"deque": "cpp",
-		"fstream": "cpp"
+		"fstream": "cpp",
+		"numeric": "cpp",
+		"iostream": "cpp",
+		"numbers": "cpp"
 	}
 }
 /*
