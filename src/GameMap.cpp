@@ -51,7 +51,6 @@ void
 			}
 			else if (tileData[y][x] == 200)
 			{
-				write(1, "AAAA\n", 5);
 				glm::vec2 enemyWowoPos(unit_width * x, unit_height * y);
 				_enemyWowo = new Wowo(enemyWowoPos, (*textures)["wowo"].getSize(), (*textures)["wowo"], glm::vec3(1.0f));
 				_enemyWowo->setSolid(true);

@@ -7,7 +7,7 @@ GameObject::GameObject(
 	glm::vec2 size,
 	Texture2D sprite,
 	glm::vec3 color
-): 
+):
 	_position(pos),
 	_size(size),
 	_color(color),
@@ -59,7 +59,12 @@ void GameObject::setSolid(bool solid)
 void GameObject::setPosition(glm::vec2 pos)
 {
 	_position = pos;
-	_collision.setCollision(_position, _size);
+	_collision.setPosition(pos);
+}
+
+void GameObject::setCollisionSize(glm::vec2 size)
+{
+	_collision.setSize(size);
 }
 /* **************************** [^] SETTERS [^] ***************************** */
 

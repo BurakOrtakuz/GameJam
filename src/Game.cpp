@@ -54,7 +54,7 @@ void Game::loop(void)
 			//
 			//
 
-			
+
             std::cout << "FPS: " << frameCount << std::endl; //__??__
             fpsTimer = 0.0f;
             frameCount = 0;
@@ -67,7 +67,7 @@ void Game::loop(void)
 		processInput(deltaTime);
 
 		update(deltaTime);
-	
+
 		render();
 
 		glfwSwapBuffers(_window);
@@ -119,9 +119,9 @@ void Game::initRender()
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
-	
+
 	//_player = maps["level1"]._player;
-	
+
 	// _enemyWowo = maps["level1"]._enemyWowo;
 	maps["level1"]._player->tagAdd(e_tag::PLAYER);
 	_walls = &(maps["level1"].walls);
@@ -214,7 +214,7 @@ void
 		}
 		*/
 
-		
+
 
 		if (_keys[GLFW_KEY_A])
 		{
@@ -230,16 +230,16 @@ void
 
 		glm::vec2 position = playerPos;
 		position.y -= 300;
-		
+
 		glm::vec2 tempPos = maps["level1"]._player->getPosition();
 		maps["level1"]._player->setPosition(playerPos);
-		if (CollisionManager::checkCollision(e_tag::WALL, position, maps["level1"]._player->getSize()) == true)
+		//if (CollisionManager::checkCollision(e_tag::WALL, position, maps["level1"]._player->getSize()) == true)
 		if (CollisionManager::checkCollision(e_tag::WALL, maps["level1"]._player) == true)
 		{
 			maps["level1"]._player->setPosition(tempPos);
 		}
-		
-		
+
+
 		_camera->setPosition(position);
 		_shader.SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
@@ -257,7 +257,6 @@ void
 		maps["level1"]._player->draw(*_renderer);
 		maps["level1"]._enemyWowo->draw(*_renderer);
 
-		
 		//_enemy->draw(*_renderer);
 
 
