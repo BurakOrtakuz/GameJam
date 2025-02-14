@@ -1,3 +1,5 @@
 ./jam.exe
+./jam
 ./obj
-./Makefile
+./src/*.o
+./src/*/*.o
