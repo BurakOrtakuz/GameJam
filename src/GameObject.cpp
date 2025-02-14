@@ -1,4 +1,5 @@
 #include <GameObject.hpp>
+#include <TagManager.hpp>
 
 /* ******************* [v] CONSTRUCTOR AND DESTRUCTOR [v] ******************* */
 GameObject::GameObject(
@@ -14,7 +15,7 @@ GameObject::GameObject(
 	_isSolid(false),
 	_destroyed(false),
 	_sprite(sprite),
-	_collision(Collision(pos, size))
+	_collision(pos, size)
 {
 
 }
@@ -42,6 +43,11 @@ bool GameObject::isDestroyed() const
 {
 	return _destroyed;
 }
+
+Collision	GameObject::getCollision() const
+{
+	return (this->_collision);
+}
 /* **************************** [^] GETTERS [^] ***************************** */
 
 /* **************************** [v] SETTERS [v] ***************************** */
@@ -53,6 +59,7 @@ void GameObject::setSolid(bool solid)
 void GameObject::setPosition(glm::vec2 pos)
 {
 	_position = pos;
+	_collision.setCollision(_position, _size);
 }
 /* **************************** [^] SETTERS [^] ***************************** */
 
@@ -60,5 +67,10 @@ void GameObject::setPosition(glm::vec2 pos)
 void GameObject::draw(SpriteRenderer &renderer)
 {
     renderer.drawSprite(_sprite, _position, _size, _rotation, _color);
+}
+
+void GameObject::tagAdd(e_tag tag)
+{
+	TagManager::addTag(tag, this);
 }
 /* **************************** [^] FUNCTIONS [^] *************************** */

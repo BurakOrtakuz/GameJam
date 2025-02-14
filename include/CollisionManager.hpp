@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 20:35:09 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 14:57:32 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:34:21 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ class CollisionManager
 		// private constructor
 		CollisionManager() = delete;
 		CollisionManager(CollisionManager const &src) = delete;
-		~CollisionManager();
 		CollisionManager &operator=(CollisionManager const &src) = delete;
 	public:
 
+		~CollisionManager();
 		// member functions
-		static bool			checkCollision(e_tag tag, GameObject *other);
+		static bool	checkCollision(e_tag tag, const GameObject *other);
 
 };
 #endif // COLLISIONMANAGER_HPP

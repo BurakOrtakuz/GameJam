@@ -6,15 +6,17 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:59:32 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 15:14:54 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:45:19 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Collision.hpp"
 
+#include <iostream>
+
 // constructor
-Collision::Collision(glm::vec2 position, glm::vec2 size) : _square({position, size})
+Collision::Collision(glm::vec2 position, glm::vec2 size) : _square({position.y, position.y + size.y, position.x, position.x + size.x})
 {
 }
 
@@ -40,7 +42,28 @@ Collision &Collision::operator=(Collision const &src)
 }
 
 // setters
-void Collision::setPosition(glm::vec2 position)
+void Collision::setCollision(glm::vec2 position, glm::vec2 size)
 {
-	_square.position = position;
+	this->_square = {position.y, position.y + size.y, position.x, position.x + size.x};
 }
+
+// getters
+square Collision::getCollision() const
+{
+	return this->_square;
+}
+
+#include <iostream>
+// member functions
+bool	Collision::checkCollision(Collision const &other) const
+{
+	if (this->_square.right >= other._square.left &&
+		this->_square.left <= other._square.right &&
+		this->_square.down >= other._square.up &&
+		this->_square.up <= other._square.down)
+	{
+		return true;
+	}
+	return false;
+}
+
