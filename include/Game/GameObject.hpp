@@ -46,7 +46,7 @@ public:
 /* **************************** [^] GETTERS [^] ***************************** */
 /* **************************** [v] SETTERS [v] ***************************** */
 	void	setSolid(bool solid);
-	void	setPosition(glm::vec2 pos);
+	virtual void	setPosition(glm::vec2 pos);
 	void	setCollisionSize(glm::vec2 size);
 	void	setCollisionPosition(glm::vec2 pos);
 	void	setCollision(glm::vec2 pos, glm::vec2 size);

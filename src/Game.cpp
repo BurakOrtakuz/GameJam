@@ -11,6 +11,16 @@
 
 bool Game::_keys[1024] = {0};
 
+#define GRAVITY_FALL_POWER 0.8F
+#define JUMP_POWER 8.0F
+#define SLIPPERINESS 0.0008F
+
+static float
+	my_lerp(float x, float y, float f)
+{
+	return (x + f * (y - x));
+}
+
 Game::Game(void)
 {
 	_state = GameState::GAME_ACTIVE;
@@ -43,6 +53,9 @@ void Game::start(void)
 
 void Game::loop(void)
 {
+	float slipperiness = SLIPPERINESS;
+	Player *player = maps["level1"]._player;
+	float delta_momentum = 0.0F;
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 	float fpsTimer = 0.0f;
@@ -63,6 +76,100 @@ void Game::loop(void)
 			fpsTimer = 0.0f;
 			frameCount = 0;
 		}
+
+		glm::vec2 playerPos = player->getCollision().getPosition();
+		glm::vec2 playerMomentum = player->getMomentum();
+
+		glm::vec2 temp = playerPos;
+
+		if (CollisionManager::checkCollision(e_tag::WALL, player->_groundCollision) == false)
+		{
+			player->able_to_jump = false;
+			delta_momentum += GRAVITY_FALL_POWER;
+		}
+		else
+		{
+			player->able_to_jump = true;
+			delta_momentum = 0.0F;
+		}
+
+		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
+		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
+		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+
+
+		{ // COLISSION
+			const float p_right = playerPos.x + player->getCollision().getSize().x;
+			const float p_left = playerPos.x;
+			const float p_up = playerPos.y;
+			const float p_down = playerPos.y + player->getCollision().getSize().y;
+			std::vector<GameObject *> objects = TagManager::getTags(e_tag::WALL);
+
+			for (auto object : objects)
+			{
+				if (object->isDestroyed())
+					continue;
+
+				glm::vec2 object_position = object->getCollision().getPosition();
+				glm::vec2 object_size = object->getCollision().getSize();
+
+				const float o_right = object_position.x + object_size.x;
+				const float o_left = object_position.x;
+				const float o_up = object_position.y;
+				const float o_down = object_position.y + object_size.y;
+
+				bool bottomCollision =
+					(fabs(p_down - o_up) < 1.0f) &&
+					(p_up < o_up) &&
+					(p_right > o_left) &&
+					(p_left < o_right);
+
+				bool topCollision =
+					(fabs(p_up - o_down) < 1.0f) &&
+					(p_down > o_down) &&
+					(p_right > o_left) &&
+					(p_left < o_right);
+
+				bool leftCollision =
+					(fabs(p_left - o_right) < 1.0f) &&
+					(p_right > o_right) &&
+					(p_down > o_up) &&
+					(p_up < o_down);
+
+				bool rightCollision =
+					(fabs(p_right - o_left) < 1.0f) &&
+					(p_left < o_left) &&
+					(p_down > o_up) &&
+					(p_up < o_down);
+
+				if (bottomCollision)
+				{
+					playerPos = glm::vec2(playerPos.x, temp.y - 0.1F);
+					playerMomentum = glm::vec2(playerMomentum.x, temp.y);
+				}
+
+				if (topCollision)
+				{
+					playerPos = glm::vec2(playerPos.x, temp.y + 0.1F);
+					playerMomentum = glm::vec2(playerMomentum.x, temp.y);
+				}
+
+				if (leftCollision)
+				{
+					playerPos = glm::vec2(temp.x + 0.1F, playerPos.y);
+					playerMomentum = glm::vec2(temp.x, playerMomentum.y);
+				}
+
+				if (rightCollision)
+				{
+					playerPos = glm::vec2(temp.x - 0.1F, playerPos.y);
+					playerMomentum = glm::vec2(temp.x, playerMomentum.y);
+				}
+			}
+		} // COLISSION
+
+		player->setMomentum(playerMomentum);
+		player->setPosition(playerPos);
 
 		glfwPollEvents();
 
@@ -200,27 +307,11 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		float velocity = _playerVelocity * dt;
-		glm::vec2 playerPos = maps["level1"]._player->getPosition();
+		glm::vec2 playerPos = maps["level1"]._player->getCollision().getPosition();
+		glm::vec2 playerMomentum = maps["level1"]._player->getMomentum();
 
 		glm::vec2 playerSize = maps["level1"]._player->getSize();
 
-		glm::vec2 player_ru = {playerPos.x, playerPos.y};
-		glm::vec2 player_lu = {playerPos.x + playerSize.x, playerPos.y};
-		glm::vec2 player_rd = {playerPos.x, playerPos.y + playerSize.y};
-		glm::vec2 player_ld = {playerPos.x + playerSize.x, playerPos.y + playerSize.y};
-
-		/*
-		for (Wall wall : _walls)
-		{
-			glm::vec2 wallPos = wall->getPosition();
-			glm::vec2 wallSize = wall->getSize();
-
-			glm::vec2 wall_lu = {wallPos.x, wallPos.y};
-			glm::vec2 wall_ru = {wallPos.x + wallSize.x, wallPos.y};
-			glm::vec2 wall_ld = {wallPos.x, wallPos.y + wallSize.y};
-			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
-		}
-		*/
 		resetInputs();
 		glm::vec2 size = maps["level1"]._player->getSize();
 		size.y = 0.0f;
@@ -237,13 +328,13 @@ void
 			
 			maps["level1"]._player->setCurAnimation("sprint");
 			maps["level1"]._player->setIsReversed(true);
-			playerPos.x -= velocity;
+			playerMomentum.x -= velocity;
 		}
 		else if (_keys[GLFW_KEY_D])
 		{
 			maps["level1"]._player->setCurAnimation("sprint");
 			maps["level1"]._player->setIsReversed(false);
-			playerPos.x += velocity;
+			playerMomentum.x += velocity;
 		}
 		else if (_keys['C'])
 		{
@@ -256,7 +347,7 @@ void
 		else if (_keys['N'])
 		{
 			maps["level1"]._player->setCurAnimation("dash");
-			playerPos.x += velocity * 2;
+			playerMomentum.x += velocity * 2;
 		}
 		else if (_keys['H'])
 		{
@@ -279,8 +370,15 @@ void
 			maps["level1"]._player->setCurAnimation("damage");
 		}
 
-		glm::vec2 position = playerPos;
-		position.y -= 200;
+		if (_keys[GLFW_KEY_SPACE] && maps["level1"]._player->able_to_jump)
+		{
+			maps["level1"]._player->setCurAnimation("jump");
+			playerMomentum.y -= JUMP_POWER;
+		}
+
+		glm::vec2 camPosition = maps["level1"]._player->getCollision().getPosition();
+		camPosition.y -= 200;
+		maps["level1"]._player->setMomentum(playerMomentum);
 		
 		glm::vec2 playerViewPos = glm::vec2(playerPos.x + 800, playerPos.y - 100) - _camera->getPosition();
 		//std::cout << "Player Position: (" << playerViewPos.x << ", " << playerViewPos.y << ")" << std::endl;
@@ -290,19 +388,9 @@ void
 		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
 		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
 		
-
 		ResourceManager::getShader("shader").Use();
 
-		glm::vec2 tempPos = maps["level1"]._player->getPosition();
-		maps["level1"]._player->setPosition(playerPos);
-		//if (CollisionManager::checkCollision(e_tag::WALL, position, maps["level1"]._player->getSize()) == true)
-		if (CollisionManager::checkCollision(e_tag::WALL, maps["level1"]._player) == true)
-		{
-			maps["level1"]._player->setPosition(tempPos);
-		}
-
-
-		_camera->setPosition(position);
+		_camera->setPosition(camPosition);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
 }
@@ -362,10 +450,10 @@ void
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
-		// maps["level1"]._enemyWowo->draw(*_renderer);
+		maps["level1"]._enemyWowo->draw(*_renderer);
 
-		_renderer->drawSprite("merhaba",maps["level1"]._player->getCollision().getPosition(),
-			maps["level1"]._player->getCollision().getSize(),false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		_renderer->drawSprite("merhaba", maps["level1"]._player->_groundCollision.getPosition(),
+			maps["level1"]._player->_groundCollision.getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
 
