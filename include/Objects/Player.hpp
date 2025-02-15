@@ -9,8 +9,7 @@ class Player : public GameObject
 private:
 	constexpr static glm::vec2	defaultVelocity = glm::vec2(0.0f, 0.0f);
 
-	//std::map<std::string, Animation*>	_animations;
-	Animation							*_animation;
+	std::map<std::string, Animation>	_animations;
 	glm::vec2							_velocity;
 	std::string							_currentAnimation;
 public:
@@ -29,7 +28,7 @@ public:
 		std::vector<std::string> textures,
 		std::string animationName
 	);
-	void updateAnimation();
+	void updateAnimation(float deltaTime);
 	void setCurAnimation(const std::string &animationName);
 };
 

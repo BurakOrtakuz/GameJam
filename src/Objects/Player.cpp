@@ -37,22 +37,13 @@ void Player::addAnimation(
 	std::string animationName
 )
 {
-	try {
-		_animation = new Animation(textures, false, 1, false);
-		puts("tayyib");
-        //std::cout << _animation->getFrameCount() << std::endl;
-		std::cout << "BEFORE Adding Animation: " << animationName << std::endl;
-		std::cout << "AFTER Adding Animation: " << animationName << std::endl;
-	} catch (const std::exception &e) {
-		std::cout << "Exception caught during Animation creation: " << e.what() << std::endl;
-	}
+	_animations[animationName] = Animation(textures, true, 15, true);
+	_animations[animationName].setPlaying(true);
 }
 
-void Player::updateAnimation()
+void Player::updateAnimation(float deltaTime)
 {
-	std::cout << "Current Animation: " << _currentAnimation << std::endl;
-	std::cout << "SPRITE: " << _sprite << std::endl;
-	_sprite = _animation->update(0.0f);
+	_sprite = _animations[_currentAnimation].update(deltaTime);
 }
 
 void Player::setCurAnimation(const std::string &animationName)

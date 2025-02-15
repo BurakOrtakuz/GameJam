@@ -6,7 +6,7 @@
 /*   By: enveryilmaz <enveryilmaz@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 17:15:16 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/15 01:04:04 by enveryilmaz      ###   ########.fr       */
+/*   Updated: 2025/02/15 01:48:48 by enveryilmaz      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,16 +145,12 @@ void	Animation::removeFrame(unsigned int index)
 }
 
 std::string Animation::update(float deltaTime) {
-	std::cout << "Update called" << std::endl;
     if (_isPlaying) {
         _frameCount += deltaTime;
         float frameDuration = 1.0f / _frameRate; // Use frame rate
         if (_frameCount >= frameDuration) {
             _frameCount -= frameDuration; // Subtract to preserve residual time
             _currentFrame = (_currentFrame + 1) % _textures.size();
-            if (!_isLooping && _currentFrame == _textures.size() - 1) {
-                _isPlaying = false;
-            }
         }
     }
     return _textures[_currentFrame];

@@ -134,11 +134,10 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/7_run_loop.png", true, "sprint7");
 	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/8_run_loop.png", true, "sprint8");
 
+	newMap("levels/one.lvl", "level1");
 	maps["level1"]._player->addAnimation(textures, "sprint");
 	std::cout << "Textures loaded" << std::endl;
 	maps["level1"]._player->setCurAnimation("sprint");
-	newMap("levels/one.lvl", "level1");
-
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
@@ -286,6 +285,6 @@ void
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	maps["level1"]._player->updateAnimation();
+	maps["level1"]._player->updateAnimation(dt);
 	this->_camera->updateCamera(dt);
 }
