@@ -111,9 +111,9 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
-	ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
-	ResourceManager::loadTexture("assets/Player.png", true, "player");
-	
+	//ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
+
 	newMap("levels/one.lvl", "level1");
 	
 	uploadForkBattle_stance();
@@ -124,24 +124,22 @@ void Game::initRender()
 	uploadForkJump();
 	uploadForkSprint();
 	uploadForkStill();
-	uploadForkStill();
 	uploadForkHide();
 	uploadForkQuickPunch();
 
-	std::cout << "Textures loaded" << std::endl;
+	//std::cout << "Textures loaded" << std::endl;
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
 	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
-	
 	maps["level1"]._player->setCurAnimation("still");
 	//_player = maps["level1"]._player;
 
 	// _enemyWowo = maps["level1"]._enemyWowo;
 	Player *player = maps["level1"]._player;
 	player->tagAdd(e_tag::PLAYER);
-	player->setCollision(glm::vec2(player->getPosition().x + 10.0f, player->getPosition().y + 5.0f),
-							glm::vec2 (player->getSize().x - 10.0f, player->getSize().y - 6.0f));
+	player->setCollision(glm::vec2(player->getPosition().x + 1.0f, player->getPosition().y + 5.0f),
+							glm::vec2 (player->getSize().x - 1.0f, player->getSize().y - 6.0f));
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -186,6 +184,8 @@ void Game::process(float dt)
 	}
 }
 
+int hideOn = 0;
+
 void
 	Game::processInput(float dt)
 {
@@ -213,6 +213,21 @@ void
 			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
 		}
 		*/
+		//maps["level1"]._player->setCurAnimation("still");
+		if (_keys['H'])
+		{
+			if (hideOn < maps["level1"]._player->getTextureSize("hide"))
+			{
+				maps["level1"]._player->setCurAnimation("hide");
+				hideOn++;
+			}
+			else
+			{
+				hideOn = 0;
+				_keys['H'] = false;
+			}
+		}
+
 		glm::vec2 size = maps["level1"]._player->getSize();
 		size.y = 0.0f;
 		size.x += 20.0f;
@@ -220,8 +235,11 @@ void
 		{
 			maps["level1"]._player->setCurAnimation("battle_stance");
 		}
-		else
-			maps["level1"]._player->setCurAnimation("still");
+		if (_keys[GLFW_KEY_SPACE])
+		{
+			maps["level1"]._player->setCurAnimation("jump");
+		}
+
 		if (_keys[GLFW_KEY_A])
 		{
 			//if (playerPos.x >= 0.0f)
@@ -248,6 +266,18 @@ void
 			maps["level1"]._player->setCurAnimation("dash");
 			playerPos.x += velocity * 2;
 		}
+		else if (_keys['H'])
+		{
+			maps["level1"]._player->setCurAnimation("hide");
+		}
+		else if (_keys['O'])
+		{
+			maps["level1"]._player->setCurAnimation("quickPunch");
+		}
+		else if (_keys['P'])
+		{
+			maps["level1"]._player->setCurAnimation("doublePunch");
+		}
 
 		glm::vec2 position = playerPos;
 		position.y -= 300;
@@ -259,7 +289,6 @@ void
 		{
 			maps["level1"]._player->setPosition(tempPos);
 		}
-
 
 		_camera->setPosition(position);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
@@ -280,11 +309,6 @@ void
 
 		_renderer->drawSprite("merhaba",maps["level1"]._player->getCollision().getPosition(),
 			maps["level1"]._player->getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		//_renderer->drawSprite(textures["rightUPCorner"],
-		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
-		//Texture2D text = textures["rightUPCorner"];
-		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
-		////maps["level1"]._player->draw(*_renderer);
 	}
 }
 

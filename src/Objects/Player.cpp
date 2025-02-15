@@ -10,7 +10,6 @@ Player::Player(
 	GameObject(pos, size, sprite, color),
 	_velocity(velocity)
 {
-	this->_currentAnimation = "";
 }
 
 Player::Player(const Player &player)
@@ -32,21 +31,8 @@ Player::~Player()
 {
 }
 
-void Player::addAnimation(
-	std::vector<std::string> textures,
-	std::string animationName
-)
-{
-	_animations[animationName] = Animation(textures, true, 15, true);
-	_animations[animationName].setPlaying(true);
-}
 
 void Player::updateAnimation(float deltaTime)
 {
-	_sprite = _animations[_currentAnimation].update(deltaTime);
-}
-
-void Player::setCurAnimation(const std::string &animationName)
-{
-	_currentAnimation = animationName;
+	_sprite = getUpdate(deltaTime);
 }

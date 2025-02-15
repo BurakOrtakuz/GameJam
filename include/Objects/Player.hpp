@@ -4,14 +4,14 @@
 #include <GameObject.hpp>
 #include <Animation.hpp>
 #include <map>
-class Player : public GameObject
+#include <Animationable.hpp>
+
+class Player : public GameObject, public Animationable
 {
 private:
 	constexpr static glm::vec2	defaultVelocity = glm::vec2(0.0f, 0.0f);
 
-	std::map<std::string, Animation>	_animations;
 	glm::vec2							_velocity;
-	std::string							_currentAnimation;
 public:
 	Player(
 		glm::vec2 pos = defaultPosition, 
@@ -23,13 +23,7 @@ public:
 	Player(const Player &player);
 	Player &operator=(const Player &player);
 	~Player();
-
-	void addAnimation(
-		std::vector<std::string> textures,
-		std::string animationName
-	);
 	void updateAnimation(float deltaTime);
-	void setCurAnimation(const std::string &animationName);
 };
 
 

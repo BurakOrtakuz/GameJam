@@ -4,7 +4,7 @@ INCLUDEFLAGS =	-Ilib -Iinclude \
 				-Iinclude/Animation \
 				-Iinclude/Enemies \
 				-Iinclude/Game \
-				-Iinclude/Objects \
+				-Iinclude/Objects
 
 RM	=	rm -rf
 
@@ -15,10 +15,11 @@ ifeq ($(OS),Windows_NT)
 else
 	NAME			= jam
 	RELEASE_FLAGS	=
-	LDFLAGS			= -lglfw -ldl -lGL -lz
+	LDFLAGS			=	-lglfw -ldl -lGL -lz
+#	LDFLAGS			=	-lglfw -lGL -lGLEW -lm
 endif
 
-CXXFLAGS	=	
+CXXFLAGS	=	#-Wextra -Wall #-Werror
 CXXFLAGS	+= $(RELEASE_FLAGS) $(INCLUDEFLAGS)
 
 
@@ -31,6 +32,7 @@ OBJECTSDIR		=	$(SRCDIR)/Objects
 
 #Animation
 SRC			=	$(ANIMDIR)/Animation.cpp \
+				$(ANIMDIR)/Animationable.cpp \
 
 #Enemies
 SRC			+=	$(ENEMDIR)/Enemy.cpp \

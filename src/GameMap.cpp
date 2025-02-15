@@ -45,7 +45,7 @@ void
 			else if (tileData[y][x] == 9)
 			{
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y);
+				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y - 60.0f);
 				_player = new Player(playerPos, ResourceManager::getTexture("player").getSize(), "player");
 				_player->setSolid(true);
 			}

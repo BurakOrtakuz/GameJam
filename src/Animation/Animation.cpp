@@ -32,19 +32,15 @@ Animation::Animation(
 	_isPlaying = false;
 	_frameCount = 0;
 	_currentFrame = 0;
-	std::cout << "Textures loaded" << std::endl;
-	
 }
 
 Animation::Animation(const Animation &animation)
 {
-	std::cout << "Copy constructor called" << std::endl;
 	*this = animation;
 }
 
 Animation &Animation::operator=(const Animation &animation)
 {
-	std::cout << "Assignment operator called" << std::endl;
 	_textures = animation._textures;
 	_isLooping = animation._isLooping;
 	_frameRate = animation._frameRate;
@@ -57,7 +53,6 @@ Animation &Animation::operator=(const Animation &animation)
 // Destructor
 Animation::~Animation()
 {
-	std::cout << "Destructor called" << std::endl;
 }
 
 

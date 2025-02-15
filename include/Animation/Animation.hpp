@@ -19,7 +19,7 @@
 #include <string>
 class Animation
 {
-private:
+public:
 	std::vector<std::string>	_textures;
 	unsigned int	_currentFrame;
 	unsigned int	_frameRate;

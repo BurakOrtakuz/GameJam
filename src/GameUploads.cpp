@@ -22,7 +22,7 @@ void	Game::uploadForkBattle_stance()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Battle_stance/Battle_stance-1.png", true, "battle_stance_1");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Battle_stance/Battle_stance-2.png", true, "battle_stance_2");
 
-	maps["level1"]._player->addAnimation(textures, "battle_stance");
+	maps["level1"]._player->addAnimation(textures, "battle_stance", 2);
 }
 
 void	Game::uploadForkClimb()
@@ -47,7 +47,7 @@ void	Game::uploadForkClimb()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Climb/Climb-8.png", true, "climb8");
 	
 
-	maps["level1"]._player->addAnimation(textures, "climb");
+	maps["level1"]._player->addAnimation(textures, "climb", 2);
 }
 
 void	Game::uploadForkDash()
@@ -59,7 +59,7 @@ void	Game::uploadForkDash()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Dash/Dash-loop_1.png", true, "dash1");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Dash/Dash-loop_2.png", true, "dash2");
 
-	maps["level1"]._player->addAnimation(textures, "dash");
+	maps["level1"]._player->addAnimation(textures, "dash", 2);
 }
 
 void	Game::uploadForkDeath()
@@ -83,7 +83,7 @@ void	Game::uploadForkDeath()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Death/Fork_death-7.png", true, "death7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Death/Fork_death-8.png", true, "death8");
 
-	maps["level1"]._player->addAnimation(textures, "death");
+	maps["level1"]._player->addAnimation(textures, "death", 2);
 }
 
 void	Game::uploadForkDoublePunch()
@@ -98,16 +98,16 @@ void	Game::uploadForkDoublePunch()
 	textures.push_back("double_punch7");
 	textures.push_back("double_punch8");
 
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-1.png", true, "battle_stance_1");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-2.png", true, "battle_stance_2");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-3.png", true, "battle_stance_3");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-4.png", true, "battle_stance_4");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-5.png", true, "battle_stance_5");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-6.png", true, "battle_stance_6");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-7.png", true, "battle_stance_7");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double punch/Double_punch-8.png", true, "battle_stance_8");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-1.png", true, "double_punch1");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-2.png", true, "double_punch2");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-3.png", true, "double_punch3");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-4.png", true, "double_punch4");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-5.png", true, "double_punch5");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-6.png", true, "double_punch6");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-7.png", true, "double_punch7");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-8.png", true, "double_punch8");
 
-	maps["level1"]._player->addAnimation(textures, "doublePunch");
+	maps["level1"]._player->addAnimation(textures, "doublePunch", 10);
 }
 
 void	Game::uploadForkJump()
@@ -131,7 +131,7 @@ void	Game::uploadForkJump()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_jump/_Fork_jump-7.png", true, "jump7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_jump/_Fork_jump-8.png", true, "jump8");
 
-	maps["level1"]._player->addAnimation(textures, "jump");
+	maps["level1"]._player->addAnimation(textures, "jump", 30);
 }
 
 void	Game::uploadForkSprint()
@@ -155,7 +155,7 @@ void	Game::uploadForkSprint()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_sprint/7_run_loop.png", true, "sprint7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_sprint/8_run_loop.png", true, "sprint8");
 
-	maps["level1"]._player->addAnimation(textures, "sprint");
+	maps["level1"]._player->addAnimation(textures, "sprint", 10);
 }
 
 void	Game::uploadForkStill()
@@ -165,7 +165,7 @@ void	Game::uploadForkStill()
 
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "still1");
 
-	maps["level1"]._player->addAnimation(textures, "still");
+	maps["level1"]._player->addAnimation(textures, "still", 2);
 }
 
 void	Game::uploadForkHide()
@@ -189,9 +189,9 @@ void	Game::uploadForkHide()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Hide/Hide-7.png", true, "hide7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Hide/Hide-8.png", true, "hide8");
 
-	maps["level1"]._player->addAnimation(textures, "hide");
+	maps["level1"]._player->addAnimation(textures, "hide", 10, false);
 }
-
+//285 560
 void	Game::uploadForkQuickPunch()
 {
 	std::vector<std::string> textures;
@@ -201,13 +201,13 @@ void	Game::uploadForkQuickPunch()
 	textures.push_back("quickPunch4");
 	textures.push_back("quickPunch5");
 
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick punch/Quick_punch-1.png", true, "quickPunch1");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick punch/Quick_punch-2.png", true, "quickPunch2");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick punch/Quick_punch-3.png", true, "quickPunch3");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick punch/Quick_punch-4.png", true, "quickPunch4");
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick punch/Quick_punch-5.png", true, "quickPunch5");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-1.png", true, "quickPunch1");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-2.png", true, "quickPunch2");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-3.png", true, "quickPunch3");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-4.png", true, "quickPunch4");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-5.png", true, "quickPunch5");
 
-	maps["level1"]._player->addAnimation(textures, "quickPunch");
+	maps["level1"]._player->addAnimation(textures, "quickPunch", 9);
 }
 
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
