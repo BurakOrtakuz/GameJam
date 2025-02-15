@@ -16,11 +16,6 @@ void Animationable::addAnimation(std::vector<std::string> textures, std::string 
     _animations[animationName].setPlaying(true);
 }
 
-void Animationable::setAnimationIsPlayOneTime(const std::string animationName, bool isPlayOneTime)
-{
-    _animations[animationName].setIsPlayOneTime(isPlayOneTime);
-}
-
 std::string Animationable::getUpdate(float deltaTime)
 {
     return _animations[_currentAnimation].update(deltaTime);

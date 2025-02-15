@@ -23,15 +23,13 @@ Animation::Animation(
 	std::vector<std::string> textures,
 	bool alpha,
 	unsigned int frameRate,
-	bool isLooping,
-	bool isPlayOneTime)
+	bool isLooping)
 {
 	(void)alpha;
 	_textures = textures;
 	_isLooping = isLooping;
 	_frameRate = frameRate;
 	_isPlaying = false;
-	_isPlayOneTime = isPlayOneTime;
 	_frameCount = 0;
 	_currentFrame = 0;
 }
@@ -79,10 +77,6 @@ void	Animation::setPlaying(bool isPlaying)
 	this->_isPlaying = isPlaying;
 }
 
-void	Animation::setIsPlayOneTime(bool isPlayOneTime)
-{
-	this->_isPlayOneTime = isPlayOneTime;
-}
 
 // Getters
 
@@ -147,17 +141,7 @@ void	Animation::removeFrame(unsigned int index)
 }
 
 std::string Animation::update(float deltaTime) {
-    if (_isPlayOneTime == true)
-	{
-		if (_currentFrame == _textures.size() - 1)
-		{
-			_currentFrame = 0;
-			std::string res = "TEST";
-			return (res);
-		}
-	}
-
-	if (_isPlaying) {
+    if (_isPlaying) {
         _frameCount += deltaTime;
         float frameDuration = 1.0f / _frameRate; // Use frame rate
         if (_frameCount >= frameDuration) {
@@ -165,7 +149,6 @@ std::string Animation::update(float deltaTime) {
             _currentFrame = (_currentFrame + 1) % _textures.size();
         }
     }
-	std::cout <<  "CURRENT FRAME " << _textures[_currentFrame] << std::endl;
     return _textures[_currentFrame];
 }
 void	Animation::play()

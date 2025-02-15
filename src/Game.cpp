@@ -47,15 +47,17 @@ void Game::loop(void)
 		lastFrame = currentFrame;
 
 		fpsTimer += deltaTime;
-		frameCount++;
+        frameCount++;
 		if (fpsTimer >= 1.0f)
-		{
+        {
+			//
+			//
 
 
-			std::cout << "FPS: " << frameCount << std::endl; //__??__
-			fpsTimer = 0.0f;
-			frameCount = 0;
-		}
+            std::cout << "FPS: " << frameCount << std::endl; //__??__
+            fpsTimer = 0.0f;
+            frameCount = 0;
+        }
 
 		glfwPollEvents();
 

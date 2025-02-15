@@ -60,7 +60,6 @@ void	Game::uploadForkDash()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Dash/Dash-loop_2.png", true, "dash2");
 
 	maps["level1"]._player->addAnimation(textures, "dash", 2);
-	maps["level1"]._player->setAnimationIsPlayOneTime("dash", true);
 }
 
 void	Game::uploadForkDeath()

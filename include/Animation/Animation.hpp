@@ -26,7 +26,6 @@ public:
 	float			_frameCount;
 	bool			_isPlaying;
 	bool			_isLooping;
-	bool			_isPlayOneTime; // for play one time
 
 public:
 // Constructors	
@@ -35,8 +34,7 @@ public:
 		std::vector<std::string> textures,
 		bool alpha = false,
 		unsigned int frameRate = 1,
-		bool isLooping = false,
-		bool isPlayOneTime = false
+		bool isLooping = false
 	);
 	Animation(const Animation &animation);
 	Animation &operator=(const Animation &animation);
@@ -48,7 +46,6 @@ public:
 	void	setFrameRate(unsigned int frameRate);
 	void	setLooping(bool isLooping);
 	void	setPlaying(bool isPlaying);
-	void	setIsPlayOneTime(bool isPlayOneTime);
 
 	// Getters
 	unsigned int	getCurrentFrameIndex() const;

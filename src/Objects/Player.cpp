@@ -31,6 +31,7 @@ Player::~Player()
 {
 }
 
+
 void Player::updateAnimation(float deltaTime)
 {
 	_sprite = getUpdate(deltaTime);
