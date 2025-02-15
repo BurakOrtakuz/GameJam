@@ -88,7 +88,7 @@ void Game::init(void)
 
 	this->_window = errCheck(
 		(GLFWwindow *)NULL,
-		gl_create_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout"),
+		gl_create_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Labiryntika"),
 		"Failed to create GLFW window"
 		);
 
@@ -123,15 +123,16 @@ void Game::initRender()
 	
 	uploadForkBattle_stance();
 	uploadForkClimb();
+	uploadForkDamage();
 	uploadForkDash();
 	uploadForkDeath();
 	uploadForkDoublePunch();
 	uploadForkJump();
 	uploadForkSprint();
-	uploadForkStill();
-	uploadForkStill();
 	uploadForkHide();
 	uploadForkQuickPunch();
+	uploadForkStill();
+	uploadForkHurt();
 
 	std::cout << "Textures loaded" << std::endl;
 	// O_o Beg your pardon but the fuck?
@@ -180,10 +181,12 @@ void Game::process(float dt)
 		if (playerPos.x < wowoPos.x)
 		{
 			wowoPos.x -= velocity;
+			maps["level1"]._enemyWowo->setIsReversed(false);
 		}
 		else if (playerPos.x > wowoPos.x)
 		{
 			wowoPos.x += velocity;
+			maps["level1"]._enemyWowo->setIsReversed(true);
 		}
 
 		glm::vec2 position = wowoPos;
@@ -218,6 +221,7 @@ void
 			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
 		}
 		*/
+		resetInputs();
 		glm::vec2 size = maps["level1"]._player->getSize();
 		size.y = 0.0f;
 		size.x += 20.0f;
@@ -230,16 +234,16 @@ void
 		
 		if (_keys[GLFW_KEY_A])
 		{
-			//if (playerPos.x >= 0.0f)
-			maps["level1"]._player->setCurAnimation("sprint");	
+			
+			maps["level1"]._player->setCurAnimation("sprint");
+			maps["level1"]._player->setIsReversed(true);
 			playerPos.x -= velocity;
 		}
 		else if (_keys[GLFW_KEY_D])
 		{
-			{
-				maps["level1"]._player->setCurAnimation("sprint");
-				playerPos.x += velocity;
-			}
+			maps["level1"]._player->setCurAnimation("sprint");
+			maps["level1"]._player->setIsReversed(false);
+			playerPos.x += velocity;
 		}
 		else if (_keys['C'])
 		{
@@ -266,9 +270,17 @@ void
 		{
 			maps["level1"]._player->setCurAnimation("doublePunch");
 		}
+		else if (_keys['I'])
+		{
+			maps["level1"]._player->setCurAnimation("hurt");
+		}
+		else if (_keys['K'])
+		{
+			maps["level1"]._player->setCurAnimation("damage");
+		}
 
 		glm::vec2 position = playerPos;
-		position.y -= 300;
+		position.y -= 200;
 		
 		glm::vec2 playerViewPos = glm::vec2(playerPos.x + 800, playerPos.y - 100) - _camera->getPosition();
 		//std::cout << "Player Position: (" << playerViewPos.x << ", " << playerViewPos.y << ")" << std::endl;
@@ -346,16 +358,17 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite("background",
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT));
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
-		maps["level1"]._enemyWowo->draw(*_renderer);
+		// maps["level1"]._enemyWowo->draw(*_renderer);
 
 		_renderer->drawSprite("merhaba",maps["level1"]._player->getCollision().getPosition(),
-			maps["level1"]._player->getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			maps["level1"]._player->getCollision().getSize(),false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
+
 		//Texture2D text = textures["rightUPCorner"];
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);

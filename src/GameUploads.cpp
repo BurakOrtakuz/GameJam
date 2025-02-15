@@ -47,7 +47,20 @@ void	Game::uploadForkClimb()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Climb/Climb-8.png", true, "climb8");
 	
 
-	maps["level1"]._player->addAnimation(textures, "climb", 2);
+	maps["level1"]._player->addAnimation(textures, "climb", 8);
+}
+
+void	Game::uploadForkDamage()
+{
+	std::vector<std::string> textures;
+	textures.push_back("damage1");
+	textures.push_back("damage2");
+
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Damage/Fork_damage_frame_1.png", true, "damage1");
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Damage/Fork_damage_frame_2.png", true, "damage2");
+	
+
+	maps["level1"]._player->addAnimation(textures, "damage", 2);
 }
 
 void	Game::uploadForkDash()
@@ -83,7 +96,7 @@ void	Game::uploadForkDeath()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Death/Fork_death-7.png", true, "death7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Death/Fork_death-8.png", true, "death8");
 
-	maps["level1"]._player->addAnimation(textures, "death", 2);
+	maps["level1"]._player->addAnimation(textures, "death", 8);
 }
 
 void	Game::uploadForkDoublePunch()
@@ -107,8 +120,12 @@ void	Game::uploadForkDoublePunch()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-7.png", true, "double_punch7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Double_punch/Double_punch-8.png", true, "double_punch8");
 
-	maps["level1"]._player->addAnimation(textures, "doublePunch", 10);
+	maps["level1"]._player->addAnimation(textures, "doublePunch", 8);
 }
+
+//EKSİK: DOUBLE PUNCH IMPACT FRAMES
+
+//EKSİK: FALL IMPACT
 
 void	Game::uploadForkJump()
 {
@@ -158,16 +175,6 @@ void	Game::uploadForkSprint()
 	maps["level1"]._player->addAnimation(textures, "sprint", 10);
 }
 
-void	Game::uploadForkStill()
-{
-	std::vector<std::string> textures;
-	textures.push_back("still1");
-
-	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "still1");
-
-	maps["level1"]._player->addAnimation(textures, "still", 2);
-}
-
 void	Game::uploadForkHide()
 {
 	std::vector<std::string> textures;
@@ -208,6 +215,28 @@ void	Game::uploadForkQuickPunch()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Quick_punch/Quick_punch-5.png", true, "quickPunch5");
 
 	maps["level1"]._player->addAnimation(textures, "quickPunch", 9);
+}
+
+////EKSİK: SINGLE PUNCH IMPACT FRAMES
+
+void	Game::uploadForkStill()
+{
+	std::vector<std::string> textures;
+	textures.push_back("still1");
+
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "still1");
+
+	maps["level1"]._player->addAnimation(textures, "still", 2);
+}
+
+void	Game::uploadForkHurt()
+{
+	std::vector<std::string> textures;
+	textures.push_back("hurt1");
+
+	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_hurt.png", true, "hurt1");
+	
+	maps["level1"]._player->addAnimation(textures, "hurt", 1);
 }
 
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */

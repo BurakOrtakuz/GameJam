@@ -34,5 +34,19 @@ Player::~Player()
 
 void Player::updateAnimation(float deltaTime)
 {
-	_sprite = getUpdate(deltaTime);
+	std::string tempAnim = _sprite;
+	std::string res = getUpdate(deltaTime);
+
+	// std::cout << "RES: " << res << std::endl;
+
+	if (res == "1")
+	{
+		// if (tempAnim == "death")
+		// {
+		// 	_sprite = 
+		// }
+		_sprite = "still1";
+	}
+	else
+		_sprite = res;
 }

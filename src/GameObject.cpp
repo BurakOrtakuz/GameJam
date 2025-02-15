@@ -14,6 +14,7 @@ GameObject::GameObject(
 	_rotation(0.0f),
 	_isSolid(false),
 	_destroyed(false),
+	_isReversed(false),
 	_sprite(sprite),
 	_collision(pos, size)
 {
@@ -76,12 +77,17 @@ void GameObject::setCollision(glm::vec2 pos, glm::vec2 size)
 {
 	_collision.setCollision(pos, size);
 }
+
+void GameObject::setIsReversed(bool flip)
+{
+	_isReversed = flip;
+}
 /* **************************** [^] SETTERS [^] ***************************** */
 
 /* **************************** [v] FUNCTIONS [v] *************************** */
 void GameObject::draw(SpriteRenderer &renderer)
 {
-    renderer.drawSprite(_sprite, _position, _size, _rotation, _color);
+    renderer.drawSprite(_sprite, _position, _size,_isReversed, _rotation, _color);
 }
 
 void GameObject::tagAdd(e_tag tag)
