@@ -1,20 +1,24 @@
-NAME		=	jam.exe
-
-RELEASE_FLAGS = -O3 -DNDEBUG -s
-INCLUDEFLAGS = -Ilib -Iinclude 
-INCLUDEFLAGS +=	-Iinclude/Animation
-INCLUDEFLAGS += -Iinclude/Enemies
-INCLUDEFLAGS += -Iinclude/Game
-INCLUDEFLAGS += -Iinclude/Objects
-
-
-LDFLAGS = -lglfw3 -lgdi32 -lopengl32 -lmingw32
-
-INC_FLAGS	=	-Ilib -Iinclude
-
 CXX			=	c++
+
+INCLUDEFLAGS =	-Ilib -Iinclude \
+				-Iinclude/Animation \
+				-Iinclude/Enemies \
+				-Iinclude/Game \
+				-Iinclude/Objects \
+
+ifeq ($(OS),Windows_NT)
+	NAME			= jam.exe
+	RELEASE_FLAGS	= -O3 -DNDEBUG -s
+	LDFLAGS			= -lglfw3 -lgdi32 -lopengl32 -lmingw32
+else
+	NAME			= jam
+	RELEASE_FLAGS	=
+	LDFLAGS			= -lglfw -ldl -lGL -lz
+endif
+
 CXXFLAGS	=	 $(RELEASE_FLAGS) $(INCLUDEFLAGS)
-#-Wall -Wextra -Werror
+
+
 GRAPHIC		=	lib/graphic.a
 
 SRCDIR		=	./src
@@ -52,7 +56,7 @@ OBJ			=	$(SRC:.cpp=.o)
 all: graphall $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS)  $(OBJ) $(GRAPHIC) $(INC_FLAGS) $(LDFLAGS) -o $(NAME)
+	$(CXX) $(CXXFLAGS)  $(OBJ) $(GRAPHIC) $(INCLUDEFLAGS) $(LDFLAGS) -o $(NAME)
 
 rrun: re
 	@./$(NAME) || true
@@ -62,20 +66,31 @@ run: all
 
 c: clean
 clean:
+	@make -C lib clean
 	$(RM) $(OBJ)
 
-f: fclean
-fclean: clean
+f: fc
+fclean: fc
+fc: clean
+	@make -C lib fclean
 	$(RM) $(NAME)
 
 re: fclean all
 
+rr: rerun
+
+rerun: re
+	./$(NAME)
+
+run : all
+	./$(NAME)
+.PHONY: all c clean fc fclean re run
+
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INC_FLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDEFLAGS) -c $< -o $@
 
 graphall:
 	@make -C lib
 
 .PHONY: all clean fclean re c f
-

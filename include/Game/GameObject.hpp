@@ -15,7 +15,7 @@ protected:
 // MODERN DEFINES :)
 	constexpr static glm::vec2	defaultPosition = glm::vec2(0.0f, 0.0f);
 	constexpr static glm::vec2	defaultSize 	= glm::vec2(1.0f, 1.0f);
-	constexpr static float		defaultRotation = 0.0f;	
+	constexpr static float		defaultRotation = 0.0f;
 // VARIABLES
 	glm::vec2   _position, _size;
 	glm::vec3   _color;
@@ -44,8 +44,11 @@ public:
 	Collision	getCollision()	const;
 /* **************************** [^] GETTERS [^] ***************************** */
 /* **************************** [v] SETTERS [v] ***************************** */
-	void		setSolid(bool solid);
-	void		setPosition(glm::vec2 pos);
+	void	setSolid(bool solid);
+	void	setPosition(glm::vec2 pos);
+	void	setCollisionSize(glm::vec2 size);
+	void	setCollisionPosition(glm::vec2 pos);
+	void	setCollision(glm::vec2 pos, glm::vec2 size);
 /* **************************** [^] SETTERS [^] ***************************** */
 /* **************************** [v] FUNCTIONS [v] *************************** */
 	void draw(SpriteRenderer &renderer);

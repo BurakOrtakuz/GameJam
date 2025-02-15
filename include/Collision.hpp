@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:56:02 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 18:48:56 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/14 23:59:25 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class Collision
 {
 	private:
 		square	_square;
+		glm::vec2	_position;
+		glm::vec2	_size;
 
 		// private constructor
 		Collision() = delete;
@@ -42,9 +44,14 @@ class Collision
 
 		// setters
 		void	setCollision(glm::vec2 position, glm::vec2 size);
+		void	setCollision(square square);
+		void	setPosition(glm::vec2 position);
+		void	setSize(glm::vec2 size);
 
 		// getters
-		square	getCollision() const;
+		square		getCollision() const;
+		glm::vec2	getSize() const;
+		glm::vec2	getPosition() const;
 
 		// member functions
 		bool	checkCollision(Collision const &other) const;

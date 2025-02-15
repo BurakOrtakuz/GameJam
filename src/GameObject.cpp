@@ -7,7 +7,7 @@ GameObject::GameObject(
 	glm::vec2 size,
 	std::string sprite,
 	glm::vec3 color
-): 
+):
 	_position(pos),
 	_size(size),
 	_color(color),
@@ -58,8 +58,23 @@ void GameObject::setSolid(bool solid)
 
 void GameObject::setPosition(glm::vec2 pos)
 {
+	_collision.setPosition(pos + _collision.getPosition() - _position);
 	_position = pos;
-	_collision.setCollision(_position, _size);
+}
+
+void GameObject::setCollisionSize(glm::vec2 size)
+{
+	_collision.setSize(size);
+}
+
+void GameObject::setCollisionPosition(glm::vec2 pos)
+{
+	_collision.setPosition(pos);
+}
+
+void GameObject::setCollision(glm::vec2 pos, glm::vec2 size)
+{
+	_collision.setCollision(pos, size);
 }
 /* **************************** [^] SETTERS [^] ***************************** */
 

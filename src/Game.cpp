@@ -53,7 +53,7 @@ void Game::loop(void)
 			//
 			//
 
-			
+
             std::cout << "FPS: " << frameCount << std::endl; //__??__
             fpsTimer = 0.0f;
             frameCount = 0;
@@ -66,7 +66,7 @@ void Game::loop(void)
 		processInput(deltaTime);
 
 		update(deltaTime);
-	
+
 		render();
 
 		glfwSwapBuffers(_window);
@@ -108,8 +108,7 @@ void Game::initRender()
 	this->_quadVAO = gl_init_render(vertices, sizeof(vertices));
 
 
-	ResourceManager::loadTexture("assets/background.jpg", false, "background");
-	ResourceManager::loadTexture("assets/back.png", true, "background");
+	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
@@ -135,17 +134,21 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/8_run_loop.png", true, "sprint8");
 
 	newMap("levels/one.lvl", "level1");
+	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
 	maps["level1"]._player->addAnimation(textures, "sprint");
 	std::cout << "Textures loaded" << std::endl;
 	maps["level1"]._player->setCurAnimation("sprint");
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
-	
+
 	//_player = maps["level1"]._player;
-	
+
 	// _enemyWowo = maps["level1"]._enemyWowo;
-	maps["level1"]._player->tagAdd(e_tag::PLAYER);
+	Player *player = maps["level1"]._player;
+	player->tagAdd(e_tag::PLAYER);
+	player->setCollision(glm::vec2(player->getPosition().x + 10.0f, player->getPosition().y + 5.0f),
+							glm::vec2 (player->getSize().x - 10.0f, player->getSize().y - 6.0f));
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -220,7 +223,7 @@ void
 		}
 		*/
 
-		
+
 
 		if (_keys[GLFW_KEY_A])
 		{
@@ -236,14 +239,16 @@ void
 
 		glm::vec2 position = playerPos;
 		position.y -= 300;
-		
+
 		glm::vec2 tempPos = maps["level1"]._player->getPosition();
 		maps["level1"]._player->setPosition(playerPos);
+		//if (CollisionManager::checkCollision(e_tag::WALL, position, maps["level1"]._player->getSize()) == true)
 		if (CollisionManager::checkCollision(e_tag::WALL, maps["level1"]._player) == true)
 		{
 			maps["level1"]._player->setPosition(tempPos);
 		}
-		
+
+
 		_camera->setPosition(position);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
@@ -261,10 +266,8 @@ void
 		maps["level1"]._player->draw(*_renderer);
 		maps["level1"]._enemyWowo->draw(*_renderer);
 
-		
-		//_enemy->draw(*_renderer);
-
-
+		_renderer->drawSprite("merhaba",maps["level1"]._player->getCollision().getPosition(),
+			maps["level1"]._player->getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
 		//Texture2D text = textures["rightUPCorner"];
