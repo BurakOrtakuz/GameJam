@@ -1,13 +1,13 @@
+#include <iostream>
+#include <Game.hpp>
+#include <Utils.hpp>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
-#include <graphic/Graphic.hpp>
-#include <Utils.hpp>
-#include <Game.hpp>
-#include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
-#include <CollisionManager.hpp>
 #include <TagManager.hpp>
+#include <graphic/Graphic.hpp>
 #include <ResourceManager.hpp>
+#include <CollisionManager.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 /* ***************** [v] UPLOAD ANIMATION SPRITES [v] **************** */
 

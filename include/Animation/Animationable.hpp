@@ -15,7 +15,6 @@ public:
     Animationable(void);
     virtual ~Animationable(void);
     void addAnimation(std::vector<std::string> textures, std::string animationName, unsigned int frames,bool loop = true);
-    void setAnimationIsPlayOneTime(const std::string animationName, bool isPlayOneTime);
     std::string getUpdate(float deltaTime);
     void setCurAnimation(const std::string &animationName);
     size_t  getTextureSize(const std::string &animationName);

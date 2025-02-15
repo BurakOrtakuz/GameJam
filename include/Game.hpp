@@ -37,6 +37,7 @@ public:
 	void		render(void);
 	void		update(float);
 	static void	updateKeyStatus(int key, bool status);
+	std::map<std::string, unsigned int> uniformShaders;
 private:
 	constexpr static float _playerVelocity = 500.0f;
 	static bool				_keys[1024];
@@ -51,9 +52,12 @@ private:
 	std::vector<Wall>		*_walls;
 	Camera  				*_camera;
 	map<string, GameMap>	maps;
+	unsigned int VAO, VBO;
 
 /* **************** [] UPLOAD ANIMATION SPRITES [] **************** */
 /* ******************* [v] FORK MAIN CHARACTER [v] ******************* */
+void    createLight();
+void	printLight();
 void	uploadForkBattle_stance();
 void	uploadForkClimb();
 void	uploadForkDash();

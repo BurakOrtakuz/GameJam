@@ -71,6 +71,11 @@ void Camera::zoom(const float zoom)
 		_zoom += zoom;
 }
 
+glm::vec2 Camera::getPosition() const
+{
+	return _position;
+}
+
 void Camera::setPosition(const glm::vec2 &position)
 {
 	_targetPosition = position;
@@ -85,4 +90,3 @@ void Camera::setLerpSpeed(const float lerpSpeed)
 {
 	_lerpSpeed = lerpSpeed;
 }
-

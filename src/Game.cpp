@@ -23,6 +23,15 @@ Game::~Game(void)
 
 void Game::start(void)
 {
+	ResourceManager::loadShader("lib/Shaders/shaderlight.vs", "lib/Shaders/shaderlight.fs", nullptr, "shaderlight");
+	unsigned int shaderId = ResourceManager::getShader("shaderlight").getID();
+	ResourceManager::getShader("shaderlight").Use();
+	createLight();
+	uniformShaders["lightPosition"] = glGetUniformLocation(shaderId, "lightPosition");
+	uniformShaders["lightIntensity"] = glGetUniformLocation(shaderId, "lightIntensity");
+	glUniform2f(uniformShaders["lightPosition"], 0.0f, 0.0f);
+	glUniform1f(uniformShaders["lightIntensity"], 1.0f);
+
 	ResourceManager::loadShader("lib/Shaders/shader.vs", "lib/Shaders/shader.fs", nullptr, "shader");
 	ResourceManager::getShader("shader").Use().SetInteger("image", 0);
 	_renderer = new SpriteRenderer("shader");
@@ -47,17 +56,13 @@ void Game::loop(void)
 		lastFrame = currentFrame;
 
 		fpsTimer += deltaTime;
-        frameCount++;
+		frameCount++;
 		if (fpsTimer >= 1.0f)
-        {
-			//
-			//
-
-
-            std::cout << "FPS: " << frameCount << std::endl; //__??__
-            fpsTimer = 0.0f;
-            frameCount = 0;
-        }
+		{
+			std::cout << "FPS: " << frameCount << std::endl; //__??__
+			fpsTimer = 0.0f;
+			frameCount = 0;
+		}
 
 		glfwPollEvents();
 
@@ -111,9 +116,9 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
-	//ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
+	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
-
+	
 	newMap("levels/one.lvl", "level1");
 	
 	uploadForkBattle_stance();
@@ -124,22 +129,24 @@ void Game::initRender()
 	uploadForkJump();
 	uploadForkSprint();
 	uploadForkStill();
+	uploadForkStill();
 	uploadForkHide();
 	uploadForkQuickPunch();
 
-	//std::cout << "Textures loaded" << std::endl;
+	std::cout << "Textures loaded" << std::endl;
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
 	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
+	
 	maps["level1"]._player->setCurAnimation("still");
 	//_player = maps["level1"]._player;
 
 	// _enemyWowo = maps["level1"]._enemyWowo;
 	Player *player = maps["level1"]._player;
 	player->tagAdd(e_tag::PLAYER);
-	player->setCollision(glm::vec2(player->getPosition().x + 1.0f, player->getPosition().y + 5.0f),
-							glm::vec2 (player->getSize().x - 1.0f, player->getSize().y - 6.0f));
+	player->setCollision(glm::vec2(player->getPosition().x + 10.0f, player->getPosition().y + 5.0f),
+							glm::vec2 (player->getSize().x - 10.0f, player->getSize().y - 6.0f));
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -184,8 +191,6 @@ void Game::process(float dt)
 	}
 }
 
-int hideOn = 0;
-
 void
 	Game::processInput(float dt)
 {
@@ -213,21 +218,6 @@ void
 			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
 		}
 		*/
-		//maps["level1"]._player->setCurAnimation("still");
-		if (_keys['H'])
-		{
-			if (hideOn < maps["level1"]._player->getTextureSize("hide"))
-			{
-				maps["level1"]._player->setCurAnimation("hide");
-				hideOn++;
-			}
-			else
-			{
-				hideOn = 0;
-				_keys['H'] = false;
-			}
-		}
-
 		glm::vec2 size = maps["level1"]._player->getSize();
 		size.y = 0.0f;
 		size.x += 20.0f;
@@ -235,11 +225,9 @@ void
 		{
 			maps["level1"]._player->setCurAnimation("battle_stance");
 		}
-		if (_keys[GLFW_KEY_SPACE])
-		{
-			maps["level1"]._player->setCurAnimation("jump");
-		}
-
+		else
+			maps["level1"]._player->setCurAnimation("still");
+		
 		if (_keys[GLFW_KEY_A])
 		{
 			//if (playerPos.x >= 0.0f)
@@ -281,6 +269,17 @@ void
 
 		glm::vec2 position = playerPos;
 		position.y -= 300;
+		
+		glm::vec2 playerViewPos = glm::vec2(playerPos.x + 800, playerPos.y - 100) - _camera->getPosition();
+		//std::cout << "Player Position: (" << playerViewPos.x << ", " << playerViewPos.y << ")" << std::endl;
+		ResourceManager::getShader("shaderlight").Use();
+
+		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
+		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
+		
+
+		ResourceManager::getShader("shader").Use();
 
 		glm::vec2 tempPos = maps["level1"]._player->getPosition();
 		maps["level1"]._player->setPosition(playerPos);
@@ -290,14 +289,60 @@ void
 			maps["level1"]._player->setPosition(tempPos);
 		}
 
+
 		_camera->setPosition(position);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
 }
 
+void Game::createLight()
+{
+	unsigned int shaderId = ResourceManager::getShader("shaderlight").getID();
+	ResourceManager::getShader("shaderlight").Use();
+	GLfloat lightPos[2];
+	GLfloat intensity;
+	glGetUniformfv(shaderId, uniformShaders["lightPosition"], lightPos);
+	glGetUniformfv(shaderId, uniformShaders["lightIntensity"], &intensity);
+	glGetUniformfv(shaderId, uniformShaders["lightPosition"], lightPos);
+	std::cout << "Light Position: (" << lightPos[0] << ", " << lightPos[1] << ")" << std::endl;
+	std::cout << "Light Intensity: " << intensity << std::endl;
+
+	float vertices[] = {
+		-1.0f, -1.0f, 0.0f,0.0f,0.0f,  // Bottom-left
+		 1.0f, -1.0f, 0.0f,0.0f,0.0f, // Bottom-right
+		-1.0f,  1.0f, 0.0f,0.0f,0.0f, // Top-left
+		1.0f,   1.0f, 0.0f,0.0f,0.0f  // Top-right
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Game::printLight()
+{
+	ResourceManager::getShader("shaderlight").Use();
+	glUseProgram(ResourceManager::getShader("shaderlight").getID());
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
 void
 	Game::render(void)
 {
+
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite("background",
@@ -309,7 +354,13 @@ void
 
 		_renderer->drawSprite("merhaba",maps["level1"]._player->getCollision().getPosition(),
 			maps["level1"]._player->getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		//_renderer->drawSprite(textures["rightUPCorner"],
+		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
+		//Texture2D text = textures["rightUPCorner"];
+		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
+		////maps["level1"]._player->draw(*_renderer);
 	}
+	printLight();
 }
 
 void
