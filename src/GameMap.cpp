@@ -38,21 +38,21 @@ void
 			{
 				glm::vec2 pos(unit_width * x, unit_height * y);
 				glm::vec2 size = ResourceManager::getTexture("leftUPCorner").getSize();
-				Wall wall(pos, ResourceManager::getTexture("leftUPCorner").getSize(), ResourceManager::getTexture("leftUPCorner"), glm::vec3(0.8f, 0.8f, 0.7f));
+				Wall wall(pos, ResourceManager::getTexture("leftUPCorner").getSize(), "leftUPCorner", glm::vec3(0.8f, 0.8f, 0.7f));
 				wall.setSolid(true);
 				this->walls.push_back(wall);
 			}
 			else if (tileData[y][x] == 9)
 			{
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y);
-				_player = new Player(playerPos, ResourceManager::getTexture("player").getSize(), ResourceManager::getTexture("player"));
+				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y - 60.0f);
+				_player = new Player(playerPos, ResourceManager::getTexture("player").getSize(), "player");
 				_player->setSolid(true);
 			}
 			else if (tileData[y][x] == 200)
 			{
 				glm::vec2 enemyWowoPos(unit_width * x, unit_height * y);
-				_enemyWowo = new Wowo(enemyWowoPos, ResourceManager::getTexture("wowo").getSize(), ResourceManager::getTexture("wowo"), glm::vec3(1.0f));
+				_enemyWowo = new Wowo(enemyWowoPos, ResourceManager::getTexture("wowo").getSize(), "wowo", glm::vec3(1.0f));
 				_enemyWowo->setSolid(true);
 			}
 		}

@@ -47,7 +47,7 @@ Texture2D& ResourceManager::getTexture(const std::string &name)
 
 void ResourceManager::clear()
 {
-	// (properly) delete all shaders	
+	// (properly) delete all shaders
 	for (auto iter : _shaders)
 		glDeleteProgram(iter.second.getID());
 	// (properly) delete all textures
@@ -111,6 +111,14 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
 	// load image
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+	if (!data)
+	{
+		std::cout << "Failed to load texture : " << file << std::endl;
+	}
+	else
+	{
+		std::cout << "Loaded texture : " << file << std::endl;
+	}
 	// now generate texture
 	texture.generate(width, height, data);
 	// and finally free image data

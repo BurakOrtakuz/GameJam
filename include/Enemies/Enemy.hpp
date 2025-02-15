@@ -2,6 +2,7 @@
 #define ENEMY_HPP 202502
 
 #include <GameObject.hpp>
+#include <iostream>
 
 class Enemy : public GameObject
 {
@@ -9,7 +10,7 @@ public:
 	Enemy(
 		glm::vec2 pos,
 		glm::vec2 size,
-		Texture2D sprite,
+		std::string spriteName,
 		glm::vec3 color
 	);
 	~Enemy();

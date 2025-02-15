@@ -4,9 +4,9 @@
 Wowo::Wowo(
 	glm::vec2 pos,
 	glm::vec2 size,
-	Texture2D sprite,
+	std::string spriteName,
 	glm::vec3 color
-): Enemy(pos, size, sprite, color)
+): Enemy(pos, size, spriteName, color)
 {
 	this->_velocity = 250;
 }
