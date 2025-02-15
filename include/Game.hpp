@@ -52,6 +52,21 @@ private:
 	Camera  				*_camera;
 	map<string, GameMap>	maps;
 
+/* **************** [] UPLOAD ANIMATION SPRITES [] **************** */
+/* ******************* [v] FORK MAIN CHARACTER [v] ******************* */
+void	uploadForkBattle_stance();
+void	uploadForkClimb();
+void	uploadForkDash();
+void	uploadForkDeath();
+void	uploadForkDoublePunch();
+void	uploadForkJump();
+void	uploadForkSprint();
+void	uploadForkStill();
+void	uploadForkHide();
+void	uploadForkQuickPunch();
+/* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
+
+
 };
 
 #endif /* GAME_HPP */

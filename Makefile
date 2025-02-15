@@ -16,15 +16,16 @@ else
 	LDFLAGS			= -lglfw -ldl -lGL -lz
 endif
 
-CXXFLAGS	=	 $(RELEASE_FLAGS) $(INCLUDEFLAGS)
+CXXFLAGS	=	
+CXXFLAGS	+= $(RELEASE_FLAGS) $(INCLUDEFLAGS)
 
 
 GRAPHIC		=	lib/graphic.a
 
-SRCDIR		=	./src
-ANIMDIR		=	$(SRCDIR)/Animation
-ENEMDIR		=	$(SRCDIR)/Enemies
-OBJDIR		=	$(SRCDIR)/Objects
+SRCDIR			=	./src
+ANIMDIR			=	$(SRCDIR)/Animation
+ENEMDIR			=	$(SRCDIR)/Enemies
+OBJECTSDIR		=	$(SRCDIR)/Objects
 
 #Animation
 SRC			=	$(ANIMDIR)/Animation.cpp \
@@ -34,8 +35,8 @@ SRC			+=	$(ENEMDIR)/Enemy.cpp \
 				$(ENEMDIR)/Wowo.cpp \
 
 #Objects
-SRC			+=	$(OBJDIR)/Player.cpp \
-				$(OBJDIR)/Wall.cpp
+SRC			+=	$(OBJECTSDIR)/Player.cpp \
+				$(OBJECTSDIR)/Wall.cpp
 
 SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/Collision.cpp \
@@ -43,20 +44,22 @@ SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/Game.cpp \
 				$(SRCDIR)/GameMap.cpp \
 				$(SRCDIR)/GameObject.cpp \
+				$(SRCDIR)/GameUploads.cpp \
 				$(SRCDIR)/InputCallbacks.cpp \
 				$(SRCDIR)/main.cpp \
 				$(SRCDIR)/ResourceManager.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
 				$(SRCDIR)/TagManager.cpp \
-				$(SRCDIR)/Texture2D.cpp \
+				$(SRCDIR)/Texture2D.cpp
 
-OBJ			=	$(SRC:.cpp=.o)
+OBJDIR		=	./obj
+OBJ			=	$(SRC:%.cpp=$(OBJDIR)/%.o)
 
 all: graphall $(NAME)
 
 $(NAME): $(OBJ)
-	$(CXX) $(CXXFLAGS)  $(OBJ) $(GRAPHIC) $(INCLUDEFLAGS) $(LDFLAGS) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJ) $(GRAPHIC) $(LDFLAGS) -o $(NAME)
 
 rrun: re
 	@./$(NAME) || true
@@ -67,7 +70,7 @@ run: all
 c: clean
 clean:
 	@make -C lib clean
-	$(RM) $(OBJ)
+	$(RM) $(OBJDIR)/*.o
 
 f: fc
 fclean: fc
@@ -86,9 +89,9 @@ run : all
 	./$(NAME)
 .PHONY: all c clean fc fclean re run
 
-
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDEFLAGS) -c $< -o $@
+$(OBJDIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphall:
 	@make -C lib

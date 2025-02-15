@@ -113,35 +113,28 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Wowo/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Player.png", true, "player");
-
-	std::vector<std::string> textures;
-	textures.push_back("sprint1");
-	textures.push_back("sprint2");
-	textures.push_back("sprint3");
-	textures.push_back("sprint4");
-	textures.push_back("sprint5");
-	textures.push_back("sprint6");
-	textures.push_back("sprint7");
-	textures.push_back("sprint8");
-
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/1_run_loop.png", true, "sprint1");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/2_run_loop.png", true, "sprint2");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/3_run_loop.png", true, "sprint3");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/4_run_loop.png", true, "sprint4");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/5_run_loop.png", true, "sprint5");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/6_run_loop.png", true, "sprint6");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/7_run_loop.png", true, "sprint7");
-	ResourceManager::loadTexture("assets/Characters/Fork_(mc)/Fork_sprint/8_run_loop.png", true, "sprint8");
-
+	
 	newMap("levels/one.lvl", "level1");
-	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
-	maps["level1"]._player->addAnimation(textures, "sprint");
+	
+	uploadForkBattle_stance();
+	uploadForkClimb();
+	uploadForkDash();
+	uploadForkDeath();
+	uploadForkDoublePunch();
+	uploadForkJump();
+	uploadForkSprint();
+	uploadForkStill();
+	uploadForkStill();
+	uploadForkHide();
+	uploadForkQuickPunch();
+
 	std::cout << "Textures loaded" << std::endl;
-	maps["level1"]._player->setCurAnimation("sprint");
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
-
+	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
+	
+	maps["level1"]._player->setCurAnimation("still");
 	//_player = maps["level1"]._player;
 
 	// _enemyWowo = maps["level1"]._enemyWowo;
@@ -208,8 +201,6 @@ void
 		glm::vec2 player_rd = {playerPos.x, playerPos.y + playerSize.y};
 		glm::vec2 player_ld = {playerPos.x + playerSize.x, playerPos.y + playerSize.y};
 
-		(void)_keys;
-
 		/*
 		for (Wall wall : _walls)
 		{
@@ -222,19 +213,40 @@ void
 			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
 		}
 		*/
-
-
-
+		glm::vec2 size = maps["level1"]._player->getSize();
+		size.y = 0.0f;
+		size.x += 20.0f;
+		if (CollisionManager::checkCollision(e_tag::WALL, Collision(maps["level1"]._player->getPosition(), size)) == true)
+		{
+			maps["level1"]._player->setCurAnimation("battle_stance");
+		}
+		else
+			maps["level1"]._player->setCurAnimation("still");
 		if (_keys[GLFW_KEY_A])
 		{
 			//if (playerPos.x >= 0.0f)
-				playerPos.x -= velocity;
+			maps["level1"]._player->setCurAnimation("sprint");	
+			playerPos.x -= velocity;
 		}
-
-		if (_keys[GLFW_KEY_D])
+		else if (_keys[GLFW_KEY_D])
 		{
-			//if (playerPos.x <= SCREEN_WIDTH - _player->getSize().x)
+			{
+				maps["level1"]._player->setCurAnimation("sprint");
 				playerPos.x += velocity;
+			}
+		}
+		else if (_keys['C'])
+		{
+			maps["level1"]._player->setCurAnimation("climb");
+		}
+		else if (_keys['B'])
+		{
+			maps["level1"]._player->setCurAnimation("battle_stance");
+		}
+		else if (_keys['N'])
+		{
+			maps["level1"]._player->setCurAnimation("dash");
+			playerPos.x += velocity * 2;
 		}
 
 		glm::vec2 position = playerPos;

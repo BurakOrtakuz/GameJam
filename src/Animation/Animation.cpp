@@ -25,6 +25,7 @@ Animation::Animation(
 	unsigned int frameRate,
 	bool isLooping)
 {
+	(void)alpha;
 	_textures = textures;
 	_isLooping = isLooping;
 	_frameRate = frameRate;
