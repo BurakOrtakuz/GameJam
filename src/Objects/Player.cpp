@@ -3,7 +3,7 @@
 Player::Player(
 	glm::vec2 pos, 
 	glm::vec2 size, 
-	Texture2D sprite, 
+	std::string sprite, 
 	glm::vec3 color,
 	glm::vec2 velocity
 ): 
@@ -31,3 +31,7 @@ Player::~Player()
 {
 }
 
+void Player::updateAnimation(float deltaTime)
+{
+	_sprite = getUpdate(deltaTime);
+}

@@ -1,2 +1,5 @@
 ./jam.exe
+./jam
 ./obj
+./src/*.o
+./src/*/*.o

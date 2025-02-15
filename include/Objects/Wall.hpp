@@ -13,7 +13,7 @@ public:
 	Wall(
 		glm::vec2 pos = defaultPosition, 
 		glm::vec2 size = defaultSize,
-		Texture2D sprite = Texture2D(),
+		std::string sprite = "",
 		glm::vec3 color = glm::vec3(1.0f),
 		glm::vec2 velocity = defaultVelocity
 	);

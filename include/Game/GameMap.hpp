@@ -18,7 +18,6 @@ class GameMap
 {
 public:
 	GameMap(void);
-	GameMap(map<string, Texture2D> *_textures);
 	~GameMap(void);
 
 	GameObject getGameObject(int index);
@@ -35,7 +34,6 @@ public:
 	std::vector<Wall>	walls;
 private:
 	std::vector<GameObject>		objects;
-	map<string, Texture2D>		*textures;
 
 	void init(
 		std::vector<std::vector<unsigned int>>	tileData,
