@@ -6,6 +6,8 @@ INCLUDEFLAGS =	-Ilib -Iinclude \
 				-Iinclude/Game \
 				-Iinclude/Objects \
 
+RM	=	rm -rf
+
 ifeq ($(OS),Windows_NT)
 	NAME			= jam.exe
 	RELEASE_FLAGS	= -O3 -DNDEBUG -s
@@ -70,7 +72,7 @@ run: all
 c: clean
 clean:
 	@make -C lib clean
-	$(RM) $(OBJDIR)/*.o
+	$(RM) $(OBJDIR)
 
 f: fc
 fclean: fc
