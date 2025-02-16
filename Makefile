@@ -47,6 +47,7 @@ SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/CollisionManager.cpp \
 				$(SRCDIR)/Game.cpp \
 				$(SRCDIR)/GameMap.cpp \
+				$(SRCDIR)/GameMapUploads.cpp \
 				$(SRCDIR)/GameObject.cpp \
 				$(SRCDIR)/GameUploads.cpp \
 				$(SRCDIR)/GameUtils.cpp \

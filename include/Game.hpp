@@ -38,6 +38,7 @@ public:
 	void		resetInputs();
 	static void	updateKeyStatus(int key, bool status);
 	std::map<std::string, unsigned int> uniformShaders;
+	float		deltaTime = 0.0f;
 private:
 	constexpr static float _playerVelocity = 500.0f;
 	static bool				_keys[1024];
@@ -72,8 +73,11 @@ void	uploadForkQuickPunch();
 void	uploadForkStill();
 void	uploadForkHurt();
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
-
-
+void	uploadBackground();
+void	upload_Platform();
+void	upload_Discard();
+void	upload_GroundTextures();
+void	uploadSimpleTextures();
 };
 
 #endif /* GAME_HPP */

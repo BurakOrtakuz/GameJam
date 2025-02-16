@@ -11,9 +11,9 @@
 
 bool Game::_keys[1024] = {0};
 
-#define GRAVITY_FALL_POWER 1.8F
-#define JUMP_POWER 5.0F
-#define SLIPPERINESS 0.0038F
+#define GRAVITY_FALL_POWER 920.8F
+#define JUMP_POWER 10.0F
+#define SLIPPERINESS 0.1038F
 
 static float
 	my_lerp(float x, float y, float f)
@@ -53,10 +53,8 @@ void Game::start(void)
 
 void Game::loop(void)
 {
-	float slipperiness = SLIPPERINESS;
 	Player *player = maps["level1"]._player;
 	float delta_momentum = 0.0F;
-	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 	float fpsTimer = 0.0f;
 	int frameCount = 0;
@@ -85,7 +83,7 @@ void Game::loop(void)
 		if (CollisionManager::checkCollision(e_tag::WALL, player->_groundCollision) == false)
 		{
 			player->able_to_jump = false;
-			delta_momentum += GRAVITY_FALL_POWER;
+			delta_momentum += GRAVITY_FALL_POWER * deltaTime;
 		}
 		else
 		{
@@ -93,9 +91,9 @@ void Game::loop(void)
 			delta_momentum = 0.0F;
 		}
 
-		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
-		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
-		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+		playerMomentum.y = playerMomentum.y + ((delta_momentum) * (deltaTime)); // gravity
+		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, SLIPPERINESS * (deltaTime * 60.0F));
+		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, SLIPPERINESS * (deltaTime * 60.0F));
 
 		if (player->getHide())
 		{
@@ -118,8 +116,8 @@ void Game::loop(void)
 				glm::vec2 object_position = object->getCollision().getPosition();
 				glm::vec2 object_size = object->getCollision().getSize();
 
-				const float o_right = object_position.x + object_size.x;
-				const float o_left = object_position.x;
+				const float o_right = object_position.x + object_size.x + 0.1;
+				const float o_left = object_position.x - 0.1;
 				const float o_up = object_position.y;
 				const float o_down = object_position.y + object_size.y;
 
@@ -231,13 +229,26 @@ void Game::initRender()
 	};
 
 	this->_quadVAO = gl_init_render(vertices, sizeof(vertices));
-
-
-	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
+/*
+	
+	upload_Platform();
+	upload_Discard();
+	upload_GroundTextures();
+	*/
+	uploadSimpleTextures();
+	uploadBackground();
+	//DELETE
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
+
+
+//	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
+//	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
+//	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
+//	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
+//	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
 	
 	newMap("levels/one.lvl", "level1");
 	
@@ -455,7 +466,7 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite("background",
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT));
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 2));
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
@@ -472,7 +483,7 @@ void
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);
 	}
-	printLight();
+	//printLight();
 }
 
 void

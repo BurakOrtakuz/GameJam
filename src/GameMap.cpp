@@ -7,6 +7,43 @@
 #include <stdio.h>
 #include <ResourceManager.hpp>
 
+std::string getSpriteName(int i)
+{
+	switch (i)
+	{
+	case 1:
+		return "ground_texture_corner_L"; //"Siradan Platform";
+	case 2:
+		return "ground_texture_middle"; // orta cimen
+	case 3:
+		return "ground_texture_corner_R"; // Sag cimen
+	case 4:
+		return "ground_texture_soil"; // Sol cimen
+	case 5:
+		return "key1"; // 
+	case 6:
+		return "key2"; // 
+	case 7:
+		return "keywhole"; // SU
+	case 8:
+		return "sarkit";
+	case 9:
+		return "spikes";
+	case 10:
+		return "platform_corner_L"; //"platform_L_M";
+	case 11:
+		return "platform_corner_R";
+	case 12:
+		return "platform_mid";
+	case 13:
+		return "wall_wine";
+	case 14:
+		return "wall_texture";
+	default:
+		return "";
+	}
+}
+
 /* ************************ [v] PRIVATE FUNCTIONS [v] *********************** */
 void
 	GameMap::init(
@@ -26,26 +63,20 @@ void
 	{
 		for (unsigned int x = 0; x < width; ++x)
 		{
-			//if (tileData[y][x] == 0)
-			//{
-			//    glm::vec2 pos(unit_width * x, unit_height * y);
-			//    //glm::vec2 size(unit_width, unit_height);
-			//    GameObject obj(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
-			//    obj.setSolid(true);
-			//    this->objects.push_back(obj);
-			//}
-			if (tileData[y][x] == 1)
+			if (tileData[y][x] > 0 && tileData[y][x] < 15)
 			{
 				glm::vec2 pos(unit_width * x, unit_height * y);
-				glm::vec2 size = ResourceManager::getTexture("leftUPCorner").getSize();
-				Wall wall(pos, ResourceManager::getTexture("leftUPCorner").getSize(), "leftUPCorner", glm::vec3(0.8f, 0.8f, 0.7f));
+				std::string spriteName = getSpriteName(tileData[y][x]);
+				glm::vec2 size = ResourceManager::getTexture(spriteName).getSize();
+				Wall wall(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
 				wall.setSolid(true);
 				this->walls.push_back(wall);
 			}
-			else if (tileData[y][x] == 9)
+			else if (tileData[y][x] == 100)
 			{
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
-				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y - 60.0f);
+				std::cout << "Player position: " << unit_width * x << " " << unit_height * y << std::endl;
+				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y + 60);
 				_player = new Player(playerPos, ResourceManager::getTexture("player").getSize(), "player");
 				_player->setSolid(true);
 			}

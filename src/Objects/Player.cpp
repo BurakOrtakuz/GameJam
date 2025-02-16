@@ -58,7 +58,7 @@ void Player::setPosition(glm::vec2 pos)
 {
 	_position = glm::vec2(pos.x - 67.0f, pos.y - 13.0f);
 	_collision.setPosition(glm::vec2(pos.x, pos.y));
-	_groundCollision.setPosition(glm::vec2(pos.x, pos.y + 173.0f));
+	_groundCollision.setPosition(glm::vec2(pos.x, pos.y + 143.0f));
 }
 
 glm::vec2 Player::getMomentum(void) const
