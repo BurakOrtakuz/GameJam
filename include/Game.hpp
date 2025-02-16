@@ -36,9 +36,9 @@ public:
 	void		render(void);
 	void		update(float);
 	void		resetInputs();
-	void		collisionDetection(glm::vec2&, glm::vec2&, glm::vec2&, Player *);
 	static void	updateKeyStatus(int key, bool status);
 	std::map<std::string, unsigned int> uniformShaders;
+	float deltaTime = 0.0f;
 private:
 	constexpr static float _playerVelocity = 500.0f;
 	static bool				_keys[1024];

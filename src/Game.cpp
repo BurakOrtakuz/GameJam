@@ -11,9 +11,9 @@
 
 bool Game::_keys[1024] = {0};
 
-#define GRAVITY_FALL_POWER 1.8F
-#define JUMP_POWER 5.0F
-#define SLIPPERINESS 0.0038F
+#define GRAVITY_FALL_POWER 2055.8F
+#define JUMP_POWER 30.0F
+#define SLIPPERINESS 0.1668F
 
 static float
 	my_lerp(float x, float y, float f)
@@ -53,16 +53,16 @@ void Game::start(void)
 
 void Game::loop(void)
 {
-	float slipperiness = SLIPPERINESS;
 	Player *player = maps["level1"]._player;
 	float delta_momentum = 0.0F;
-	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 	float fpsTimer = 0.0f;
 	int frameCount = 0;
+	player->setMomentum(player->getCollision().getPosition());
+
 	while (!glfwWindowShouldClose(_window))
 	{
-		// calculate delta time
+			// calculate delta time
 		// --------------------
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -85,7 +85,7 @@ void Game::loop(void)
 		if (CollisionManager::checkCollision(e_tag::WALL, player->_groundCollision) == false)
 		{
 			player->able_to_jump = false;
-			delta_momentum += GRAVITY_FALL_POWER;
+			delta_momentum += GRAVITY_FALL_POWER * deltaTime;  // Scale gravity by deltaTime
 		}
 		else
 		{
@@ -93,9 +93,9 @@ void Game::loop(void)
 			delta_momentum = 0.0F;
 		}
 
-		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
-		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
-		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+		playerMomentum.y += delta_momentum * deltaTime; // gravity
+		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, SLIPPERINESS * (deltaTime * 60.0f));
+		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, SLIPPERINESS * (deltaTime * 60.0f));
 
 		if (player->getHide())
 		{
@@ -104,9 +104,91 @@ void Game::loop(void)
 			
 		}
 
+		{
+			float p_right = playerPos.x + player->getCollision().getSize().x;
+			float p_left = playerPos.x;
+			float p_up = playerPos.y;
+			float p_down = playerPos.y + player->getCollision().getSize().y;
+			std::vector<GameObject *> objects = TagManager::getTags(e_tag::WALL);
+			bool bottomCollision = false;
+			bool topCollision = false;
+			bool leftCollision = false;
+			bool rightCollision = false;
 
-		 // COLISSION
-		 collisionDetection(playerPos, playerMomentum, temp, player);
+			for (auto object : objects)
+			{
+				if (object->isDestroyed())
+					continue;
+
+				glm::vec2 object_position = object->getCollision().getPosition();
+				glm::vec2 object_size = object->getCollision().getSize();
+
+				const float o_right = object_position.x + object_size.x + 1.0f;
+				const float o_left = object_position.x;
+				const float o_up = object_position.y;
+				const float o_down = object_position.y + object_size.y;
+
+				bottomCollision = bottomCollision ||
+					(fabs(p_down - o_up) < 1.0f) &&
+					(p_up < o_up) &&
+					(p_right > o_left) &&
+					(p_left < o_right);
+
+				topCollision = topCollision ||
+					(fabs(p_up - o_down) < 1.0f) &&
+					(p_down > o_down) &&
+					(p_right > o_left) &&
+					(p_left < o_right);
+
+				leftCollision = leftCollision ||
+					(fabs(p_left - o_right) < 1.0f) &&
+					(p_right > o_right) &&
+					(p_down > o_up) &&
+					(p_up < o_down);
+
+				rightCollision = rightCollision ||
+					(fabs(p_right - o_left) < 1.0f) &&
+					(p_left < o_left) &&
+					(p_down > o_up) &&
+					(p_up < o_down);
+
+				if (bottomCollision)
+				{
+					playerPos = glm::vec2(playerPos.x, temp.y - 0.1F);
+					playerMomentum = glm::vec2(playerMomentum.x, playerPos.y);
+					temp = playerPos;
+					p_up = playerPos.y;
+					p_down = playerPos.y + player->getCollision().getSize().y;
+				}
+	
+				if (topCollision)
+				{
+					playerPos = glm::vec2(playerPos.x, temp.y + 0.1F);
+					playerMomentum = glm::vec2(playerMomentum.x, playerPos.y);
+					temp = playerPos;
+					p_up = playerPos.y;
+					p_down = playerPos.y + player->getCollision().getSize().y;
+				}
+	
+				if (leftCollision)
+				{
+					playerPos = glm::vec2(temp.x + 0.1F, playerPos.y);
+					playerMomentum = glm::vec2(playerPos.x, playerMomentum.y);
+					temp = playerPos;
+					p_right = playerPos.x + player->getCollision().getSize().x;
+					p_left = playerPos.x;
+				}
+	
+				if (rightCollision)
+				{
+					playerPos = glm::vec2(temp.x - 0.1F, playerPos.y);
+					playerMomentum = glm::vec2(playerPos.x, playerMomentum.y);
+					temp = playerPos;
+					p_right = playerPos.x + player->getCollision().getSize().x;
+					p_left = playerPos.x;
+				}
+			}
+		}
 
 		player->setMomentum(playerMomentum);
 		player->setPosition(playerPos);
@@ -405,6 +487,14 @@ void
 		_renderer->drawSprite("merhaba", maps["level1"]._player->_groundCollision.getPosition(),
 			maps["level1"]._player->_groundCollision.getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
+		_renderer->drawSprite("merhaba", maps["level1"]._player->getCollision().getPosition(),
+			maps["level1"]._player->getCollision().getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		for (auto &wall : maps["level1"].walls)
+		{
+			_renderer->drawSprite("merhaba", wall.getCollision().getPosition(),
+				wall.getCollision().getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
 
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
@@ -413,7 +503,7 @@ void
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);
 	}
-	printLight();
+	//printLight();
 }
 
 void
