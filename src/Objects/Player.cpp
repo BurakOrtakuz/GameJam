@@ -6,14 +6,18 @@ Player::Player(
 	std::string sprite, 
 	glm::vec3 color,
 	glm::vec2 velocity
-): 
+):
 	GameObject(pos, size, sprite, color),
-	_velocity(velocity)
+	_velocity(velocity),
+	_groundCollision(Collision(glm::vec2(pos.x + 65.0f, pos.y + 150.0f), glm::vec2(30.0f, 10.0f)))
 {
+	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(31.0f, 127.0f));
+	_momentumPosition = pos;
+	_position = pos;
 }
 
 Player::Player(const Player &player)
-	: GameObject(player), _velocity(player._velocity)
+	: GameObject(player), _velocity(player._velocity), _groundCollision(player._groundCollision)
 {
 }
 
@@ -31,8 +35,48 @@ Player::~Player()
 {
 }
 
-
 void Player::updateAnimation(float deltaTime)
 {
-	_sprite = getUpdate(deltaTime);
+	std::string tempAnim = _sprite;
+	std::string res = getUpdate(deltaTime);
+
+	// std::cout << "RES: " << res << std::endl;
+
+	if (res == "1")
+	{
+		// if (tempAnim == "death")
+		// {
+		// 	_sprite = 
+		// }
+		_sprite = "still1";
+	}
+	else
+		_sprite = res;
+}
+
+void Player::setPosition(glm::vec2 pos)
+{
+	_position = glm::vec2(pos.x - 67.0f, pos.y - 13.0f);
+	_collision.setPosition(glm::vec2(pos.x, pos.y));
+	_groundCollision.setPosition(glm::vec2(pos.x, pos.y + 173.0f));
+}
+
+glm::vec2 Player::getMomentum(void) const
+{
+	return (this->_momentumPosition);
+}
+
+void Player::setMomentum(glm::vec2 momentum)
+{
+	this->_momentumPosition = momentum;
+}
+
+void Player::onHide(bool value)
+{
+	this->_onHide = value;
+}
+
+bool Player::getHide(void) const
+{
+	return (this->_onHide);
 }

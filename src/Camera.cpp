@@ -76,6 +76,11 @@ glm::vec2 Camera::getPosition() const
 	return _position;
 }
 
+glm::vec2 Camera::getTargetPosition() const
+{
+	return _targetPosition;
+}
+
 void Camera::setPosition(const glm::vec2 &position)
 {
 	_targetPosition = position;

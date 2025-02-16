@@ -106,12 +106,12 @@ bool Animation::isLooping() const
 }
 
 std::string Animation::getCurrentFrame() {
-    return _textures[_currentFrame];
+	return _textures[_currentFrame];
 }
 
 std::string Animation::getFrame(unsigned int index) {
-    // Add bounds checking if needed
-    return _textures[index];
+	// Add bounds checking if needed
+	return _textures[index];
 }
 std::string	Animation::getNextFrame()
 {
@@ -120,6 +120,11 @@ std::string	Animation::getNextFrame()
 	else
 		_currentFrame++;
 	return (_textures[_currentFrame]);
+}
+
+bool Animation::getLoop()
+{
+	return (_isLooping);
 }
 
 unsigned int	Animation::getSize()
@@ -141,27 +146,42 @@ void	Animation::removeFrame(unsigned int index)
 }
 
 std::string Animation::update(float deltaTime) {
-    if (_isPlaying) {
-        _frameCount += deltaTime;
-        float frameDuration = 1.0f / _frameRate; // Use frame rate
-        if (_frameCount >= frameDuration) {
-            _frameCount -= frameDuration; // Subtract to preserve residual time
-            _currentFrame = (_currentFrame + 1) % _textures.size();
-        }
-    }
-    return _textures[_currentFrame];
+	if (_isPlaying) {
+		_frameCount += deltaTime;
+		float frameDuration = 1.0f / _frameRate; // Use frame rate
+		if (_frameCount >= frameDuration) {
+			_frameCount -= frameDuration; // Subtract to preserve residual time
+			if(_isLooping)
+			{
+				_currentFrame = (_currentFrame + 1) % _textures.size();
+			}
+			else if (_currentFrame + 1 <  _textures.size())
+				_currentFrame++;
+			else
+			{
+				std::cout << "GIRDI" << std::endl;
+				_currentFrame = 0;
+				_isPlaying =false;
+				return "1";
+			}
+		}
+		return _textures[_currentFrame];
+	}
+	return "1";
 }
 void	Animation::play()
 {
+	_isPlaying = true;
 }
 
 void	Animation::stop()
 {
-
+	_isPlaying = false;
+	_currentFrame = 0;
 }
 
 void	Animation::pause()
 {
-
+	_isPlaying = false;
 }
 

@@ -10,7 +10,6 @@
 #include <Player.hpp>
 #include <Camera.hpp>
 
-
 using std::map;
 using std::string;
 
@@ -36,6 +35,7 @@ public:
 	void		processInput(float dt);
 	void		render(void);
 	void		update(float);
+	void		resetInputs();
 	static void	updateKeyStatus(int key, bool status);
 	std::map<std::string, unsigned int> uniformShaders;
 private:
@@ -54,20 +54,23 @@ private:
 	map<string, GameMap>	maps;
 	unsigned int VAO, VBO;
 
+	void    createLight();
+	void	printLight();
+
 /* **************** [] UPLOAD ANIMATION SPRITES [] **************** */
 /* ******************* [v] FORK MAIN CHARACTER [v] ******************* */
-void    createLight();
-void	printLight();
 void	uploadForkBattle_stance();
 void	uploadForkClimb();
+void	uploadForkDamage();
 void	uploadForkDash();
 void	uploadForkDeath();
 void	uploadForkDoublePunch();
 void	uploadForkJump();
 void	uploadForkSprint();
-void	uploadForkStill();
 void	uploadForkHide();
 void	uploadForkQuickPunch();
+void	uploadForkStill();
+void	uploadForkHurt();
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
 
 

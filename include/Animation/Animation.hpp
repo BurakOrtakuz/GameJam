@@ -57,6 +57,7 @@ public:
 	std::string		getFrame(unsigned int index);
 	std::string		getNextFrame();
 	unsigned int	getSize();
+	bool			getLoop();
 
 	// member functions
 	void			addFrame(const std::string &texture, bool alpha = false);

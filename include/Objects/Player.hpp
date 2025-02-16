@@ -12,7 +12,11 @@ private:
 	constexpr static glm::vec2	defaultVelocity = glm::vec2(0.0f, 0.0f);
 
 	glm::vec2							_velocity;
+	glm::vec2							_momentumPosition;
+	bool								_onHide = false;
 public:
+	Collision							_groundCollision;
+	bool								able_to_jump = false;
 	Player(
 		glm::vec2 pos = defaultPosition, 
 		glm::vec2 size = defaultSize,
@@ -24,7 +28,11 @@ public:
 	Player &operator=(const Player &player);
 	~Player();
 	void updateAnimation(float deltaTime);
+	void	setPosition(glm::vec2 pos) override;
+	glm::vec2	getMomentum(void) const;
+	void setMomentum(glm::vec2 momentum);
+	void onHide(bool value);
+	bool getHide(void) const;
 };
-
 
 #endif // PLAYER_HPP
