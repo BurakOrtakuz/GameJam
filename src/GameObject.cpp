@@ -94,4 +94,10 @@ void GameObject::tagAdd(e_tag tag)
 {
 	TagManager::addTag(tag, this);
 }
+
+void GameObject::update(float deltaTime)
+{
+	(void)deltaTime;
+}
 /* **************************** [^] FUNCTIONS [^] *************************** */
+

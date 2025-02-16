@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 20:52:27 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/15 19:40:04 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/16 11:51:39 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,28 @@ bool CollisionManager::checkCollision(glm::vec2 a, glm::vec2 b, glm::vec2 size)
 			return true;
     }
     return false;
+}
+
+
+triggers	CollisionManager::checkTriggers(e_tag tag, Collision const &obj2)
+{
+	std::vector<GameObject *> objects = TagManager::getTags(tag);
+	triggers trigger = {false, false, false, false};
+	for (auto object : objects)
+	{
+		if (object->isDestroyed())
+			continue;
+		triggers temp = object->getCollision().checkTriggers(obj2);
+
+		trigger.top = trigger.top || temp.top;
+		trigger.bottom = trigger.bottom || temp.bottom;
+		trigger.left = trigger.left || temp.left;
+		trigger.right = trigger.right || temp.right;
+	}
+	return trigger;
+}
+
+triggers	CollisionManager::checkTriggers(e_tag tag, glm::vec2 position, glm::vec2 size)
+{
+	return checkTriggers(tag, Collision(position, size));
 }

@@ -122,7 +122,7 @@ unsigned int gl_compile_shader(const char *vShaderFile, const char *fShaderFile)
 	std::string vertexCode;
 	std::string fragmentCode;
 	std::string geometryCode;
-	
+
 		// open files
 		std::ifstream vertexShaderFile(vShaderFile);
 		std::ifstream fragmentShaderFile(fShaderFile);

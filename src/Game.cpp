@@ -1,12 +1,13 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <graphic/Graphic.hpp>
-#include <Utils.hpp>
+#include <utils.hpp>
 #include <Game.hpp>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <CollisionManager.hpp>
 #include <TagManager.hpp>
+#include <utils.hpp>
 #include <ResourceManager.hpp>
 
 bool Game::_keys[1024] = {0};
@@ -14,12 +15,6 @@ bool Game::_keys[1024] = {0};
 #define GRAVITY_FALL_POWER 1.8F
 #define JUMP_POWER 5.0F
 #define SLIPPERINESS 0.0038F
-
-static float
-	my_lerp(float x, float y, float f)
-{
-	return (x + f * (y - x));
-}
 
 Game::Game(void)
 {
@@ -94,8 +89,8 @@ void Game::loop(void)
 		}
 
 		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
-		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
-		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+		playerPos.x = lerp(playerPos.x, playerMomentum.x, slipperiness);
+		playerPos.y = lerp(playerPos.y, playerMomentum.y, slipperiness);
 
 		if (player->getHide())
 		{
@@ -176,6 +171,7 @@ void Game::loop(void)
 		player->setMomentum(playerMomentum);
 		player->setPosition(playerPos);
 
+		maps["level1"]._enemyWowo->update(deltaTime);
 		glfwPollEvents();
 
 		process(deltaTime);
@@ -238,9 +234,9 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
-	
+
 	newMap("levels/one.lvl", "level1");
-	
+
 	uploadForkBattle_stance();
 	uploadForkClimb();
 	uploadForkDamage();
@@ -259,7 +255,7 @@ void Game::initRender()
 	// Most manuel shit I've ever seen
 	// - Teo
 	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
-	
+
 	maps["level1"]._player->setCurAnimation("still");
 	//_player = maps["level1"]._player;
 
@@ -283,34 +279,6 @@ void
 
 void Game::process(float dt)
 {
-	if (_state == GameState::GAME_ACTIVE)
-	{
-		float velocity = maps["level1"]._enemyWowo->_velocity * dt;
-		glm::vec2 wowoPos = maps["level1"]._enemyWowo->getPosition();
-
-		glm::vec2 playerSize = maps["level1"]._enemyWowo->getSize();
-
-		glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
-		glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
-
-		glm::vec2 playerPos = maps["level1"]._player->getPosition();
-
-		if (playerPos.x < wowoPos.x)
-		{
-			wowoPos.x -= velocity;
-			maps["level1"]._enemyWowo->setIsReversed(false);
-		}
-		else if (playerPos.x > wowoPos.x)
-		{
-			wowoPos.x += velocity;
-			maps["level1"]._enemyWowo->setIsReversed(true);
-		}
-
-		glm::vec2 position = wowoPos;
-		maps["level1"]._enemyWowo->setPosition(wowoPos);
-	}
 }
 
 void
@@ -333,10 +301,10 @@ void
 		}
 		else
 			maps["level1"]._player->setCurAnimation("still");
-		
+
 		if (_keys[GLFW_KEY_A])
 		{
-			
+
 			maps["level1"]._player->setCurAnimation("sprint");
 			maps["level1"]._player->setIsReversed(true);
 			playerMomentum.x -= velocity;
@@ -427,7 +395,7 @@ void Game::createLight()
 	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -436,7 +404,7 @@ void Game::createLight()
 
 	glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -472,7 +440,7 @@ void
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);
 	}
-	printLight();
+	//printLight();
 }
 
 void

@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:56:02 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 23:59:25 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/16 08:28:58 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ struct	square
 	float	right;
 };
 
+struct	triggers
+{
+	bool	top;
+	bool	bottom;
+	bool	left;
+	bool	right;
+};
+
 class Collision
 {
 	private:
@@ -34,7 +42,7 @@ class Collision
 		Collision() = delete;
 
 	public:
-		// member functions
+		// constructor
 		Collision(glm::vec2 position, glm::vec2 size);
 		Collision(Collision const &src);
 		~Collision();
@@ -54,7 +62,8 @@ class Collision
 		glm::vec2	getPosition() const;
 
 		// member functions
-		bool	checkCollision(Collision const &other) const;
+		bool		checkCollision(Collision const &other) const;
+		triggers	checkTriggers(Collision const &other) const;
 };
 
 #endif // COLLISION_HPP

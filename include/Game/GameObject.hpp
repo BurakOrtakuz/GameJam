@@ -55,6 +55,7 @@ public:
 /* **************************** [v] FUNCTIONS [v] *************************** */
 	void draw(SpriteRenderer &renderer);
 	void	tagAdd(e_tag tag);
+	virtual void update(float dt);
 /* **************************** [^] FUNCTIONS [^] *************************** */
 };
 

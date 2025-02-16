@@ -1,17 +1,17 @@
 #include <Player.hpp>
 
 Player::Player(
-	glm::vec2 pos, 
-	glm::vec2 size, 
-	std::string sprite, 
+	glm::vec2 pos,
+	glm::vec2 size,
+	std::string sprite,
 	glm::vec3 color,
 	glm::vec2 velocity
 ):
 	GameObject(pos, size, sprite, color),
 	_velocity(velocity),
-	_groundCollision(Collision(glm::vec2(pos.x + 65.0f, pos.y + 150.0f), glm::vec2(30.0f, 10.0f)))
+	_groundCollision(Collision(glm::vec2(pos.x + 65.0f, pos.y + 170.0f), glm::vec2(30.0f, 10.0f)))
 {
-	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(31.0f, 127.0f));
+	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(60.0f, 142.0f));
 	_momentumPosition = pos;
 	_position = pos;
 }
@@ -46,7 +46,7 @@ void Player::updateAnimation(float deltaTime)
 	{
 		// if (tempAnim == "death")
 		// {
-		// 	_sprite = 
+		// 	_sprite =
 		// }
 		_sprite = "still1";
 	}
@@ -56,9 +56,9 @@ void Player::updateAnimation(float deltaTime)
 
 void Player::setPosition(glm::vec2 pos)
 {
-	_position = glm::vec2(pos.x - 67.0f, pos.y - 13.0f);
+	_position = glm::vec2(pos.x - 47.0f, pos.y - 13.0f);
 	_collision.setPosition(glm::vec2(pos.x, pos.y));
-	_groundCollision.setPosition(glm::vec2(pos.x, pos.y + 173.0f));
+	_groundCollision.setPosition(glm::vec2(pos.x + 18.0f, pos.y + 140.0f));
 }
 
 glm::vec2 Player::getMomentum(void) const

@@ -6,9 +6,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
 /* ************************ [v] INPUT CALL BACKS [v] ************************ */
 extern void framebuffer_size_callback(GLFWwindow*, int, int);
 extern void key_callback(GLFWwindow*, int, int, int, int);
+float lerp(float x, float y, float f);
 /* ************************ [^] INPUT CALL BACKS [^] ************************ */
 
 

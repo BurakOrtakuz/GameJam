@@ -56,7 +56,8 @@ SRC			+=	$(SRCDIR)/Camera.cpp \
 				$(SRCDIR)/Shader.cpp \
 				$(SRCDIR)/SpriteRenderer.cpp \
 				$(SRCDIR)/TagManager.cpp \
-				$(SRCDIR)/Texture2D.cpp
+				$(SRCDIR)/Texture2D.cpp \
+				$(SRCDIR)/utils.cpp
 
 OBJDIR		=	./obj
 OBJ			=	$(SRC:%.cpp=$(OBJDIR)/%.o)

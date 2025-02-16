@@ -5,7 +5,7 @@
 #include <TagManager.hpp>
 #include <glm/glm.hpp>
 #include <glad/glad.h>
-#include <Utils.hpp>
+#include <utils.hpp>
 #include <Game.hpp>
 #include <iostream>
 
@@ -45,7 +45,7 @@ void	Game::uploadForkClimb()
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Climb/Climb-6.png", true, "climb6");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Climb/Climb-7.png", true, "climb7");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Climb/Climb-8.png", true, "climb8");
-	
+
 
 	maps["level1"]._player->addAnimation(textures, "climb", 8);
 }
@@ -58,7 +58,7 @@ void	Game::uploadForkDamage()
 
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Damage/Fork_damage_frame_1.png", true, "damage1");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Damage/Fork_damage_frame_2.png", true, "damage2");
-	
+
 
 	maps["level1"]._player->addAnimation(textures, "damage", 2);
 }
@@ -235,7 +235,7 @@ void	Game::uploadForkHurt()
 	textures.push_back("hurt1");
 
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_hurt.png", true, "hurt1");
-	
+
 	maps["level1"]._player->addAnimation(textures, "hurt", 1);
 }
 

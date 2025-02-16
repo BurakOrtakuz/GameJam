@@ -1,7 +1,7 @@
 #ifndef GAME_HPP
 # define GAME_HPP 202502
 
-#include <Utils.hpp>
+#include <utils.hpp>
 #include <Shader.hpp>
 #include <Game/GameMap.hpp>
 #include <Texture2D.hpp>
@@ -72,7 +72,6 @@ void	uploadForkQuickPunch();
 void	uploadForkStill();
 void	uploadForkHurt();
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
-
 
 };
 

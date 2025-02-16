@@ -6,7 +6,7 @@
 /*   By: bdemirbu <bdemirbu@student.42kocaeli.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 19:59:32 by bdemirbu          #+#    #+#             */
-/*   Updated: 2025/02/14 23:59:30 by bdemirbu         ###   ########.fr       */
+/*   Updated: 2025/02/16 12:00:51 by bdemirbu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,26 @@ bool	Collision::checkCollision(Collision const &other) const
 		return true;
 	}
 	return false;
+}
+
+triggers Collision::checkTriggers(Collision const &other) const
+{
+	triggers trigger = {false, false, false, false};
+
+	if (this->_square.right >= other._square.left &&
+		this->_square.left <= other._square.right &&
+		this->_square.down >= other._square.up &&
+		this->_square.up <= other._square.down)
+	{
+		if (this->_square.up <= other._square.down && this->_square.down >= other._square.down)
+			trigger.bottom = true;
+		if (this->_square.down >= other._square.up && this->_square.up <= other._square.up)
+			trigger.top = true;
+		if (this->_square.left <= other._square.right && this->_square.right >= other._square.right)
+			trigger.right = true;
+		if (this->_square.right >= other._square.left && this->_square.left <= other._square.left)
+			trigger.left = true;
+	}
+
+	return trigger;
 }
