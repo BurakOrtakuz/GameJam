@@ -11,9 +11,9 @@
 
 bool Game::_keys[1024] = {0};
 
-#define GRAVITY_FALL_POWER 0.8F
-#define JUMP_POWER 8.0F
-#define SLIPPERINESS 0.0008F
+#define GRAVITY_FALL_POWER 1.8F
+#define JUMP_POWER 5.0F
+#define SLIPPERINESS 0.0038F
 
 static float
 	my_lerp(float x, float y, float f)
@@ -96,6 +96,11 @@ void Game::loop(void)
 		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
 		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
 		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+
+		if (player->getHide())
+		{
+			// lerp the target lightIntensity to 0.0f
+		}
 
 
 		{ // COLISSION
@@ -182,6 +187,14 @@ void Game::loop(void)
 		render();
 
 		glfwSwapBuffers(_window);
+
+		glm::vec2 playerViewPos = glm::vec2(
+			maps["level1"]._player->getCollision().getPosition().x + 800,
+			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
+		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
+		ResourceManager::getShader("shaderlight").Use();
+		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
 	}
 }
 
@@ -253,8 +266,7 @@ void Game::initRender()
 	// _enemyWowo = maps["level1"]._enemyWowo;
 	Player *player = maps["level1"]._player;
 	player->tagAdd(e_tag::PLAYER);
-	player->setCollision(glm::vec2(player->getPosition().x + 10.0f, player->getPosition().y + 5.0f),
-							glm::vec2 (player->getSize().x - 10.0f, player->getSize().y - 6.0f));
+
 	_walls = &(maps["level1"].walls);
 	for (Wall &wall : *_walls)
 		wall.tagAdd(e_tag::WALL);
@@ -307,7 +319,6 @@ void
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		float velocity = _playerVelocity * dt;
-		glm::vec2 playerPos = maps["level1"]._player->getCollision().getPosition();
 		glm::vec2 playerMomentum = maps["level1"]._player->getMomentum();
 
 		glm::vec2 playerSize = maps["level1"]._player->getSize();
@@ -352,6 +363,7 @@ void
 		else if (_keys['H'])
 		{
 			maps["level1"]._player->setCurAnimation("hide");
+			maps["level1"]._player->onHide(true);
 		}
 		else if (_keys['O'])
 		{
@@ -377,19 +389,16 @@ void
 		}
 
 		glm::vec2 camPosition = maps["level1"]._player->getCollision().getPosition();
-		camPosition.y -= 200;
+		camPosition.y -= 10;
 		maps["level1"]._player->setMomentum(playerMomentum);
-		
-		glm::vec2 playerViewPos = glm::vec2(playerPos.x + 800, playerPos.y - 100) - _camera->getPosition();
-		//std::cout << "Player Position: (" << playerViewPos.x << ", " << playerViewPos.y << ")" << std::endl;
-		ResourceManager::getShader("shaderlight").Use();
-
+		glm::vec2 playerViewPos = glm::vec2(
+			maps["level1"]._player->getCollision().getPosition().x + 800,
+			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
 		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
-		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
-		
-		ResourceManager::getShader("shader").Use();
+		ResourceManager::getShader("shaderlight").Use();
 
+		ResourceManager::getShader("shader").Use();
 		_camera->setPosition(camPosition);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
@@ -454,6 +463,8 @@ void
 
 		_renderer->drawSprite("merhaba", maps["level1"]._player->_groundCollision.getPosition(),
 			maps["level1"]._player->_groundCollision.getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
 

@@ -11,7 +11,7 @@ Player::Player(
 	_velocity(velocity),
 	_groundCollision(Collision(glm::vec2(pos.x + 65.0f, pos.y + 150.0f), glm::vec2(30.0f, 10.0f)))
 {
-	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(61.0f, 127.0f));
+	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(31.0f, 127.0f));
 	_momentumPosition = pos;
 	_position = pos;
 }
@@ -56,9 +56,9 @@ void Player::updateAnimation(float deltaTime)
 
 void Player::setPosition(glm::vec2 pos)
 {
-	_position = glm::vec2(pos.x + 47.0f, pos.y - 13.0f);
+	_position = glm::vec2(pos.x - 67.0f, pos.y - 13.0f);
 	_collision.setPosition(glm::vec2(pos.x, pos.y));
-	_groundCollision.setPosition(glm::vec2(pos.x + 95.5f, pos.y + 173.0f));
+	_groundCollision.setPosition(glm::vec2(pos.x, pos.y + 173.0f));
 }
 
 glm::vec2 Player::getMomentum(void) const
@@ -69,4 +69,14 @@ glm::vec2 Player::getMomentum(void) const
 void Player::setMomentum(glm::vec2 momentum)
 {
 	this->_momentumPosition = momentum;
+}
+
+void Player::onHide(bool value)
+{
+	this->_onHide = value;
+}
+
+bool Player::getHide(void) const
+{
+	return (this->_onHide);
 }

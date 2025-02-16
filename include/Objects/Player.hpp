@@ -13,6 +13,7 @@ private:
 
 	glm::vec2							_velocity;
 	glm::vec2							_momentumPosition;
+	bool								_onHide = false;
 public:
 	Collision							_groundCollision;
 	bool								able_to_jump = false;
@@ -30,7 +31,8 @@ public:
 	void	setPosition(glm::vec2 pos) override;
 	glm::vec2	getMomentum(void) const;
 	void setMomentum(glm::vec2 momentum);
+	void onHide(bool value);
+	bool getHide(void) const;
 };
-
 
 #endif // PLAYER_HPP
