@@ -4,21 +4,21 @@
 #include <GameObject.hpp>
 #include <Animation.hpp>
 #include <map>
-class Player : public GameObject
+#include <Animationable.hpp>
+
+class Player : public GameObject, public Animationable
 {
 private:
 	constexpr static glm::vec2	defaultVelocity = glm::vec2(0.0f, 0.0f);
 
-	std::map<std::string, Animation>	_animations;
 	glm::vec2							_velocity;
-	std::string							_currentAnimation;
 	glm::vec2							_momentumPosition;
+	bool								_onHide = false;
 public:
 	Collision							_groundCollision;
 	bool								able_to_jump = false;
-
 	Player(
-		glm::vec2 pos = defaultPosition,
+		glm::vec2 pos = defaultPosition, 
 		glm::vec2 size = defaultSize,
 		std::string sprite = "",
 		glm::vec3 color = glm::vec3(1.0f),
@@ -27,17 +27,12 @@ public:
 	Player(const Player &player);
 	Player &operator=(const Player &player);
 	~Player();
-
-	void addAnimation(
-		std::vector<std::string> textures,
-		std::string animationName
-	);
 	void updateAnimation(float deltaTime);
 	void	setPosition(glm::vec2 pos) override;
-	void setCurAnimation(const std::string &animationName);
 	glm::vec2	getMomentum(void) const;
 	void setMomentum(glm::vec2 momentum);
+	void onHide(bool value);
+	bool getHide(void) const;
 };
-
 
 #endif // PLAYER_HPP

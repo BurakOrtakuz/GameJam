@@ -41,6 +41,10 @@ public:
 	void updateCamera(float dt);
 	void move(glm::vec2 &delta);
 	void zoom(const float zoom);
+
+	// Getters
+	glm::vec2 getPosition() const;
+	glm::vec2 getTargetPosition() const;
 	void setPosition(const glm::vec2 &position);
 	void setRotation(const float degree);
 	void setLerpSpeed(const float lerpSpeed);

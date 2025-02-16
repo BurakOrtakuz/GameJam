@@ -11,20 +11,19 @@
 
 bool Game::_keys[1024] = {0};
 
-#define GRAVITY_FALL_POWER 0.8F
-#define JUMP_POWER 4.0F
-#define SLIPPERINESS 0.0012F
+#define GRAVITY_FALL_POWER 1.8F
+#define JUMP_POWER 5.0F
+#define SLIPPERINESS 0.0038F
+
+static float
+	my_lerp(float x, float y, float f)
+{
+	return (x + f * (y - x));
+}
 
 Game::Game(void)
 {
 	_state = GameState::GAME_ACTIVE;
-	SCREEN_WIDTH = 0;
-	SCREEN_HEIGHT = 0;
-	_quadVAO = 0;
-	_renderer = nullptr;
-	_window = nullptr;
-	_walls = nullptr;
-	_camera = nullptr;
 }
 
 Game::~Game(void)
@@ -34,6 +33,15 @@ Game::~Game(void)
 
 void Game::start(void)
 {
+	ResourceManager::loadShader("lib/Shaders/shaderlight.vs", "lib/Shaders/shaderlight.fs", nullptr, "shaderlight");
+	unsigned int shaderId = ResourceManager::getShader("shaderlight").getID();
+	ResourceManager::getShader("shaderlight").Use();
+	createLight();
+	uniformShaders["lightPosition"] = glGetUniformLocation(shaderId, "lightPosition");
+	uniformShaders["lightIntensity"] = glGetUniformLocation(shaderId, "lightIntensity");
+	glUniform2f(uniformShaders["lightPosition"], 0.0f, 0.0f);
+	glUniform1f(uniformShaders["lightIntensity"], 1.0f);
+
 	ResourceManager::loadShader("lib/Shaders/shader.vs", "lib/Shaders/shader.fs", nullptr, "shader");
 	ResourceManager::getShader("shader").Use().SetInteger("image", 0);
 	_renderer = new SpriteRenderer("shader");
@@ -43,23 +51,17 @@ void Game::start(void)
 	this->loop();
 }
 
-static float
-	my_lerp(float x, float y, float f)
-{
-	return (x + f * (y - x));
-}
-
 void Game::loop(void)
 {
 	float slipperiness = SLIPPERINESS;
+	Player *player = maps["level1"]._player;
+	float delta_momentum = 0.0F;
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
 	float fpsTimer = 0.0f;
 	int frameCount = 0;
-	float delta_momentum = 0.0F;
 	while (!glfwWindowShouldClose(_window))
 	{
-		Player *player = maps["level1"]._player;
 		// calculate delta time
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -67,13 +69,13 @@ void Game::loop(void)
 		lastFrame = currentFrame;
 
 		fpsTimer += deltaTime;
-        frameCount++;
+		frameCount++;
 		if (fpsTimer >= 1.0f)
-        {
-            std::cout << "FPS: " << frameCount << std::endl; //__??__
-            fpsTimer = 0.0f;
-            frameCount = 0;
-        }
+		{
+			std::cout << "FPS: " << frameCount << std::endl; //__??__
+			fpsTimer = 0.0f;
+			frameCount = 0;
+		}
 
 		glm::vec2 playerPos = player->getCollision().getPosition();
 		glm::vec2 playerMomentum = player->getMomentum();
@@ -94,6 +96,11 @@ void Game::loop(void)
 		playerMomentum.y = playerMomentum.y + ((392.0f + delta_momentum) * (deltaTime)); // gravity
 		playerPos.x = my_lerp(playerPos.x, playerMomentum.x, slipperiness);
 		playerPos.y = my_lerp(playerPos.y, playerMomentum.y, slipperiness);
+
+		if (player->getHide())
+		{
+			// lerp the target lightIntensity to 0.0f
+		}
 
 
 		{ // COLISSION
@@ -169,21 +176,6 @@ void Game::loop(void)
 		player->setMomentum(playerMomentum);
 		player->setPosition(playerPos);
 
-		/*
-		if (
-			CollisionManager::checkCollision(
-				player->getCollision().getPosition(),
-				playerMomentum,
-				player->getCollision().getSize()
-			) == true
-		)
-		{
-			player->setPosition(temp);
-			player->setMomentum(temp);
-		}
-		*/
-
-
 		glfwPollEvents();
 
 		process(deltaTime);
@@ -193,9 +185,16 @@ void Game::loop(void)
 		update(deltaTime);
 
 		render();
-		_renderer->drawSprite("merhaba", player->_groundCollision.getPosition(),
-			player->_groundCollision.getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
 		glfwSwapBuffers(_window);
+
+		glm::vec2 playerViewPos = glm::vec2(
+			maps["level1"]._player->getCollision().getPosition().x + 800,
+			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
+		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
+		ResourceManager::getShader("shaderlight").Use();
+		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
 	}
 }
 
@@ -209,7 +208,7 @@ void Game::init(void)
 
 	this->_window = errCheck(
 		(GLFWwindow *)NULL,
-		gl_create_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout"),
+		gl_create_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Labiryntika"),
 		"Failed to create GLFW window"
 		);
 
@@ -237,28 +236,30 @@ void Game::initRender()
 	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
-	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Crawl/Crawl-1.png", true, "wowo");
+	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
-
+	
 	newMap("levels/one.lvl", "level1");
-
+	
 	uploadForkBattle_stance();
 	uploadForkClimb();
+	uploadForkDamage();
 	uploadForkDash();
 	uploadForkDeath();
 	uploadForkDoublePunch();
 	uploadForkJump();
 	uploadForkSprint();
-	uploadForkStill();
 	uploadForkHide();
 	uploadForkQuickPunch();
+	uploadForkStill();
+	uploadForkHurt();
 
 	std::cout << "Textures loaded" << std::endl;
 	// O_o Beg your pardon but the fuck?
 	// Most manuel shit I've ever seen
 	// - Teo
 	ResourceManager::loadTexture("assets/Collision.png", true, "merhaba");
-
+	
 	maps["level1"]._player->setCurAnimation("still");
 	//_player = maps["level1"]._player;
 
@@ -299,10 +300,12 @@ void Game::process(float dt)
 		if (playerPos.x < wowoPos.x)
 		{
 			wowoPos.x -= velocity;
+			maps["level1"]._enemyWowo->setIsReversed(false);
 		}
 		else if (playerPos.x > wowoPos.x)
 		{
 			wowoPos.x += velocity;
+			maps["level1"]._enemyWowo->setIsReversed(true);
 		}
 
 		glm::vec2 position = wowoPos;
@@ -315,110 +318,161 @@ void
 {
 	if (_state == GameState::GAME_ACTIVE)
 	{
-		Player *player = maps["level1"]._player;
 		float velocity = _playerVelocity * dt;
 		glm::vec2 playerMomentum = maps["level1"]._player->getMomentum();
 
 		glm::vec2 playerSize = maps["level1"]._player->getSize();
 
-		/*
-		glm::vec2 player_ru = {playerMomentum.x, playerMomentum.y};
-		glm::vec2 player_lu = {playerMomentum.x + playerMomentum.x, playerMomentum.y};
-		glm::vec2 player_rd = {playerMomentum.x, playerMomentum.y + playerMomentum.y};
-		glm::vec2 player_ld = {playerMomentum.x + playerMomentum.x, playerMomentum.y + playerSize.y};
-		*/
-
-		/*
-		for (Wall wall : _walls)
-		{
-			glm::vec2 wallPos = wall->getPosition();
-			glm::vec2 wallSize = wall->getSize();
-
-			glm::vec2 wall_lu = {wallPos.x, wallPos.y};
-			glm::vec2 wall_ru = {wallPos.x + wallSize.x, wallPos.y};
-			glm::vec2 wall_ld = {wallPos.x, wallPos.y + wallSize.y};
-			glm::vec2 wall_rd = {wallPos.x + wallSize.x, wallPos.y + wallSize.y};
-		}
-		*/
-		glm::vec2 size = player->getSize();
+		resetInputs();
+		glm::vec2 size = maps["level1"]._player->getSize();
 		size.y = 0.0f;
 		size.x += 20.0f;
-		if (CollisionManager::checkCollision(e_tag::WALL, Collision(player->getPosition(), size)) == true)
+		if (CollisionManager::checkCollision(e_tag::WALL, Collision(maps["level1"]._player->getPosition(), size)) == true)
 		{
-			player->setCurAnimation("battle_stance");
+			maps["level1"]._player->setCurAnimation("battle_stance");
 		}
 		else
-			player->setCurAnimation("still");
+			maps["level1"]._player->setCurAnimation("still");
+		
 		if (_keys[GLFW_KEY_A])
 		{
-			//if (playerPos.x >= 0.0f)
-			player->setCurAnimation("sprint");
+			
+			maps["level1"]._player->setCurAnimation("sprint");
+			maps["level1"]._player->setIsReversed(true);
 			playerMomentum.x -= velocity;
 		}
-		if (_keys[GLFW_KEY_D])
+		else if (_keys[GLFW_KEY_D])
 		{
-			{
-				player->setCurAnimation("sprint");
-				playerMomentum.x += velocity;
-			}
+			maps["level1"]._player->setCurAnimation("sprint");
+			maps["level1"]._player->setIsReversed(false);
+			playerMomentum.x += velocity;
 		}
-		if (_keys['C'])
+		else if (_keys['C'])
 		{
-			player->setCurAnimation("climb");
+			maps["level1"]._player->setCurAnimation("climb");
 		}
-		if (_keys['B'])
+		else if (_keys['B'])
 		{
-			player->setCurAnimation("battle_stance");
+			maps["level1"]._player->setCurAnimation("battle_stance");
 		}
-		if (_keys['N'])
+		else if (_keys['N'])
 		{
-			player->setCurAnimation("dash");
+			maps["level1"]._player->setCurAnimation("dash");
 			playerMomentum.x += velocity * 2;
 		}
-		if (_keys[GLFW_KEY_SPACE] && player->able_to_jump)
+		else if (_keys['H'])
 		{
-			player->setCurAnimation("jump");
+			maps["level1"]._player->setCurAnimation("hide");
+			maps["level1"]._player->onHide(true);
+		}
+		else if (_keys['O'])
+		{
+			maps["level1"]._player->setCurAnimation("quickPunch");
+		}
+		else if (_keys['P'])
+		{
+			maps["level1"]._player->setCurAnimation("doublePunch");
+		}
+		else if (_keys['I'])
+		{
+			maps["level1"]._player->setCurAnimation("hurt");
+		}
+		else if (_keys['K'])
+		{
+			maps["level1"]._player->setCurAnimation("damage");
+		}
+
+		if (_keys[GLFW_KEY_SPACE] && maps["level1"]._player->able_to_jump)
+		{
+			maps["level1"]._player->setCurAnimation("jump");
 			playerMomentum.y -= JUMP_POWER;
 		}
 
+		glm::vec2 camPosition = maps["level1"]._player->getCollision().getPosition();
+		camPosition.y -= 10;
+		maps["level1"]._player->setMomentum(playerMomentum);
+		glm::vec2 playerViewPos = glm::vec2(
+			maps["level1"]._player->getCollision().getPosition().x + 800,
+			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
+		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
+		ResourceManager::getShader("shaderlight").Use();
 
-		glm::vec2 camPosition = player->getCollision().getPosition();
-		camPosition.y -= 100;
-
-		player->setMomentum(playerMomentum);
-
+		ResourceManager::getShader("shader").Use();
 		_camera->setPosition(camPosition);
 		ResourceManager::getShader("shader").SetMatrix4("projection", _camera->getViewProjectionMatrix());
 	}
 }
 
+void Game::createLight()
+{
+	unsigned int shaderId = ResourceManager::getShader("shaderlight").getID();
+	ResourceManager::getShader("shaderlight").Use();
+	GLfloat lightPos[2];
+	GLfloat intensity;
+	glGetUniformfv(shaderId, uniformShaders["lightPosition"], lightPos);
+	glGetUniformfv(shaderId, uniformShaders["lightIntensity"], &intensity);
+	glGetUniformfv(shaderId, uniformShaders["lightPosition"], lightPos);
+	std::cout << "Light Position: (" << lightPos[0] << ", " << lightPos[1] << ")" << std::endl;
+	std::cout << "Light Intensity: " << intensity << std::endl;
+
+	float vertices[] = {
+		-1.0f, -1.0f, 0.0f,0.0f,0.0f,  // Bottom-left
+		 1.0f, -1.0f, 0.0f,0.0f,0.0f, // Bottom-right
+		-1.0f,  1.0f, 0.0f,0.0f,0.0f, // Top-left
+		1.0f,   1.0f, 0.0f,0.0f,0.0f  // Top-right
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void Game::printLight()
+{
+	ResourceManager::getShader("shaderlight").Use();
+	glUseProgram(ResourceManager::getShader("shaderlight").getID());
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
 void
 	Game::render(void)
 {
+
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		_renderer->drawSprite("background",
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT), 0.0f);
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT));
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
 		maps["level1"]._enemyWowo->draw(*_renderer);
 
-		Wall wall = maps["level1"].walls[0];
-		for (Wall wall : maps["level1"].walls)
-		{
-			_renderer->drawSprite("merhaba", wall.getCollision().getPosition(),
-				wall.getCollision().getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		}
 		_renderer->drawSprite("merhaba", maps["level1"]._player->_groundCollision.getPosition(),
-			maps["level1"]._player->_groundCollision.getSize(), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			maps["level1"]._player->_groundCollision.getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
 
 		//_renderer->drawSprite(textures["rightUPCorner"],
 		//	glm::vec2(1430.0f, 0.0f), textures["rightUPCorner"].getSize(), 0.0f);
+
 		//Texture2D text = textures["rightUPCorner"];
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);
 	}
+	printLight();
 }
 
 void
