@@ -11,7 +11,7 @@
 
 bool Game::_keys[1024] = {0};
 
-#define GRAVITY_FALL_POWER 920.8F
+#define GRAVITY_FALL_POWER 2020.8F
 #define JUMP_POWER 10.0F
 #define SLIPPERINESS 0.1038F
 
@@ -58,6 +58,8 @@ void Game::loop(void)
 	float lastFrame = 0.0f;
 	float fpsTimer = 0.0f;
 	int frameCount = 0;
+	bool skipFirstFrame = true;
+
 	while (!glfwWindowShouldClose(_window))
 	{
 		// calculate delta time
@@ -68,13 +70,14 @@ void Game::loop(void)
 
 		fpsTimer += deltaTime;
 		frameCount++;
+
 		if (fpsTimer >= 1.0f)
 		{
 			std::cout << "FPS: " << frameCount << std::endl; //__??__
 			fpsTimer = 0.0f;
 			frameCount = 0;
 		}
-
+		
 		glm::vec2 playerPos = player->getCollision().getPosition();
 		glm::vec2 playerMomentum = player->getMomentum();
 
@@ -87,8 +90,22 @@ void Game::loop(void)
 		}
 		else
 		{
+			player->doubleJump = 0;
 			player->able_to_jump = true;
 			delta_momentum = 0.0F;
+		}
+
+		if (maps["level1"]._player->doubleJump == 3)
+		{
+			playerMomentum.y -= JUMP_POWER * 20;
+			delta_momentum = 0.0F;
+			maps["level1"]._player->doubleJump = 4;
+		}
+
+		if (skipFirstFrame)
+		{
+			delta_momentum = 0.0f;
+			skipFirstFrame = false;
 		}
 
 		playerMomentum.y = playerMomentum.y + ((delta_momentum) * (deltaTime)); // gravity
@@ -99,7 +116,6 @@ void Game::loop(void)
 		{
 			// lerp the target lightIntensity to 0.0f
 		}
-
 
 		{ // COLISSION
 			const float p_right = playerPos.x + player->getCollision().getSize().x;
@@ -116,8 +132,8 @@ void Game::loop(void)
 				glm::vec2 object_position = object->getCollision().getPosition();
 				glm::vec2 object_size = object->getCollision().getSize();
 
-				const float o_right = object_position.x + object_size.x + 0.1;
-				const float o_left = object_position.x - 0.1;
+				const float o_right = object_position.x + object_size.x + 0.2;
+				const float o_left = object_position.x - 0.2;
 				const float o_up = object_position.y;
 				const float o_down = object_position.y + object_size.y;
 
@@ -188,11 +204,11 @@ void Game::loop(void)
 
 		glm::vec2 playerViewPos = glm::vec2(
 			maps["level1"]._player->getCollision().getPosition().x + 800,
-			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
+			maps["level1"]._player->getCollision().getPosition().y + 500) - _camera->getPosition();
 		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
 		ResourceManager::getShader("shaderlight").Use();
-		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
+		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, -normalizedPos.y);
 	}
 }
 
@@ -294,34 +310,34 @@ void
 
 void Game::process(float dt)
 {
-	if (_state == GameState::GAME_ACTIVE)
-	{
-		float velocity = maps["level1"]._enemyWowo->_velocity * dt;
-		glm::vec2 wowoPos = maps["level1"]._enemyWowo->getPosition();
+	// if (_state == GameState::GAME_ACTIVE)
+	// {
+	// 	float velocity = maps["level1"]._enemyWowo->_velocity * dt;
+	// 	glm::vec2 wowoPos = maps["level1"]._enemyWowo->getPosition();
 
-		glm::vec2 playerSize = maps["level1"]._enemyWowo->getSize();
+	// 	glm::vec2 playerSize = maps["level1"]._enemyWowo->getSize();
 
-		glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
-		glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
+	// 	glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
+	// 	glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
+	// 	glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
+	// 	glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
 
-		glm::vec2 playerPos = maps["level1"]._player->getPosition();
+	// 	glm::vec2 playerPos = maps["level1"]._player->getPosition();
 
-		if (playerPos.x < wowoPos.x)
-		{
-			wowoPos.x -= velocity;
-			maps["level1"]._enemyWowo->setIsReversed(false);
-		}
-		else if (playerPos.x > wowoPos.x)
-		{
-			wowoPos.x += velocity;
-			maps["level1"]._enemyWowo->setIsReversed(true);
-		}
+	// 	if (playerPos.x < wowoPos.x)
+	// 	{
+	// 		wowoPos.x -= velocity;
+	// 		maps["level1"]._enemyWowo->setIsReversed(false);
+	// 	}
+	// 	else if (playerPos.x > wowoPos.x)
+	// 	{
+	// 		wowoPos.x += velocity;
+	// 		maps["level1"]._enemyWowo->setIsReversed(true);
+	// 	}
 
-		glm::vec2 position = wowoPos;
-		maps["level1"]._enemyWowo->setPosition(wowoPos);
-	}
+	// 	glm::vec2 position = wowoPos;
+	// 	maps["level1"]._enemyWowo->setPosition(wowoPos);
+	// }
 }
 
 void
@@ -393,11 +409,26 @@ void
 			maps["level1"]._player->setCurAnimation("damage");
 		}
 
-		if (_keys[GLFW_KEY_SPACE] && maps["level1"]._player->able_to_jump)
+		if (_keys[GLFW_KEY_SPACE])
 		{
-			maps["level1"]._player->setCurAnimation("jump");
-			playerMomentum.y -= JUMP_POWER;
+			if (maps["level1"]._player->able_to_jump)
+			{
+				maps["level1"]._player->setCurAnimation("jump");
+				playerMomentum.y -= JUMP_POWER;
+				maps["level1"]._player->doubleJump = 1;
+			}
+			else if (maps["level1"]._player->doubleJump == 2)
+			{
+				maps["level1"]._player->setCurAnimation("jump");
+				maps["level1"]._player->doubleJump = 3;
+			}
 		}
+		else
+		{
+			if (maps["level1"]._player->doubleJump == 1)
+				maps["level1"]._player->doubleJump = 2;
+		}
+
 
 		glm::vec2 camPosition = maps["level1"]._player->getCollision().getPosition();
 		camPosition.y -= 10;
@@ -465,12 +496,12 @@ void
 
 	if (_state == GameState::GAME_ACTIVE)
 	{
-		_renderer->drawSprite("background",
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 2));
+		_renderer->drawSpriteTiled("background",
+			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3));
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
-		maps["level1"]._enemyWowo->draw(*_renderer);
+		// maps["level1"]._enemyWowo->draw(*_renderer);
 
 		_renderer->drawSprite("merhaba", maps["level1"]._player->_groundCollision.getPosition(),
 			maps["level1"]._player->_groundCollision.getSize(), false, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -483,7 +514,7 @@ void
 		//_renderer->drawSprite(text, glm::vec2(90.0f, 0.0f), text.getSize(), 0.0f);
 		////maps["level1"]._player->draw(*_renderer);
 	}
-	//printLight();
+	printLight();
 }
 
 void

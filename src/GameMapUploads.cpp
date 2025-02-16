@@ -19,13 +19,18 @@ void	Game::uploadSimpleTextures()
 	ResourceManager::loadTexture("assets/Simple_textures/Key/Key1.png", true, "key1");												//4
 	ResourceManager::loadTexture("assets/Simple_textures/Key/Key2.png", true, "key2");												//5
 	ResourceManager::loadTexture("assets/Simple_textures/Key/Keywhole.png", true, "keywhole");										//6
-	ResourceManager::loadTexture("assets/Simple_textures/Obsticles/Sarkit.png", true, "sarkit");										//7
-	ResourceManager::loadTexture("assets/Simple_textures/Obsticles/Spikes.png", true, "spikes");										//8
+	ResourceManager::loadTexture("assets/Simple_textures/Obsticles/Sarkit.png", true, "sarkit");									//7
+	ResourceManager::loadTexture("assets/Simple_textures/Obsticles/Spikes.png", true, "spikes");									//8
 	ResourceManager::loadTexture("assets/Simple_textures/Platform/Platform_corner_L.png", true, "platform_corner_L");				//9
 	ResourceManager::loadTexture("assets/Simple_textures/Platform/Platform_corner_R.png", true, "platform_corner_R");				//10
 	ResourceManager::loadTexture("assets/Simple_textures/Platform/Platform_mid.png", true, "platform_mid");							//11
-	ResourceManager::loadTexture("assets/Simple_textures/Wall/Simple_wall_wine.png", true, "wall_wine");								//12
-	ResourceManager::loadTexture("assets/Simple_textures/Wall/Walltexture.png", true, "wall_texture");								//13
+	ResourceManager::loadTexture("assets/Simple_textures/Wall/Simple_wall_wine.png", true, "wall_wine");							//12
+	ResourceManager::loadTexture("assets/Simple_textures/Wall/Walltexture.png", true, "wall_texture");							//13
+	ResourceManager::loadTexture("assets/Obsticles/Acid_frames/Af7.png", true, "asit7");								//14
+	ResourceManager::loadTexture("assets/Door/Doorframe.png", true, "door1");								//14
+	ResourceManager::loadTexture("assets/Door/DoorL.png", true, "door2");								//14
+	ResourceManager::loadTexture("assets/Door/DoorR.png", true, "door3");								//14
+	
 }
 
 

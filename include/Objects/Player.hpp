@@ -15,6 +15,7 @@ private:
 	glm::vec2							_momentumPosition;
 	bool								_onHide = false;
 public:
+	int									doubleJump = 0;
 	Collision							_groundCollision;
 	bool								able_to_jump = false;
 	Player(

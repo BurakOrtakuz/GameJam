@@ -39,6 +39,10 @@ std::string getSpriteName(int i)
 		return "wall_wine";
 	case 14:
 		return "wall_texture";
+	case 15:
+		return "asit7";
+	case 16:
+		return "door1";
 	default:
 		return "";
 	}
@@ -63,7 +67,7 @@ void
 	{
 		for (unsigned int x = 0; x < width; ++x)
 		{
-			if (tileData[y][x] > 0 && tileData[y][x] < 15)
+			if (tileData[y][x] > 0 && tileData[y][x] < 16)
 			{
 				glm::vec2 pos(unit_width * x, unit_height * y);
 				std::string spriteName = getSpriteName(tileData[y][x]);
@@ -71,6 +75,27 @@ void
 				Wall wall(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
 				wall.setSolid(true);
 				this->walls.push_back(wall);
+			}
+			else if (tileData[y][x] == 16)
+			{
+				glm::vec2 pos(unit_width * x, unit_height * y);
+				std::string spriteName = "door1";
+				glm::vec2 size = ResourceManager::getTexture(spriteName).getSize();
+				Wall wall1(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
+				wall1.setSolid(true);
+				this->walls.push_back(wall1);
+
+				spriteName = "door2";
+				size = ResourceManager::getTexture(spriteName).getSize();
+				Wall wall2(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
+				wall2.setSolid(true);
+				this->walls.push_back(wall2);
+
+				spriteName = "door3";
+				size = ResourceManager::getTexture(spriteName).getSize();
+				Wall wall3(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
+				wall3.setSolid(true);
+				this->walls.push_back(wall3);
 			}
 			else if (tileData[y][x] == 100)
 			{
