@@ -36,6 +36,7 @@ public:
 	void		render(void);
 	void		update(float);
 	void		resetInputs();
+	void		collisionDetection(glm::vec2&, glm::vec2&, glm::vec2&, Player *);
 	static void	updateKeyStatus(int key, bool status);
 	std::map<std::string, unsigned int> uniformShaders;
 private:
@@ -73,7 +74,10 @@ void	uploadForkStill();
 void	uploadForkHurt();
 /* ******************* [^] FORK MAIN CHARACTER [^] ******************* */
 
-
+void	uploadBackground();
+void	upload_Platform();
+void	upload_Discard();
+void	upload_GroundTextures();
 };
 
 #endif /* GAME_HPP */

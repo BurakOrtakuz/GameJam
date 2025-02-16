@@ -7,6 +7,31 @@
 #include <stdio.h>
 #include <ResourceManager.hpp>
 
+std::string getSpriteName(int i)
+{
+	switch (i)
+	{
+	case 1:
+		return "ground_texture_middle"; //"platform_L_M";
+	case 2:
+		return "platform_L";
+	case 3:
+		return "platform_M";
+	case 4:
+		return "platform_R_M";
+	case 5:
+		return "ground_texture_corner_L"; //"platform_R";
+	case 6:
+		return "ground_texture_corner_L";
+	case 7:
+		return "ground_texture_corner_R";
+	case 8:
+		return "ground_texture_middle";
+	default:
+		return "";
+	}
+}
+
 /* ************************ [v] PRIVATE FUNCTIONS [v] *********************** */
 void
 	GameMap::init(
@@ -26,23 +51,16 @@ void
 	{
 		for (unsigned int x = 0; x < width; ++x)
 		{
-			//if (tileData[y][x] == 0)
-			//{
-			//    glm::vec2 pos(unit_width * x, unit_height * y);
-			//    //glm::vec2 size(unit_width, unit_height);
-			//    GameObject obj(pos, (*textures)["leftUPCorner"].getSize(), (*textures)["leftUPCorner"], glm::vec3(0.8f, 0.8f, 0.7f));
-			//    obj.setSolid(true);
-			//    this->objects.push_back(obj);
-			//}
-			if (tileData[y][x] == 1)
+			if (tileData[y][x] > 0 && tileData[y][x] < 9)
 			{
 				glm::vec2 pos(unit_width * x, unit_height * y);
-				glm::vec2 size = ResourceManager::getTexture("leftUPCorner").getSize();
-				Wall wall(pos, ResourceManager::getTexture("leftUPCorner").getSize(), "leftUPCorner", glm::vec3(0.8f, 0.8f, 0.7f));
+				std::string spriteName = getSpriteName(tileData[y][x]);
+				glm::vec2 size = ResourceManager::getTexture(spriteName).getSize();
+				Wall wall(pos, ResourceManager::getTexture(spriteName).getSize(), spriteName, glm::vec3(0.8f, 0.8f, 0.7f));
 				wall.setSolid(true);
 				this->walls.push_back(wall);
 			}
-			else if (tileData[y][x] == 9)
+			else if (tileData[y][x] == 100)
 			{
 				//glm::vec2 playerPos = glm::vec2(levelWidth / 2.0f - _playerSize.x / 2.0f, (levelHeight * 2) - _playerSize.y);
 				glm::vec2 playerPos = glm::vec2(unit_width * x, unit_height * y - 60.0f);

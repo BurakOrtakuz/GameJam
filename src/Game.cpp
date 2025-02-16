@@ -99,79 +99,14 @@ void Game::loop(void)
 
 		if (player->getHide())
 		{
-			// lerp the target lightIntensity to 0.0f
+			ResourceManager::getShader("shaderLight").Use().SetFloat("lightIntensity",\
+			100.0f);
+			
 		}
 
 
-		{ // COLISSION
-			const float p_right = playerPos.x + player->getCollision().getSize().x;
-			const float p_left = playerPos.x;
-			const float p_up = playerPos.y;
-			const float p_down = playerPos.y + player->getCollision().getSize().y;
-			std::vector<GameObject *> objects = TagManager::getTags(e_tag::WALL);
-
-			for (auto object : objects)
-			{
-				if (object->isDestroyed())
-					continue;
-
-				glm::vec2 object_position = object->getCollision().getPosition();
-				glm::vec2 object_size = object->getCollision().getSize();
-
-				const float o_right = object_position.x + object_size.x;
-				const float o_left = object_position.x;
-				const float o_up = object_position.y;
-				const float o_down = object_position.y + object_size.y;
-
-				bool bottomCollision =
-					(fabs(p_down - o_up) < 1.0f) &&
-					(p_up < o_up) &&
-					(p_right > o_left) &&
-					(p_left < o_right);
-
-				bool topCollision =
-					(fabs(p_up - o_down) < 1.0f) &&
-					(p_down > o_down) &&
-					(p_right > o_left) &&
-					(p_left < o_right);
-
-				bool leftCollision =
-					(fabs(p_left - o_right) < 1.0f) &&
-					(p_right > o_right) &&
-					(p_down > o_up) &&
-					(p_up < o_down);
-
-				bool rightCollision =
-					(fabs(p_right - o_left) < 1.0f) &&
-					(p_left < o_left) &&
-					(p_down > o_up) &&
-					(p_up < o_down);
-
-				if (bottomCollision)
-				{
-					playerPos = glm::vec2(playerPos.x, temp.y - 0.1F);
-					playerMomentum = glm::vec2(playerMomentum.x, temp.y);
-				}
-
-				if (topCollision)
-				{
-					playerPos = glm::vec2(playerPos.x, temp.y + 0.1F);
-					playerMomentum = glm::vec2(playerMomentum.x, temp.y);
-				}
-
-				if (leftCollision)
-				{
-					playerPos = glm::vec2(temp.x + 0.1F, playerPos.y);
-					playerMomentum = glm::vec2(temp.x, playerMomentum.y);
-				}
-
-				if (rightCollision)
-				{
-					playerPos = glm::vec2(temp.x - 0.1F, playerPos.y);
-					playerMomentum = glm::vec2(temp.x, playerMomentum.y);
-				}
-			}
-		} // COLISSION
+		 // COLISSION
+		 collisionDetection(playerPos, playerMomentum, temp, player);
 
 		player->setMomentum(playerMomentum);
 		player->setPosition(playerPos);
@@ -187,14 +122,6 @@ void Game::loop(void)
 		render();
 
 		glfwSwapBuffers(_window);
-
-		glm::vec2 playerViewPos = glm::vec2(
-			maps["level1"]._player->getCollision().getPosition().x + 800,
-			maps["level1"]._player->getCollision().getPosition().y + 300) - _camera->getPosition();
-		glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
-		glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
-		ResourceManager::getShader("shaderlight").Use();
-		glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, normalizedPos.y);
 	}
 }
 
@@ -232,12 +159,17 @@ void Game::initRender()
 
 	this->_quadVAO = gl_init_render(vertices, sizeof(vertices));
 
+	uploadBackground();
+	upload_Platform();
+	upload_Discard();
+	upload_GroundTextures();
 
-	ResourceManager::loadTexture("assets/Levelconcept.png", true, "background");
+	//DELETE
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_L.png", true, "leftUPCorner");
 	ResourceManager::loadTexture("assets/Discard/Ground_texture_corner_R.png", true, "rightUPCorner");
 	ResourceManager::loadTexture("assets/Characters/Wowo_(mob)/Attack/Attack-1.png", true, "wowo");
 	ResourceManager::loadTexture("assets/Characters/Fork_mc/Fork_still.png", true, "player");
+
 	
 	newMap("levels/one.lvl", "level1");
 	
@@ -283,6 +215,11 @@ void
 
 void Game::process(float dt)
 {
+	/*
+	Wowo ile playerin mesafesini al, eğer belli bir mesafeden daha fazla aralık var ise, wowoyu hareket ettir.
+	Yok ise hareket etmesin. 
+	Collision lazım, uçurumdan aşşağı uçmasın ve duvara çarpmasın.
+	*/
 	if (_state == GameState::GAME_ACTIVE)
 	{
 		float velocity = maps["level1"]._enemyWowo->_velocity * dt;
@@ -290,10 +227,10 @@ void Game::process(float dt)
 
 		glm::vec2 playerSize = maps["level1"]._enemyWowo->getSize();
 
-		glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
-		glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
-		glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
+		// glm::vec2 wowo_ru = {wowoPos.x, wowoPos.y};
+		// glm::vec2 wowo_lu = {wowoPos.x + wowoPos.x, wowoPos.y};
+		// glm::vec2 wowo_rd = {wowoPos.x, wowoPos.y + wowoPos.y};
+		// glm::vec2 wowo_ld = {wowoPos.x + wowoPos.x, wowoPos.y + wowoPos.y};
 
 		glm::vec2 playerPos = maps["level1"]._player->getPosition();
 
@@ -454,8 +391,12 @@ void
 
 	if (_state == GameState::GAME_ACTIVE)
 	{
-		_renderer->drawSprite("background",
-			glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH * 2, SCREEN_HEIGHT));
+		_renderer->drawSpriteTiled("background",
+			glm::vec2(0.0f, 0.0f),
+			glm::vec2(SCREEN_WIDTH*2, SCREEN_HEIGHT*2),
+			false,
+			0.0f,
+			glm::vec3(1.0f, 1.0f, 1.0f));
 		maps["level1"].draw(*_renderer);
 
 		maps["level1"]._player->draw(*_renderer);
@@ -489,4 +430,12 @@ void
 
 	maps["level1"]._player->updateAnimation(dt);
 	this->_camera->updateCamera(dt);
+
+	glm::vec2 playerViewPos = glm::vec2(
+		maps["level1"]._player->getCollision().getPosition().x + 800,
+		maps["level1"]._player->getCollision().getPosition().y + 500) - _camera->getPosition();
+	glm::vec2 windowSize = glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
+	glm::vec2 normalizedPos = (playerViewPos / windowSize) * 2.0f - 1.0f;
+	ResourceManager::getShader("shaderlight").Use();
+	glUniform2f(uniformShaders["lightPosition"], normalizedPos.x, -normalizedPos.y);
 }

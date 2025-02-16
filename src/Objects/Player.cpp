@@ -14,6 +14,7 @@ Player::Player(
 	_collision.setCollision(glm::vec2(pos.x + 47.0f, pos.y + 13.0f), glm::vec2(31.0f, 127.0f));
 	_momentumPosition = pos;
 	_position = pos;
+	_onHide = false;
 }
 
 Player::Player(const Player &player)
